@@ -7,18 +7,15 @@ yarn install
 
 ### Compiles and hot-reloads for development
 ```
-yarn serve
+yarn serve src/components/HelloWorld.vue
 ```
 
-### Compiles and minifies for production
+### Compiles and minifies for production (library)
 ```
-yarn build
+yarn build-lib
 ```
 
 ### Lints and fixes files
 ```
 yarn lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
