@@ -1,7 +1,10 @@
 <template>
   <div>
     <div v-if="this.loadingResults" class="text-center"><h2>Cargando resultados...</h2></div>
-    <table id="reactive-table-1" class="table table-striped table-hover reactive-table">
+    <table
+      v-if="this.initiatives.length && !this.loadingResults"
+      id="reactive-table-1"
+      class="table table-striped table-hover reactive-table">
       <thead>
         <tr>
           <th class="col-md-6" fieldid="titulo">Titulo</th>
