@@ -1,3 +1,3 @@
-import HelloWorld from './components/HelloWorld.vue';
+import Results from './components/Results.vue';
 
-export default HelloWorld;
+export default Results;
