@@ -1,7 +1,11 @@
-import Results from './components/Results/Results.vue';
-import HelloWorld from './components/HelloWorld/HelloWorld.vue';
+import * as TipiComponents from './components'
 
-export default {
-  Results,
-  HelloWorld,
-};
+let VueMaterial = Vue => {
+  Object.values(TipiComponents).forEach((TipiComponent) => {
+    Vue.use(TipiComponent)
+  })
+}
+
+TipiUI.version = '__VERSION__'
+
+export default TipiUI
