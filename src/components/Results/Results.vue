@@ -18,7 +18,13 @@
       </thead>
       <tbody>
         <tr v-for="(initiative, index) in this.initiatives" :key="index">
-          <td>{{ initiative.title }}</td>
+          <td class="titulo">
+            <router-link :to="{path: '/initiatives/' + initiative.id}">{{initiative.title}}</router-link>
+          </td>
+          <td class="autor_diputado" v-html="getDeputies(initiative)"></td>
+          <td class="autor_grupo" v-html="getAuthors(initiative)"></td>
+          <td v-html="getTopics(initiative)"></td>
+          <td class="actualizacion"><span :sort="initiative.updated">{{ moment(initiative.updated).format('DD/MM/Y') }}</span></td>
         </tr>
       </tbody>
     </table>
@@ -26,8 +32,10 @@
 </template>
 
 <script>
+const moment = require('moment');
+
 export default {
-  name: 'Results',
+  name: 'TipiResults',
   props: {
     loadingResults: Boolean,
     initiatives: {
@@ -35,6 +43,28 @@ export default {
       default: function() { return [] },
     },
   },
+  data: function() {
+    return{
+      moment: moment
+    }
+  },
+  methods: {
+    getAuthors: function(initiative) {
+      return initiative.authors.length ?
+        initiative.authors.join('<br/>') :
+        '';
+    },
+    getDeputies: function(initiative) {
+      return initiative.deputies.length ?
+        initiative.deputies.join('<br/>') :
+        '';
+    },
+    getTopics: function(initiative) {
+      return initiative.hasOwnProperty('topics') ?
+        initiative.topics.join('<br/>') :
+        '';
+    }
+  }
 };
 </script>
 

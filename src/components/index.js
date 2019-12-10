@@ -1,7 +1,7 @@
-import Results from './Results/Results.vue'
+import TipiResults from './Results/Results.vue'
 import HelloWorld from './HelloWorld/HelloWorld.vue'
 
 export {
-  Results,
+  TipiResults,
   HelloWorld
 }
