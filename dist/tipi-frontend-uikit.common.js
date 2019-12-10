@@ -1394,12 +1394,12 @@ var es_object_values = __webpack_require__("07ac");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom-collections.for-each.js
 var web_dom_collections_for_each = __webpack_require__("159b");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3b8565e8-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Results/Results.vue?vue&type=template&id=2ae13bdb&scoped=true&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(this.loadingResults)?_c('div',{staticClass:"text-center"},[_c('h2',[_vm._v("Cargando resultados...")])]):_vm._e(),(this.initiatives.length && !this.loadingResults)?_c('table',{staticClass:"table table-striped table-hover reactive-table",attrs:{"id":"reactive-table-1"}},[_vm._m(0),_c('tbody',_vm._l((this.initiatives),function(initiative,index){return _c('tr',{key:index},[_c('td',[_vm._v(_vm._s(_vm.initiavie.title))])])}),0)]):_vm._e()])}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3b8565e8-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Results/Results.vue?vue&type=template&id=28dc393a&scoped=true&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(this.loadingResults)?_c('div',{staticClass:"text-center"},[_c('h2',[_vm._v("Cargando resultados...")])]):_vm._e(),(this.initiatives.length && !this.loadingResults)?_c('table',{staticClass:"table table-striped table-hover reactive-table",attrs:{"id":"reactive-table-1"}},[_vm._m(0),_c('tbody',_vm._l((this.initiatives),function(initiative,index){return _c('tr',{key:index},[_c('td',[_vm._v(_vm._s(initiative.title))])])}),0)]):_vm._e()])}
 var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('thead',[_c('tr',[_c('th',{staticClass:"col-md-6",attrs:{"fieldid":"titulo"}},[_vm._v("Titulo")]),_c('th',{staticClass:"col-md-2",attrs:{"fieldid":"autor"}},[_vm._v("Autor")]),_c('th',{staticClass:"col-md-1",attrs:{"fieldid":"grupo"}},[_vm._v("Grupo")]),_c('th',{staticClass:"col-md-2",attrs:{"fieldid":"temas"}},[_vm._v("Temas")]),_c('th',{staticClass:"sortable col-md-1",attrs:{"fieldid":"actualizacion"}},[_vm._v(" Fecha "),_c('i',{staticClass:"fa fa-sort-desc"})])])])}]
 
 
-// CONCATENATED MODULE: ./src/components/Results/Results.vue?vue&type=template&id=2ae13bdb&scoped=true&
+// CONCATENATED MODULE: ./src/components/Results/Results.vue?vue&type=template&id=28dc393a&scoped=true&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Results/Results.vue?vue&type=script&lang=js&
 //
@@ -1433,7 +1433,12 @@ var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _
   name: 'Results',
   props: {
     loadingResults: Boolean,
-    initiavies: Array
+    initiatives: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    }
   }
 });
 // CONCATENATED MODULE: ./src/components/Results/Results.vue?vue&type=script&lang=js&
@@ -1547,7 +1552,7 @@ var component = normalizeComponent(
   staticRenderFns,
   false,
   null,
-  "2ae13bdb",
+  "28dc393a",
   null
   
 )
@@ -1609,14 +1614,14 @@ var HelloWorld_component = normalizeComponent(
 
 
 
-var main_VueMaterial = function VueMaterial(Vue) {
+var main_TipiUI = function TipiUI(Vue) {
   Object.values(components_namespaceObject).forEach(function (TipiComponent) {
     Vue.use(TipiComponent);
   });
 };
 
-TipiUI.version = '__VERSION__';
-/* harmony default export */ var main = (TipiUI);
+main_TipiUI.version = '__VERSION__';
+/* harmony default export */ var main = (main_TipiUI);
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 
 

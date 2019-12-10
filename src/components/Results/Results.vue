@@ -18,7 +18,7 @@
       </thead>
       <tbody>
         <tr v-for="(initiative, index) in this.initiatives" :key="index">
-          <td>{{ initiavie.title }}</td>
+          <td>{{ initiative.title }}</td>
         </tr>
       </tbody>
     </table>
@@ -30,7 +30,10 @@ export default {
   name: 'Results',
   props: {
     loadingResults: Boolean,
-    initiavies: Array,
+    initiatives: {
+      type: Array,
+      default: function() { return [] },
+    },
   },
 };
 </script>
