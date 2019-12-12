@@ -28,6 +28,9 @@
         </tr>
       </tbody>
     </table>
+    <a v-if="this.$listeners.loadMore && isMoreResults" href="#" class="load-more btn btn-custom" @click.prevent="loadMore">
+      Cargar más {{ nextResultsLabel }}
+    </a>
   </div>
 </template>
 
@@ -42,13 +45,27 @@ export default {
       type: Array,
       default: function() { return [] },
     },
+    queryMeta: Object,
   },
   data: function() {
     return{
       moment: moment
     }
   },
+  computed: {
+    isMoreResults: function() {
+      return !this.loadingResults && (this.queryMeta.page < this.queryMeta.pages);
+    },
+    nextResultsLabel: function() {
+      let nextResult = (this.queryMeta.page * this.queryMeta.per_page) + 1;
+      let lastResult = nextResult + this.queryMeta.per_page -1;
+      return `(${nextResult}-${lastResult})`;
+    }
+  },
   methods: {
+    loadMore: function() {
+      this.$emit('loadMore');
+    },
     getAuthors: function(initiative) {
       return initiative.authors.length ?
         initiative.authors.join('<br/>') :
@@ -70,4 +87,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+  .load-more {
+    display: block;
+    margin: 2rem auto;
+    max-width: 320px;
+    text-align: center;
+  }
 </style>
