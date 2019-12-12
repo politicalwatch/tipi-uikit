@@ -1,7 +1,9 @@
 import TipiResults from './Results/Results.vue'
-import HelloWorld from './HelloWorld/HelloWorld.vue'
+import TipiMessages from './Messages/Messages.vue'
+import TipiCsvDownload from './CSVDownload/CSVDownload.vue'
 
 export {
   TipiResults,
-  HelloWorld
+  TipiMessages,
+  TipiCsvDownload
 }
