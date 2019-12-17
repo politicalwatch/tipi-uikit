@@ -5,6 +5,7 @@ import TipiHeader from './Header/Header.vue'
 import TipiNavbar from './Navbar/Navbar.vue'
 import TipiDeputy from './Deputy/Deputy.vue'
 import TipiData from './Data/Data.vue'
+import TipiTopics from './Topics/Topics.vue'
 
 export {
   TipiResults,
@@ -14,4 +15,5 @@ export {
   TipiNavbar,
   TipiDeputy,
   TipiData,
+  TipiTopics,
 }
