@@ -29,7 +29,7 @@ export default {
       //Calculate the transform of a node
       function calculateTransform(d,i) {
         let pos = calculatePosition(d,i);
-        return `translate("${pos[0]}","${pos[1]}")`;
+        return `translate(${pos[0]},${pos[1]})`;
       }
 
       //Calculate the position of a node
@@ -102,7 +102,7 @@ export default {
           .data(data)
           .enter().append("g")
           .attr("class", "node")
-          .attr("transform", () => `translate("${width/2}","${height/2}")`);
+          .attr("transform", () => `translate(${width/2},${height/2})`);
 
         node.transition()
           .duration(700)
@@ -132,7 +132,7 @@ export default {
 
         let center = svg.append("g")
           .attr("class", "center")
-          .attr("transform", `translate("${width/2}","${height/2}")`);
+          .attr("transform", `translate(${width/2},${height/2})`);
 
         center.append("circle")
           .attr("r", 5)
