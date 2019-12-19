@@ -7,6 +7,7 @@ import TipiDeputy from './Deputy/Deputy.vue';
 import TipiText from './Text/Text.vue';
 import TipiTopics from './Topics/Topics.vue';
 import TipiInitiativeMeta from './InitiativeMeta/InitiativeMeta.vue';
+import TipiNeuron from './Neuron/Neuron.vue';
 
 export {
   TipiResults,
@@ -18,4 +19,5 @@ export {
   TipiText,
   TipiTopics,
   TipiInitiativeMeta,
+  TipiNeuron,
 };
