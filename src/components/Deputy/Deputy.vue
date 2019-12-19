@@ -32,7 +32,7 @@ export default {
     deputy: Object,
     parliamentaryGroup: Object,
   },
-}
+};
 </script>
 
 <style scoped lang="scss">

@@ -31,13 +31,13 @@ export default {
   props: {
     initiatives: {
       type: Array,
-      default: function() { return [] },
+      default: function() { return []; },
     },
     csvItems: Array,
     canDownloadCSV: Boolean,
     csvFields: {
       type: Array,
-      default: function() { return ['title', 'reference', 'initiative_type_alt', 'authors', 'deputies', 'topics', 'subtopics', 'tags', 'place', 'status', 'updated', 'url'] },
+      default: function() { return ['title', 'reference', 'initiative_type_alt', 'authors', 'deputies', 'topics', 'subtopics', 'tags', 'place', 'status', 'updated', 'url']; },
     },
   },
   methods: {

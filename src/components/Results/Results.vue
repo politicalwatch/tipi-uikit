@@ -19,10 +19,10 @@
       <tbody>
         <tr v-for="(initiative, index) in this.initiatives" :key="index">
           <td class="titulo">
-            <router-link :to="{path: '/initiatives/' + initiative.id}">{{initiative.title}}</router-link>
+            <router-link :to="{path: '/initiatives/' + initiative.id}">{{ initiative.title }}</router-link>
           </td>
           <td v-if="extendedLayout" class="autor_diputado" v-html="getDeputies(initiative)"></td>
-          <td v-if="extendedLayout"class="autor_grupo" v-html="getAuthors(initiative)"></td>
+          <td v-if="extendedLayout" class="autor_grupo" v-html="getAuthors(initiative)"></td>
           <td v-if="extendedLayout" v-html="getTopics(initiative)"></td>
           <td class="actualizacion"><span :sort="initiative.updated">{{ moment(initiative.updated).format('DD/MM/Y') }}</span></td>
         </tr>
@@ -43,15 +43,15 @@ export default {
     loadingResults: Boolean,
     initiatives: {
       type: Array,
-      default: function() { return [] },
+      default: function() { return []; },
     },
     queryMeta: Object,
     layout: String,
   },
   data: function() {
     return{
-      moment: moment
-    }
+      moment: moment,
+    };
   },
   computed: {
     isMoreResults: function() {
@@ -64,7 +64,7 @@ export default {
     },
     extendedLayout: function() {
       return this.layout!='tiny';
-    }
+    },
   },
   methods: {
     loadMore: function() {
@@ -84,8 +84,8 @@ export default {
       return initiative.hasOwnProperty('topics') ?
         initiative.topics.join('<br/>') :
         '';
-    }
-  }
+    },
+  },
 };
 </script>
 

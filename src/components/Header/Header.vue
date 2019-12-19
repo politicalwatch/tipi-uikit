@@ -4,8 +4,8 @@
       <div class="row">
         <div class="col-sm-12">
           <h1>
-            {{title}}
-            <span v-if="subtitle">{{subtitle}}</span>
+            {{ title }}
+            <span v-if="subtitle">{{ subtitle }}</span>
           </h1>
         </div>
       </div>
@@ -16,8 +16,8 @@
 <script>
 export default {
   name: 'TipiHeader',
-  props: ['title', 'subtitle']
-}
+  props: ['title', 'subtitle'],
+};
 </script>
 
 <style scoped lang="scss">

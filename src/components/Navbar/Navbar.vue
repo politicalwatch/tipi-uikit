@@ -45,7 +45,7 @@ export default {
   data: function () {
     return {
       closedMessage: false,
-    }
+    };
   },
   mounted: function () {
     let hamburger = document.querySelector('.navbar-toggle');
@@ -61,13 +61,13 @@ export default {
   computed: {
     closedDisclaimer: function () {
       return window.sessionStorage.getItem('closedDisclaimer') || this.closedMessage ? true : false;
-    }
+    },
   },
   methods: {
     closeDisclaimer: function() {
       window.sessionStorage.setItem('closedDisclaimer', true);
       this.closedMessage = true;
-    }
-  }
-}
+    },
+  },
+};
 </script>
