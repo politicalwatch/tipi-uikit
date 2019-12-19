@@ -8,6 +8,7 @@ import TipiText from './Text/Text.vue';
 import TipiTopics from './Topics/Topics.vue';
 import TipiInitiativeMeta from './InitiativeMeta/InitiativeMeta.vue';
 import TipiNeuron from './Neuron/Neuron.vue';
+import TipiRelatedInitiatives from './RelatedInitiatives/RelatedInitiatives.vue';
 
 export {
   TipiResults,
@@ -20,4 +21,5 @@ export {
   TipiTopics,
   TipiInitiativeMeta,
   TipiNeuron,
+  TipiRelatedInitiatives,
 };
