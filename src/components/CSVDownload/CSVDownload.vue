@@ -6,7 +6,7 @@
       :title="!canDownloadCSV ? 'Demasiados resultados para poder descargar. Afina la búsqueda' : 'Descarga CSV con todos los resultados'"
       @click.prevent="loadCSVItems"
       class="pull-right" href="#">
-      <i class="fa fa-download" aria-hidden="true"></i>&nbsp;Descarga datos
+      <i class="fa fa-download" aria-hidden="true"></i>&nbsp;{{ label }}
     </a>
     <vue-csv-downloader
       v-else
@@ -15,7 +15,7 @@
       :downloadName="getNameFromCSV()"
       id="downloadCSV"
       class="pull-right">
-      <i class="fa fa-download" aria-hidden="true"></i>&nbsp;Descarga datos
+      <i class="fa fa-download" aria-hidden="true"></i>&nbsp;{{ label }}
     </vue-csv-downloader>
   </span>
 </template>
@@ -39,6 +39,10 @@ export default {
       type: Array,
       default: function() { return ['title', 'reference', 'initiative_type_alt', 'authors', 'deputies', 'topics', 'subtopics', 'tags', 'place', 'status', 'updated', 'url']; },
     },
+    label: {
+      type: String,
+      default: 'Descarga datos',
+    },
   },
   methods: {
     loadCSVItems: function(event) {
@@ -56,5 +60,8 @@ export default {
   a.disabled {
     cursor: not-allowed;
     opacity: 0.5;
+  }
+  span.btn a {
+    color: #fff;
   }
 </style>
