@@ -9,6 +9,7 @@ import TipiTopics from './Topics/Topics.vue';
 import TipiInitiativeMeta from './InitiativeMeta/InitiativeMeta.vue';
 import TipiNeuron from './Neuron/Neuron.vue';
 import TipiRelatedInitiatives from './RelatedInitiatives/RelatedInitiatives.vue';
+import TipiTopicCard from './TopicCard/TopicCard.vue';
 
 export {
   TipiResults,
@@ -22,4 +23,5 @@ export {
   TipiInitiativeMeta,
   TipiNeuron,
   TipiRelatedInitiatives,
+  TipiTopicCard,
 };
