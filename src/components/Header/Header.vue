@@ -22,6 +22,7 @@ export default {
 
 <style scoped lang="scss">
 h1 {
+  color: $primary;
   margin: 1rem 0;
   font-size: 28px;
   @media (min-width: 768px) {
