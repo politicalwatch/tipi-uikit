@@ -4,12 +4,12 @@
     <br>
     <span v-if="!source" class="value" v-html="show(value)"></span>
     <span v-if="source">
-      <span v-for="v in value" v-bind:key="v" class="value" style="display:block;">
+      <span v-for="(v, i) in value" :key="i" class="value" style="display:block;">
         <router-link :to="{ path: `/${type}/${getPeopleFromName(v).id}` }" v-if="getPeopleFromName(v)">
           <span v-if="getPeopleFromName(v).image" class="foto mediana">
             <img :alt="v" :src="getPeopleFromName(v).image" />
           </span>
-          {{ v }}
+          {{ getPeopleFromName(v).name }}
         </router-link>
         <span v-else>{{ v }}</span>
       </span>
@@ -27,8 +27,9 @@ export default {
     source: Array,
   },
   methods: {
-    getPeopleFromName: function (name) {
-      return this.source.find(s => s.name == name);
+    getPeopleFromName: function (string) {
+      if (string.hasOwnProperty('name')) return string;
+      return this.source.find(s => s.name == string);
     },
     show: function(value) {
       if (value.constructor === Array) return value.join('<br/>');
