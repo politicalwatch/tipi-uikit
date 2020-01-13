@@ -1,4 +1,4 @@
-# tipi-frontend-uikit
+# tipi-uikit
 
 ## Project setup
 ```

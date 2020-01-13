@@ -1,5 +1,5 @@
 {
-  "name": "tipi-frontend-uikit",
+  "name": "tipi-uikit",
   "version": "0.1.0",
   "private": true,
   "main": "src/components/index.js",
@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "build-lib": "vue-cli-service build --target lib --name tipi-frontend-uikit src/main.js"
+    "build-lib": "vue-cli-service build --target lib --name tipi-uikit src/main.js"
   },
   "dependencies": {
     "core-js": "^3.4.8",
