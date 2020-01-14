@@ -1,0 +1,47 @@
+.u-relative {
+  position: relative;
+}
+
+.u-block {
+  display: block;
+}
+
+.u-inline-block {
+  display: inline-block;
+}
+
+.u-center-block {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.u-top {
+  top: 0 !important;
+}
+
+.u-left {
+  text-align: left;
+}
+
+.u-right {
+  text-align: right;
+
+  &\@sm {
+    @media (min-width: $sm) {
+      text-align: right;
+    }
+  }
+}
+
+.u-center {
+  text-align: center;
+
+  &\@sm {
+    @media (min-width: $sm) {
+      text-align: center;
+    }
+  }
+}
+
+@include spaces();
+@include percent-widths();

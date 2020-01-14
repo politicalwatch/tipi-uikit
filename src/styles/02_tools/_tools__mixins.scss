@@ -1,0 +1,98 @@
+@mixin hidden() {
+
+  .u-hide {
+    display: none !important;
+  }
+
+  @each $bp-key, $bp-value in $breakpoints {
+    @media (min-width: $bp-value) {
+
+      .u-hide#{$breakpoint-class}#{$bp-key} {
+        display: none !important;
+      }
+    }
+  }
+
+  @each $bp-key, $bp-value in $breakpoints-max {
+    @media (max-width: $bp-value) {
+
+      .u-hide#{$breakpoint-class}#{$bp-key} {
+        display: none !important;
+      }
+    }
+  }
+}
+
+/* GRID */
+@mixin offsets($fractions) {
+
+  @each $key, $value in $fractions {
+    $modifier: str-replace($key, '/', '\\/');
+    $offset-value: (($value * 100) * 1%);
+
+    .u-#{$modifier} {
+      flex-basis: $offset-value;
+      max-width: $offset-value;
+    }
+
+    .u-offset-#{$modifier} {
+      margin-left: $offset-value;
+    }
+  }
+
+  @each $bp-key, $bp-value in $breakpoints {
+    @media (min-width: $bp-value) {
+
+      @each $key, $value in $fractions {
+        $modifier: str-replace($key, '/', '\\/');
+        $offset-value: (($value * 100) * 1%);
+
+        .u-#{$modifier}#{$breakpoint-class}#{$bp-key} {
+          flex-basis: $offset-value;
+          max-width: $offset-value;
+        }
+
+        .u-offset-#{$modifier}#{$breakpoint-class}#{$bp-key} {
+          margin-left: $offset-value;
+        }
+      }
+    }
+  }
+}
+
+@mixin container_sizes($min, $max) {
+  @for $i from $min through $max {
+
+    &--#{$i} {
+      max-width: (($container-max - $o-container__gutter) / 12) * $i;
+    }
+  }
+}
+
+@mixin spaces() {
+  @each $side in (left, top, bottom, right) {
+
+    .u-space-#{$side} {
+      margin-#{$side}: rem($spacer-unit);
+    }
+
+    @each $space in (0, 2, 3, 4, 6, 8, 10, 12, 14, 16) {
+
+      .u-space-#{$side}-#{$space} {
+        margin-#{$side}: rem($spacer-unit * $space);
+      }
+    }
+  }
+}
+
+@mixin percent-widths() {
+  @media (min-width: $sm) {
+    @each $size in $percent-widths {
+
+      .u-w#{$size} {
+        width: $size + 0%;
+      }
+    }
+  }
+}
+
