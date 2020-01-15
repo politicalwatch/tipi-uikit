@@ -32,8 +32,8 @@ export default {
   ],
   computed: {
     sortedTopics: function() {
-      return this.$props.topics.slice().sort(Utils.naturalSort)
-    }
+      return this.$props.topics.slice().sort(Utils.naturalSort);
+    },
   },
   methods: {
     getSubtopics(topic) {
