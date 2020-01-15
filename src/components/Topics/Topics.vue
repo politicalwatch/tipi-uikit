@@ -3,7 +3,7 @@
   <span class="meta">{{ meta }}</span>
   <br>
   <ul class="list-unstyled">
-    <li v-for="topic in topics" v-bind:key="topic" class="value">
+    <li v-for="topic in sortedTopics" v-bind:key="topic" class="value">
       <router-link :to="{ name: 'results', params: { data: paramsData(topic) } }">{{ topic }}</router-link>
       <br>
       <div v-for="subtopic in getSubtopics(topic)" v-bind:key="subtopic+' - '+topic" class="subtopic">
@@ -30,6 +30,11 @@ export default {
     'topics',
     'tags',
   ],
+  computed: {
+    sortedTopics: function() {
+      return this.$props.topics.slice().sort(Utils.naturalSort)
+    }
+  },
   methods: {
     getSubtopics(topic) {
       return [...new Set(this.$props.tags.filter(tag => tag.topic === topic).map(tag => tag.subtopic))];
