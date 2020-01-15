@@ -10,10 +10,15 @@ export default {
   props: {
     initiative: Object,
     topics: Array,
-    styles: Object,
+    styles: {
+      type: Object,
+      default: function () {
+        return { topics: {}, defaultColor: "#cecece" };
+      },
+    },
   },
   methods: {
-    loadVizz: function(topics, initiative, styles = { topics: {}, defaultColor: "#cecece" }, color = { "center": "#222" }) {
+    loadVizz: function(topics, initiative, styles, color = { "center": "#222" }) {
       //Mapping ranges
       function map(x, in_min, in_max, out_min, out_max) {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;

@@ -7,29 +7,20 @@ const d3 = require('d3');
 
 export default {
   name: 'TipiTwoCircles',
-  props: ['selection'],
+  props: {
+    selection: Object,
+    styles: {
+      type: Object,
+      default: function () {
+        return { topics: {}, defaultColor: "#cecece" };
+      },
+    },
+    topic: String,
+  },
   methods: {
     loadVizz: function() {
       //Configurations
       let duration = 2000;
-      let color = {
-        "objetivos": {
-          "ODS 2": "#dea73a",
-          "ODS 6": "#00aed9",
-          "ODS 7": "#fdb713",
-          "ODS 11": "#f99d26",
-          "ODS 12": "#cf8d2a",
-          "ODS 15": "#3eb049",
-        },
-        "metas": {
-          "2": "#dea73a",
-          "6": "#00aed9",
-          "7": "#fdb713",
-          "11": "#f99d26",
-          "12": "#cf8d2a",
-          "15": "#3eb049",
-        },
-      };
 
       //Globals
       let svg = d3.select(this.$el);
@@ -38,12 +29,12 @@ export default {
       let maxRadius = 150;
       let minRadius = 5;
 
+      let styles = this.$props.styles;
+      let mainTopic = this.$props.topic;
       let data = [this.$props.selection.selected];
       let maxName = this.$props.selection.compareswith._id;
       let maxNumber = this.$props.selection.compareswith.initiatives;
-      let color_objetivo = color['objetivos'][maxName.split('-')[0].trim()];
-      let color_meta = color['metas'][maxName.split('.')[0].trim()];
-      let maxColor = (color_objetivo) ? color_objetivo : color_meta;
+      let maxColor = styles.topics[mainTopic] ? styles.topics[mainTopic].color : styles.defaultColor;
 
       let node = svg.selectAll(".node")
         .data(data)
@@ -110,9 +101,7 @@ export default {
 
 
       function selectColor(d) {
-          let color_objetivo = color['objetivos'][d._id.split('-')[0].trim()];
-          let color_meta = color['metas'][d._id.split('.')[0].trim()];
-          return (color_objetivo) ? color_objetivo : color_meta;
+        return styles.topics[mainTopic] ? styles.topics[mainTopic].color : styles.defaultColor;
       }
 
     },
