@@ -22,7 +22,7 @@
 
 <script>
 const qs = require('qs');
-import * as Utils from '@/utils';
+import * as Utils from '../../utils';
 
 export default {
   name: 'tipi-topics',

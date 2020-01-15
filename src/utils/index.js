@@ -22,4 +22,4 @@ export const naturalSort = function (as, bs) {
     }
   }
   return a.length - b.length;
-}
+};
