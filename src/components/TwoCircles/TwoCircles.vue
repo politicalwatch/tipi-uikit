@@ -34,7 +34,8 @@ export default {
       let data = [this.$props.selection.selected];
       let maxName = this.$props.selection.compareswith._id;
       let maxNumber = this.$props.selection.compareswith.initiatives;
-      let maxColor = styles.topics[mainTopic] ? styles.topics[mainTopic].color : styles.defaultColor;
+      let mainColor = styles.topics[mainTopic] ? styles.topics[mainTopic].color : styles.defaultColor;
+      let maxColor = styles.topics[maxName] ? styles.topics[maxName].color : mainColor;
 
       let node = svg.selectAll(".node")
         .data(data)
