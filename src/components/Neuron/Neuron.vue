@@ -142,6 +142,7 @@ export default {
     },
   },
   mounted: function () {
+    console.log(this.$props);
     this.loadVizz(this.$props.topics, this.$props.initiative, this.$props.styles);
   },
 };
