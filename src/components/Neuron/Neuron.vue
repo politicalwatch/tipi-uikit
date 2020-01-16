@@ -52,7 +52,6 @@ export default {
       svg.selectAll("*").remove();
       let width = +svg.node().getBoundingClientRect().width;
       let height = +svg.node().getBoundingClientRect().height;
-
       function onDataReady(topics, initiative) {
         for(let d=0; d<topics.length; d++) {
           let newNode = {"name": topics[d].name, "related": false, "intensity": 0};
@@ -71,10 +70,12 @@ export default {
           newNode["intensity"] = newNode["intensity"]/initiative["tags"].length;
           data.push(newNode);
         }
+        console.log(data, "onDataReady");
         createNodes();
       }
 
       function createNodes() {
+        console.log(data, "createNodes");
         svg.selectAll(".connection")
           .data(data)
           .enter().append("path").transition()
