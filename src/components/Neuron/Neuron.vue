@@ -70,12 +70,10 @@ export default {
           newNode["intensity"] = newNode["intensity"]/initiative["tags"].length;
           data.push(newNode);
         }
-        console.log(data, "onDataReady");
         createNodes();
       }
 
       function createNodes() {
-        console.log(data, "createNodes");
         svg.selectAll(".connection")
           .data(data)
           .enter().append("path").transition()
@@ -143,7 +141,6 @@ export default {
     },
   },
   mounted: function () {
-    console.log(this.$props);
     this.loadVizz(this.$props.topics, this.$props.initiative, this.$props.styles);
   },
 };
