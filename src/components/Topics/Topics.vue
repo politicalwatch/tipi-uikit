@@ -51,15 +51,17 @@ export default {
 <style scoped lang="scss">
 .value {
   margin-bottom: 40px;
+
   .subtopic {
     font-size: 0.8em;
     margin-left: 20px;
     margin-bottom: 20px;
+
     .tag {
       background-color: #efefef;
       color: #222;
       padding: 5px;
-      margin: 0px 5px 5px 5px;
+      margin: 0 5px 5px 5px;
       font-size: 0.8em;
       font-weight: normal;
     }

@@ -1,5 +1,5 @@
 <template>
-  <svg style="width:300px; height:500px"></svg>
+  <svg style="width: 300px; height: 500px;"></svg>
 </template>
 
 <script>
@@ -110,9 +110,9 @@ export default {
 
 
       function selectColor(d) {
-          let color_objetivo = color['objetivos'][d._id.split('-')[0].trim()];
-          let color_meta = color['metas'][d._id.split('.')[0].trim()];
-          return (color_objetivo) ? color_objetivo : color_meta;
+        let color_objetivo = color['objetivos'][d._id.split('-')[0].trim()];
+        let color_meta = color['metas'][d._id.split('.')[0].trim()];
+        return (color_objetivo) ? color_objetivo : color_meta;
       }
 
     },
@@ -130,6 +130,6 @@ export default {
 <style lang="scss">
   circle.compared,
   rect.compared {
-    opacity: .3;
+    opacity: 0.3;
   }
 </style>
