@@ -1,14 +1,11 @@
-$font-primary: 'Roboto', sans-serif;
-$font-secondary: 'Nexa', sans-serif;
-
 $base-radius: 4px;
 
-$o-container: 1224px !default;
-$o-container__gutter:               40px !default;
+$o-container: 1120px !default;
+$o-container__gutter:               32px !default;
 $o-container__gutter-single:        $o-container__gutter/2 !default;
 $container-max: $o-container + $o-container__gutter !default;
 
-$grid-gap: 24px !default;
+$grid-gap: 32px !default;
 $grid-gap-single: $grid-gap/2 !default;
 
 $spacer-unit: 8px !default;
@@ -29,8 +26,8 @@ $grid-fractions: (
   '12': 12/12
 ) !default;
 
-$-o-section-padding: 40px !default;
-$-o-section-padding-lg: 60px !default;
+$-o-section-padding: 32px !default;
+$-o-section-padding-lg: $-o-section-padding !default;
 
 $percent-widths: (
   15,

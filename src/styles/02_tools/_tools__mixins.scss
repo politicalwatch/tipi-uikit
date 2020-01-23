@@ -25,7 +25,6 @@
 
 /* GRID */
 @mixin offsets($fractions) {
-
   @each $key, $value in $fractions {
     $modifier: str-replace($key, '/', '\\/');
     $offset-value: (($value * 100) * 1%);
@@ -69,17 +68,71 @@
   }
 }
 
-@mixin spaces() {
+@mixin margins() {
   @each $side in (left, top, bottom, right) {
+    @each $space in (0, 1, 2, 3, 4, 6, 8, 10, 12, 14, 16) {
 
-    .u-space-#{$side} {
-      margin-#{$side}: rem($spacer-unit);
+      .u-margin-#{$side}-#{$space} {
+        margin-#{$side}: rem($spacer-unit * $space);
+      }
+
+      @each $bp-key, $bp-value in $breakpoints {
+        @media (min-width: $bp-value) {
+
+          .u-margin-#{$side}-#{$space}#{$breakpoint-class}#{$bp-key} {
+            margin-#{$side}: rem($spacer-unit * $space);
+          }
+        }
+      }
+    }
+  }
+
+  @each $space in (0, 1, 2, 3, 4, 6, 8, 10, 12, 14, 16) {
+
+    .u-margin-#{$space} {
+      margin: rem($spacer-unit * $space);
     }
 
-    @each $space in (0, 2, 3, 4, 6, 8, 10, 12, 14, 16) {
+    @each $bp-key, $bp-value in $breakpoints {
+      @media (min-width: $bp-value) {
+        .u-margin-#{$space}#{$breakpoint-class}#{$bp-key} {
+          margin: rem($spacer-unit * $space);
+        }
+      }
+    }
+  }
+}
 
-      .u-space-#{$side}-#{$space} {
-        margin-#{$side}: rem($spacer-unit * $space);
+@mixin paddings() {
+  @each $side in (left, top, bottom, right) {
+    @each $space in (0, 1, 2, 3, 4, 6, 8, 10, 12, 14, 16) {
+
+      .u-padding-#{$side}-#{$space} {
+        padding-#{$side}: rem($spacer-unit * $space);
+      }
+
+      @each $bp-key, $bp-value in $breakpoints {
+        @media (min-width: $bp-value) {
+
+          .u-padding-#{$side}-#{$space}#{$breakpoint-class}#{$bp-key} {
+            padding-#{$side}: rem($spacer-unit * $space);
+          }
+        }
+      }
+    }
+  }
+
+  @each $space in (0, 1, 2, 3, 4, 6, 8, 10, 12, 14, 16) {
+
+    .u-padding-#{$space} {
+      padding: rem($spacer-unit * $space);
+    }
+
+    @each $bp-key, $bp-value in $breakpoints {
+      @media (min-width: $bp-value) {
+        .u-padding-#{$space}#{$breakpoint-class}#{$bp-key} {
+          padding: rem($spacer-unit * $space);
+        }
       }
     }
   }
@@ -96,3 +149,40 @@
   }
 }
 
+//colors
+@mixin background-colors() {
+  @each $color-name, $color-value in $colors {
+
+    .u-bg-#{$color-name} {
+      background-color: $color-value !important;
+    }
+  }
+}
+
+@mixin text-colors() {
+  @each $color-name, $color-value in $colors {
+
+    .u-text-#{$color-name} {
+      color: $color-value !important;
+    }
+  }
+}
+
+//aligns
+@mixin text-aligns() {
+  @each $align in (left, right, center) {
+
+    .u-text-#{$align} {
+      text-align: $align;
+    }
+
+    @each $bp-key, $bp-value in $breakpoints {
+      @media (min-width: $bp-value) {
+
+        .u-text-#{$align}#{$breakpoint-class}#{$bp-key} {
+          text-align: $align;
+        }
+      }
+    }
+  }
+}

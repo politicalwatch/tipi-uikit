@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-12">
-          <h1>A
+          <h1 class="u-bg-primary">
             {{ title }}
             <span v-if="subtitle">{{ subtitle }}</span>
           </h1>
@@ -24,7 +24,6 @@ export default {
 @import "../../styles/main.scss";
 
 h1 {
-  color: $primary-alt;
   margin: 1rem 0;
   font-size: 28px;
   @media (min-width: 768px) {

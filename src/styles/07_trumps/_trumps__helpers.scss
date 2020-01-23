@@ -1,6 +1,4 @@
-.u-relative {
-  position: relative;
-}
+//Box model
 
 .u-block {
   display: block;
@@ -10,38 +8,24 @@
   display: inline-block;
 }
 
-.u-center-block {
+.u-inline {
+  display: inline;
+}
+
+//Position and align
+
+.u-relative {
+  position: relative;
+}
+
+.u-block-center {
   margin-left: auto;
   margin-right: auto;
 }
 
-.u-top {
-  top: 0 !important;
-}
+@include text-aligns();
 
-.u-left {
-  text-align: left;
-}
-
-.u-right {
-  text-align: right;
-
-  &\@sm {
-    @media (min-width: $sm) {
-      text-align: right;
-    }
-  }
-}
-
-.u-center {
-  text-align: center;
-
-  &\@sm {
-    @media (min-width: $sm) {
-      text-align: center;
-    }
-  }
-}
-
-@include spaces();
+// Margin and sizes
+@include margins();
+@include paddings();
 @include percent-widths();

@@ -20,17 +20,12 @@
 @import "05_objects/objects__section";
 @import "05_objects/objects__media";
 @import "05_objects/objects__columns";
+
 // Components
 @import "06_components/components__header";
+
 // End components
 @import "07_trumps/trumps__grid";
 @import "07_trumps/trumps__helpers";
 @import "07_trumps/trumps__hidden";
-
-body {
-  background-color: $primary;
-}
-
-.primary {
-  border: 6px solid $primary-alt;
-}
+@import "07_trumps/trumps__colors";
