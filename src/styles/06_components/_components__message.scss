@@ -1,0 +1,32 @@
+.c-message {
+  margin-bottom: rem($spacer-unit * 2);
+
+  &__wrapper {
+    display: inline-block;
+    padding: rem($spacer-unit * 2) rem($spacer-unit * 4);
+    background-color: $completed;
+    color: $white;
+    font-weight: 500;
+  }
+
+  &__icon {
+    margin-right: rem($spacer-unit);
+
+    svg {
+
+      path {
+        fill: $white;
+      }
+    }
+  }
+
+  &--error {
+
+    .c-message {
+
+      &__wrapper {
+        background-color: $error;
+      }
+    }
+  }
+}

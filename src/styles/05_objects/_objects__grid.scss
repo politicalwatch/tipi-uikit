@@ -5,12 +5,6 @@
   margin-left: -$grid-gap-single;
   margin-right: -$grid-gap-single;
 
-  &--block\@max-xs {
-    @media (max-width: $xs-max) {
-      display: block;
-    }
-  }
-
   &__col {
     flex: 0 0 auto;
     max-width: 100%;
@@ -19,12 +13,6 @@
 
     &--fill {
       flex: 1 1 0;
-
-      &\@lg {
-        @media (min-width: $lg) {
-          flex: 1 1 0;
-        }
-      }
     }
 
     &--right {
@@ -38,12 +26,6 @@
 
   &--reverse {
     flex-direction: row-reverse;
-
-    &\@md {
-      @media (min-width: $md) {
-        flex-direction: row-reverse;
-      }
-    }
   }
 
   &--between {

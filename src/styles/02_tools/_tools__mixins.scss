@@ -12,15 +12,6 @@
       }
     }
   }
-
-  @each $bp-key, $bp-value in $breakpoints-max {
-    @media (max-width: $bp-value) {
-
-      .u-hide#{$breakpoint-class}#{$bp-key} {
-        display: none !important;
-      }
-    }
-  }
 }
 
 /* GRID */
@@ -41,7 +32,6 @@
 
   @each $bp-key, $bp-value in $breakpoints {
     @media (min-width: $bp-value) {
-
       @each $key, $value in $fractions {
         $modifier: str-replace($key, '/', '\\/');
         $offset-value: (($value * 100) * 1%);
@@ -70,7 +60,7 @@
 
 @mixin margins() {
   @each $side in (left, top, bottom, right) {
-    @each $space in (0, 1, 2, 3, 4, 6, 8, 10, 12, 14, 16) {
+    @each $space in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10) {
 
       .u-margin-#{$side}-#{$space} {
         margin-#{$side}: rem($spacer-unit * $space);
@@ -87,7 +77,7 @@
     }
   }
 
-  @each $space in (0, 1, 2, 3, 4, 6, 8, 10, 12, 14, 16) {
+  @each $space in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10) {
 
     .u-margin-#{$space} {
       margin: rem($spacer-unit * $space);
@@ -105,7 +95,7 @@
 
 @mixin paddings() {
   @each $side in (left, top, bottom, right) {
-    @each $space in (0, 1, 2, 3, 4, 6, 8, 10, 12, 14, 16) {
+    @each $space in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10) {
 
       .u-padding-#{$side}-#{$space} {
         padding-#{$side}: rem($spacer-unit * $space);
@@ -122,7 +112,7 @@
     }
   }
 
-  @each $space in (0, 1, 2, 3, 4, 6, 8, 10, 12, 14, 16) {
+  @each $space in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10) {
 
     .u-padding-#{$space} {
       padding: rem($spacer-unit * $space);
@@ -139,11 +129,18 @@
 }
 
 @mixin percent-widths() {
-  @media (min-width: $sm) {
-    @each $size in $percent-widths {
+  @each $size in $percent-widths {
 
-      .u-w#{$size} {
-        width: $size + 0%;
+    .u-w#{$size} {
+      width: $size + 0%;
+    }
+
+    @each $bp-key, $bp-value in $breakpoints {
+      @media (min-width: $bp-value) {
+
+        .u-w#{$size}#{$breakpoint-class}#{$bp-key} {
+          width: $size+0%;
+        }
       }
     }
   }
@@ -185,4 +182,86 @@
       }
     }
   }
+}
+
+//Text styles
+@mixin th1 {
+  font-family: $font-primary;
+  font-size: rem(48px);
+  font-weight: 500;
+  line-height: 1.17;
+  margin-top: 0;
+  margin-bottom: 01rem;
+}
+
+@mixin th2 {
+  font-family: $font-primary;
+  font-size: rem(40px);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+@mixin th3 {
+  font-family: $font-primary;
+  font-size: rem(32px);
+  font-weight: 500;
+  line-height: 1.25;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+@mixin th4 {
+  font-family: $font-primary;
+  font-size: rem(24px);
+  font-weight: 500;
+  line-height: 1.33;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+@mixin th5 {
+  font-family: $font-primary;
+  font-size: rem(20px);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+@mixin th6 {
+  font-family: $font-primary;
+  font-size: rem(18px);
+  font-weight: 500;
+  line-height: 1.33;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+@mixin subtitle {
+  font-family: $font-primary;
+  font-size: rem(24px);
+  font-weight: 300;
+  line-height: 1.33;
+}
+
+@mixin tbody {
+  font-family: $font-primary;
+  font-size: rem(16px);
+  line-height: 1.5;
+}
+
+@mixin tbody2 {
+  font-family: $font-primary;
+  font-size: rem(14px);
+  line-height: 1.71;
+}
+
+@mixin overline {
+  font-family: $font-primary;
+  font-size: rem(12px);
+  font-weight: 500;
+  line-height: 1.33;
+  text-transform: uppercase;
 }

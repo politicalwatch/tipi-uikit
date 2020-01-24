@@ -1,21 +1,21 @@
 //Box model
 
 .u-block {
-  display: block;
+  display: block !important;
 }
 
 .u-inline-block {
-  display: inline-block;
+  display: inline-block !important;
 }
 
 .u-inline {
-  display: inline;
+  display: inline !important;
 }
 
 //Position and align
 
 .u-relative {
-  position: relative;
+  position: relative !important;
 }
 
 .u-block-center {

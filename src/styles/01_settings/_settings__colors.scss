@@ -7,6 +7,8 @@ $secondary-light: #fceaf5;
 $error: #ff6565;
 $black: #000;
 $white: #fff;
+$completed: #86d6a6;
+$neutral: #ddd;
 
 $colors: (
   "primary": $primary,
@@ -18,4 +20,6 @@ $colors: (
   "error": $error,
   "white": $white,
   "black": $black,
+  "completed": $completed,
+  "neutral": $neutral,
 );

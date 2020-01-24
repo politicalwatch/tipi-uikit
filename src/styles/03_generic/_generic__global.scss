@@ -7,6 +7,8 @@ body {
   flex-flow: column;
   min-height: calc(100vh - 30px);
 
+  @include tbody;
+
   @media (min-width: $md) {
     min-height: 100vh;
   }
