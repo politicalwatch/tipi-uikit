@@ -1,0 +1,159 @@
+.c-input-label {
+  display: inline-block;
+  border: solid 1px $secondary;
+  background-color: $white;
+  padding: rem($spacer-unit * 2);
+
+  input {
+    @include tbody;
+
+    outline: none;
+    border: none;
+    display: block;
+    background: transparent;
+
+    &::placeholder {
+      @include tbody;
+
+      color: $secondary;
+    }
+  }
+
+  label {
+    @include overline;
+
+    display: block;
+  }
+
+  &--disabled {
+    background-color: $secondary-light;
+    pointer-events: none;
+  }
+
+  &--error {
+    border-color: $error;
+    box-shadow: 0 0 0 4px $error inset;
+  }
+}
+
+.c-select-label {
+  display: inline-block;
+  border: solid 1px $secondary;
+  background-color: $white;
+  padding: rem($spacer-unit * 2);
+  position: relative;
+
+  select {
+    @include tbody;
+
+    outline: none;
+    border: none;
+    display: block;
+    background: transparent;
+    appearance: none;
+    color: $secondary;
+    width: 110%;
+
+    &::placeholder {
+      @include tbody;
+
+      color: $secondary;
+    }
+  }
+
+  label {
+    @include overline;
+
+    display: block;
+  }
+
+  &::after {
+    position: absolute;
+    content: "";
+    right: rem($spacer-unit * 2);
+    bottom: rem($spacer-unit * 2);
+    pointer-events: none;
+    width: rem($spacer-unit * 4);
+    height: rem($spacer-unit * 3);
+    background: url('../assets/svg/icon-chevron-down.svg') no-repeat center center;
+  }
+
+  .multiselect {
+    min-height: 24px;
+
+    &__select {
+      min-height: 24px;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    &__single,
+    &__placeholder {
+      @include tbody;
+
+      margin: 0;
+      padding: 0;
+      color: $secondary;
+    }
+
+    &__tags {
+      border: none;
+      padding-top: 0;
+      padding-left: 0;
+      min-height: 24px;
+    }
+
+    &__content-wrapper {
+      border: none;
+      border-radius: 0;
+    }
+
+    &__option {
+
+      &::after {
+        background-color: $completed;
+      }
+
+      &--highlight {
+        background-color: $primary;
+
+        &::after {
+          background-color: $primary;
+        }
+      }
+
+      &--selected {
+        background-color: $primary-light;
+
+        &::after {
+          background-color: $primary-light;
+        }
+      }
+
+      &--selected.multiselect__option--highlight {
+        background-color: $error;
+
+        &::after {
+          background-color: $error;
+        }
+      }
+    }
+
+    &__input {
+      margin-bottom: 0;
+      padding: 0;
+    }
+  }
+
+  &--disabled {
+    background-color: $secondary-light;
+    pointer-events: none;
+  }
+
+  &--error {
+    border-color: $error;
+    box-shadow: 0 0 0 4px $error inset;
+  }
+}

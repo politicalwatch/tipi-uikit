@@ -21,8 +21,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../../styles/main.scss";
-
 h1 {
   margin: 1rem 0;
   font-size: 28px;
