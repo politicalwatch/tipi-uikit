@@ -1,15 +1,20 @@
 <template>
   <div :class="`c-message c-message--${ type }`">
     <div class="c-message__wrapper">
-      <span class="c-message__icon" v-if="icon" v-html="require(`!html-loader!../../assets/svg/icon-${type}.svg`)"></span>
+      <tipi-icon class="c-message__icon" v-if="icon" :icon="type" />
       <slot/>
     </div>
   </div>
 </template>
 
 <script>
+import TipiIcon from '../Icon/Icon.vue';
+
 export default {
-  name: 'TipiMessages',
+  name: 'TipiMessage',
+  components: {
+    TipiIcon,
+  },
   props: {
     type: {
       type: String,

@@ -1,0 +1,71 @@
+.c-button {
+  padding: rem($spacer-unit * 2) rem($spacer-unit * 4);
+  color: $secondary-dark;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.disabled,
+  &[disabled] {
+    color: $secondary;
+    pointer-events: none;
+  }
+
+  .c-icon {
+    margin-right: rem($spacer-unit);
+
+    path {
+      fill: $white;
+    }
+  }
+
+  &--primary {
+    background-color: $primary;
+    color: $white;
+
+    &:hover {
+      background-color: $primary-dark;
+      text-decoration: none;
+    }
+
+    &.disabled,
+    &[disabled] {
+      color: $secondary;
+      background-color: $secondary-light;
+
+      .c-icon {
+
+        path {
+          fill: $secondary;
+        }
+      }
+    }
+  }
+
+  &--secondary {
+    background-color: $secondary;
+    color: $white;
+
+    &:hover {
+      background-color: $secondary-dark;
+      text-decoration: none;
+    }
+
+    &.disabled,
+    &[disabled] {
+      color: $secondary;
+      background-color: $secondary-light;
+
+      .c-icon {
+
+        path {
+          fill: $secondary;
+        }
+      }
+    }
+  }
+}
