@@ -108,6 +108,7 @@
     &__content-wrapper {
       border: none;
       border-radius: 0;
+      background: transparent;
     }
 
     &__option {
@@ -117,10 +118,10 @@
       }
 
       &--highlight {
-        background-color: $primary;
+        background-color: $secondary-dark;
 
         &::after {
-          background-color: $primary;
+          background-color: $secondary-dark;
         }
       }
 
@@ -139,6 +140,19 @@
           background-color: $error;
         }
       }
+    }
+
+    &__element {
+      background-color: $white;
+      margin-bottom: rem($spacer-unit / 2);
+    }
+
+    &__option {
+      @include tbody;
+
+      display: block;
+      border: solid 1px $secondary;
+      padding: rem($spacer-unit * 2);
     }
 
     &__input {
