@@ -1,14 +1,14 @@
-$primary: #ee0092;
-$primary-dark: #880053;
-$primary-light: #fceaf5;
-$secondary: #9cb0bf;
-$secondary-dark: #2d4252;
-$secondary-light: #f4f6f8;
-$error: #ff6565;
-$black: #000;
-$white: #fff;
-$completed: #86d6a6;
-$neutral: #ddd;
+$primary: #ee0092 !default;
+$primary-dark: #880053 !default;
+$primary-light: #fceaf5 !default;
+$secondary: #9cb0bf !default;
+$secondary-dark: #2d4252 !default;
+$secondary-light: #f4f6f8 !default;
+$error: #ff6565 !default;
+$black: #000 !default;
+$white: #fff !default;
+$completed: #86d6a6 !default;
+$neutral: #ddd !default;
 
 $colors: (
   "primary": $primary,
@@ -22,4 +22,4 @@ $colors: (
   "black": $black,
   "completed": $completed,
   "neutral": $neutral,
-);
+) !default;
