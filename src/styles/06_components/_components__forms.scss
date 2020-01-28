@@ -172,6 +172,52 @@
   }
 }
 
+.c-datepicker-label {
+  display: inline-block;
+  border: solid 1px $secondary;
+  background-color: $white;
+  padding: rem($spacer-unit * 2);
+  position: relative;
+
+  input {
+    @include tbody;
+
+    outline: none;
+    border: none;
+    display: block;
+    background: transparent;
+    appearance: none;
+    color: $secondary;
+
+    &::placeholder {
+      @include tbody;
+
+      color: $secondary;
+    }
+  }
+
+  label {
+    @include overline;
+
+    display: block;
+  }
+
+  &::after {
+    position: absolute;
+    content: "";
+    right: rem($spacer-unit * 2);
+    bottom: rem($spacer-unit * 2);
+    pointer-events: none;
+    width: rem($spacer-unit * 4);
+    height: rem($spacer-unit * 3);
+    background: url('../assets/svg/icon-calendar.svg') no-repeat center center;
+  }
+
+  .vdp-datepicker__clear-button {
+    display: none;
+  }
+}
+
 .c-checkbox {
 
   input[type=checkbox] {
