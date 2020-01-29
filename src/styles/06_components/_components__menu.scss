@@ -1,0 +1,21 @@
+.c-menu {
+  @include th6;
+
+  color: $secondary-dark;
+  list-style: none;
+  text-align: center;
+  padding-top: rem($spacer-unit * 4);
+
+  &__item {
+    margin-bottom: rem($spacer-unit * 2);
+
+    &::before {
+      display: none;
+    }
+  }
+
+  &__link {
+    color: $secondary-dark;
+    text-decoration: none;
+  }
+}
