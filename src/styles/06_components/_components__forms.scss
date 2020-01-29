@@ -326,7 +326,7 @@
     &:checked {
 
       &::before {
-        background: $completed;
+        background: $secondary;
       }
     }
   }
@@ -363,7 +363,7 @@
     &:checked {
 
       &::before {
-        background: $completed;
+        background: $secondary;
       }
     }
   }
