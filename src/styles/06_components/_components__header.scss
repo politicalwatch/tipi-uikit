@@ -1,0 +1,20 @@
+.c-page-header {
+  margin-bottom: rem($spacer-unit * 4);
+
+  &__title {
+    margin-bottom: rem($spacer-unit * 2);
+    color: $secondary-dark;
+
+    a {
+      color: $secondary-dark;
+    }
+  }
+
+  &__subtitle {
+    @include subtitle;
+
+    color: $secondary;
+    margin: 0;
+
+  }
+}

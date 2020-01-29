@@ -1,16 +1,10 @@
 <template>
-  <div class="page-title">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <h1 class="u-bg-primary">
-            {{ title }}
-            <span v-if="subtitle">{{ subtitle }}</span>
-          </h1>
-        </div>
-      </div>
-    </div>
-  </div>
+  <header class="c-page-header">
+    <h1 class="c-page-header__title">
+      {{ title }}
+    </h1>
+    <p class="c-page-header__subtitle" v-if="subtitle">{{ subtitle }}</p>
+  </header>
 </template>
 
 <script>
@@ -19,17 +13,3 @@ export default {
   props: ['title', 'subtitle'],
 };
 </script>
-
-<style scoped lang="scss">
-h1 {
-  margin: 1rem 0;
-  font-size: 28px;
-  @media (min-width: 768px) {
-    font-size: 39px;
-  }
-  span {
-    font-size: 0.5em;
-    display: block;
-  }
-}
-</style>
