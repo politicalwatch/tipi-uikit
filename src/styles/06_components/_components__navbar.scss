@@ -21,10 +21,10 @@
 
   &__brand {
     flex: 0 1 80%;
-    max-width: 200px;
+    max-width: $logo-mobile-width;
 
     @media (min-width: $md) {
-      max-width: 350px;
+      max-width: $logo-desktop-width;
     }
 
     &-link {
