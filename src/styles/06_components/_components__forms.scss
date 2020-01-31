@@ -11,6 +11,7 @@
     border: none;
     display: block;
     background: transparent;
+    padding: 0;
 
     &::placeholder {
       @include tbody;
@@ -42,6 +43,11 @@
   background-color: $white;
   padding: rem($spacer-unit * 2);
   position: relative;
+
+  input {
+    padding: 0;
+    border: 0;
+  }
 
   select {
     @include tbody;
@@ -188,6 +194,7 @@
     background: transparent;
     appearance: none;
     color: $secondary;
+    padding: 0;
 
     &::placeholder {
       @include tbody;
