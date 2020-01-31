@@ -1,5 +1,7 @@
 .c-page-header {
   margin-bottom: rem($spacer-unit * 4);
+  padding-bottom: rem($spacer-unit * 4);
+  border-bottom: 1px solid $neutral;
 
   &__title {
     margin-bottom: rem($spacer-unit * 2);
