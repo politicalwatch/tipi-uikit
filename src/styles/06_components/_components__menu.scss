@@ -10,6 +10,7 @@
     @include tbody;
 
     display: flex;
+    flex-wrap: wrap;
     flex: 1;
     text-align: left;
     padding: 0 0 0 rem($spacer-unit * 4);
