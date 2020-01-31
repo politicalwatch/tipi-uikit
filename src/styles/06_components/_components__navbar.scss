@@ -44,10 +44,12 @@
     overflow: hidden;
     width: 100%;
 
-
     @media (min-width: $md) {
-      display: block;
-      min-height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex: 1;
+      max-height: none;
       width: auto;
     }
 
