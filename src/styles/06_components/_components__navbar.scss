@@ -1,17 +1,6 @@
 .c-navbar {
   transition: height 1.3s ease;
 
-  &__preimage {
-    width: 100%;
-    height: rem($spacer-unit * 6);
-    object-fit: cover;
-    display: block;
-
-    @media (min-width: $md) {
-      height: rem($spacer-unit * 12);
-    }
-  }
-
   &__wrapper {
     display: flex;
     justify-content: space-between;
