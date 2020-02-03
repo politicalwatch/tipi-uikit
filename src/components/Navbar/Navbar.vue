@@ -4,7 +4,7 @@
       <router-link :to="{name: disclaimerLink.route}">{{ disclaimerLink.name }}</router-link>
       <a class="c-disclaimer__close" href="#" @click="closeDisclaimer"><icon icon="close" color="#fff" /></a>
     </div>
-    <img class="c-navbar__preimage" :src="preImage" alt="Decoración">
+    <img class="c-decorator" :src="preImage" alt="Decoración">
     <div class="c-navbar__wrapper">
       <div class="c-navbar__brand">
         <a class="c-navbar__brand-link" href="/"><img class="c-navbar__brand-logo" :src="logo"></a>
