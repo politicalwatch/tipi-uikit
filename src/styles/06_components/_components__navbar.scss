@@ -1,5 +1,8 @@
 .c-navbar {
   transition: height 1.3s ease;
+  box-shadow: inset 0 -2px 2px 0 rgba(0, 0, 0, 0.1);
+  background-color: $white;
+  margin-bottom: rem($spacer-unit * 4);
 
   &__wrapper {
     display: flex;
