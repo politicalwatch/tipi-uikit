@@ -1,10 +1,10 @@
 .o-section {
-  padding-top: rem($-o-section-padding);
-  padding-bottom: rem($-o-section-padding);
+  padding-bottom: rem($o-section-gap);
+  padding-top: rem($o-section-gap);
   flex-grow: 1;
 
   @media (min-width: $md) {
-    padding-top: rem($-o-section-padding-lg);
-    padding-bottom: rem($-o-section-padding-lg);
+    padding-bottom: rem($o-section-gap-lg);
+    padding-top: rem($o-section-gap-lg);
   }
 }

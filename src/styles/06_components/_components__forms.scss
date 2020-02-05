@@ -109,6 +109,7 @@
       padding-top: 0;
       padding-left: 0;
       min-height: 24px;
+      background-color: transparent;
     }
 
     &__content-wrapper {
@@ -118,6 +119,11 @@
     }
 
     &__option {
+      @include tbody;
+
+      display: block;
+      border: solid 1px $secondary;
+      padding: rem($spacer-unit * 2);
 
       &::after {
         background-color: $completed;
@@ -151,19 +157,25 @@
     &__element {
       background-color: $white;
       margin-bottom: rem($spacer-unit / 2);
-    }
 
-    &__option {
-      @include tbody;
-
-      display: block;
-      border: solid 1px $secondary;
-      padding: rem($spacer-unit * 2);
+      &::before {
+        display: none;
+      }
     }
 
     &__input {
       margin-bottom: 0;
       padding: 0;
+    }
+
+    &--disabled {
+      background-color: transparent;
+
+      .multiselect {
+        &__select {
+          background-color: transparent;
+        }
+      }
     }
   }
 

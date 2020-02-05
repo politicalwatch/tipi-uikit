@@ -26,8 +26,8 @@ $grid-fractions: (
   '12': 12/12
 ) !default;
 
-$-o-section-padding: 32px !default;
-$-o-section-padding-lg: $-o-section-padding !default;
+$o-section-gap: $spacer-unit * 4 !default;
+$o-section-gap-lg: $o-section-gap !default;
 
 $percent-widths: (
   15,
