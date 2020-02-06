@@ -1,33 +1,19 @@
 <template>
   <div>
     <div v-if="this.loadingResults" class="text-center"><h2>Cargando resultados...</h2></div>
-    <table
-      v-if="this.initiatives && this.initiatives.length && !this.loadingResults"
-      id="reactive-table-1"
-      class="table table-striped table-hover reactive-table">
-      <thead>
-        <tr>
-          <th class="col-md-6" fieldid="titulo">Titulo</th>
-          <th v-if="extendedLayout" class="col-md-2" fieldid="autor">Autor</th>
-          <th v-if="extendedLayout" class="col-md-1" fieldid="grupo">Grupo</th>
-          <th v-if="extendedLayout" class="col-md-2" fieldid="temas">Temas</th>
-          <th class="sortable col-md-1" fieldid="actualizacion">
-            Fecha <i class="fa fa-sort-desc"></i>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(initiative, index) in this.initiatives" :key="index">
-          <td class="titulo">
+    <section class="o-masonry o-grid" v-if="this.initiatives && this.initiatives.length && !this.loadingResults">
+      <article class="o-grid__col u-12 u-4@sm o-masonry__item" v-for="(initiative, index) in this.initiatives" :key="index">
+        <div class="c-initiative-card">
+          <span class="titulo">
             <router-link :to="{path: '/initiatives/' + initiative.id}">{{ initiative.title }}</router-link>
-          </td>
-          <td v-if="extendedLayout" class="autor_diputado" v-html="getDeputies(initiative)"></td>
-          <td v-if="extendedLayout" class="autor_grupo" v-html="getAuthors(initiative)"></td>
-          <td v-if="extendedLayout" v-html="getTopics(initiative)"></td>
-          <td class="actualizacion"><span :sort="initiative.updated">{{ moment(initiative.updated).format('DD/MM/Y') }}</span></td>
-        </tr>
-      </tbody>
-    </table>
+          </span>
+          <span v-if="extendedLayout" class="autor_diputado" v-html="getDeputies(initiative)"></span>
+          <span v-if="extendedLayout" class="autor_grupo" v-html="getAuthors(initiative)"></span>
+          <span v-if="extendedLayout" v-html="getTopics(initiative)"></span>
+          <span class="actualizacion"><span :sort="initiative.updated">{{ moment(initiative.updated).format('DD/MM/Y') }}</span></span>
+        </div>
+      </article>
+    </section>
     <a v-if="this.$listeners.loadMore && isMoreResults" href="#" class="load-more btn btn-custom" @click.prevent="loadMore">
       Cargar más {{ nextResultsLabel }}
     </a>
@@ -36,6 +22,8 @@
 
 <script>
 const moment = require('moment');
+import Masonry from "masonry-layout";
+
 
 export default {
   name: 'TipiResults',
@@ -86,15 +74,17 @@ export default {
         '';
     },
   },
+  updated: function() {
+    var grid = document.querySelector('.o-masonry');
+    if (grid) {
+      var msnry = new Masonry(grid, {
+        columnWidth: '.o-masonry__item',
+        percentPosition: true,
+        itemSelector: '.o-masonry__item',
+      });
+      console.log(grid);
+      msnry.layout();
+    }
+  },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-  .load-more {
-    display: block;
-    margin: 2rem auto;
-    max-width: 320px;
-    text-align: center;
-  }
-</style>
