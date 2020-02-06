@@ -1,4 +1,6 @@
 body {
+  @include tbody;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
@@ -6,8 +8,7 @@ body {
   display: flex;
   flex-flow: column;
   min-height: calc(100vh - 30px);
-
-  @include tbody;
+  color: $secondary-dark;
 
   @media (min-width: $md) {
     min-height: 100vh;

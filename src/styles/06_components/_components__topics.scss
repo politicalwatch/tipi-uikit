@@ -1,0 +1,12 @@
+.c-topics {
+  display: flex;
+  flex-wrap: wrap;
+
+  &__topic {
+    @include overline;
+
+    flex: 0 0 auto;
+    color: $white;
+    padding: rem($spacer-unit);
+  }
+}

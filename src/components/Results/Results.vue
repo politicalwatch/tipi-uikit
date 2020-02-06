@@ -4,13 +4,30 @@
     <section class="o-masonry o-grid" v-if="this.initiatives && this.initiatives.length && !this.loadingResults">
       <article class="o-grid__col u-12 u-4@sm o-masonry__item" v-for="(initiative, index) in this.initiatives" :key="index">
         <div class="c-initiative-card">
-          <span class="titulo">
+          <div class="c-initiative-card__topics c-topics" v-if="extendedLayout" v-html="getTopics(initiative)"></div>
+          <h2 class="c-initiative-card__title">
             <router-link :to="{path: '/initiatives/' + initiative.id}">{{ initiative.title }}</router-link>
-          </span>
-          <span v-if="extendedLayout" class="autor_diputado" v-html="getDeputies(initiative)"></span>
-          <span v-if="extendedLayout" class="autor_grupo" v-html="getAuthors(initiative)"></span>
-          <span v-if="extendedLayout" v-html="getTopics(initiative)"></span>
-          <span class="actualizacion"><span :sort="initiative.updated">{{ moment(initiative.updated).format('DD/MM/Y') }}</span></span>
+          </h2>
+          <div class="c-initiative-card__authors" v-if="getDeputies(initiative) && extendedLayout">
+            <h3 class="c-initiative-card__label">Diputado/a</h3>
+            <p v-html="getDeputies(initiative)"></p>
+          </div>
+          <div class="c-initiative-card__authors" v-if="getAuthors(initiative) && extendedLayout">
+            <h3 class="c-initiative-card__label">Autor</h3>
+            <p v-html="getAuthors(initiative)"></p>
+          </div>
+          <div class="o-grid">
+            <div class="o-grid__col">
+              <p class="c-initiative-card__date">Actualizado {{ moment(initiative.updated).fromNow() }}</p>
+            </div>
+            <div class="o-grid__col o-grid__col--right">
+              <router-link :to="{path: '/initiatives/' + initiative.id}" v-slot="{ href }">
+                <a :href="href" target="_blank">
+                  <tipi-icon icon="open-blank" class="c-icon--secondary"/>
+                </a>
+              </router-link>
+            </div>
+          </div>
         </div>
       </article>
     </section>
@@ -22,11 +39,17 @@
 
 <script>
 const moment = require('moment');
+moment.locale('es');
+
+import TipiIcon from '../Icon/Icon.vue';
 import Masonry from "masonry-layout";
 
 
 export default {
   name: 'TipiResults',
+  components: {
+    TipiIcon,
+  },
   props: {
     loadingResults: Boolean,
     initiatives: {
@@ -35,6 +58,7 @@ export default {
     },
     queryMeta: Object,
     layout: String,
+    topicsStyles: Object,
   },
   data: function() {
     return{
@@ -69,6 +93,15 @@ export default {
         '';
     },
     getTopics: function(initiative) {
+      if (this.topicsStyles && initiative.hasOwnProperty('topics')) {
+        return initiative.topics.map(element => {
+          return `
+            <div class="c-topics__topic" style="background-color:${this.topicsStyles[element].color}">
+              ${this.topicsStyles[element].shortname}
+            </div>
+          `;
+        }).join('');
+      }
       return initiative.hasOwnProperty('topics') ?
         initiative.topics.join('<br/>') :
         '';
@@ -82,7 +115,6 @@ export default {
         percentPosition: true,
         itemSelector: '.o-masonry__item',
       });
-      console.log(grid);
       msnry.layout();
     }
   },

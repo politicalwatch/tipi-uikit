@@ -283,35 +283,20 @@
 
 @mixin tbody {
   font-family: $font-primary;
-  font-size: rem(14px);
-  line-height: 1.71;
-
-  @media (min-width: $md) {
-    font-size: rem(16px);
-    line-height: 1.5;
-  }
+  font-size: rem(16px);
+  line-height: 1.5;
 }
 
 @mixin tbody2 {
   font-family: $font-primary;
-  font-size: rem(12px);
-  line-height: 1.33;
-
-  @media (min-width: $md) {
-    font-size: rem(14px);
-    line-height: 1.71;
-  }
+  font-size: rem(14px);
+  line-height: 1.71;
 }
 
 @mixin overline {
   font-family: $font-primary;
-  font-size: rem(10px);
-  line-height: 1.6;
+  font-size: rem(12px);
+  line-height: 1.33;
   font-weight: 500;
   text-transform: uppercase;
-
-  @media (min-width: $md) {
-    font-size: rem(12px);
-    line-height: 1.33;
-  }
 }
