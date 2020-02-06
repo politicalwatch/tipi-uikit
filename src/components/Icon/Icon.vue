@@ -1,5 +1,5 @@
 <template>
-  <span class="c-icon" v-html="svg"></span>
+  <span class="c-icon" :class="`c-icon--type-${icon}`" v-html="svg"></span>
 </template>
 
 <script>
