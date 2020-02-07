@@ -14,6 +14,7 @@ import TipiTopicLink from './TopicLink/TopicLink.vue';
 import TipiTwoCircles from './TwoCircles/TwoCircles.vue';
 import TipiSplash from './Splash/Splash.vue';
 import TipiIcon from './Icon/Icon.vue';
+import TipiInitiativeCard from './InitiativeCard/InitiativeCard.vue';
 
 export {
   TipiResults,
@@ -32,4 +33,5 @@ export {
   TipiTwoCircles,
   TipiSplash,
   TipiIcon,
+  TipiInitiativeCard,
 };
