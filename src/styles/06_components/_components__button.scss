@@ -8,6 +8,15 @@
   display: inline-block;
   cursor: pointer;
 
+  .c-icon {
+    position: relative;
+    top: 2px;
+
+    path {
+      fill: $secondary-dark;
+    }
+  }
+
   &:hover {
     color: $secondary;
     text-decoration: none;
@@ -24,16 +33,6 @@
   &[disabled] {
     color: $secondary;
     pointer-events: none;
-  }
-
-  .c-icon {
-    margin-right: rem($spacer-unit);
-    position: relative;
-    top: 2px;
-
-    path {
-      fill: $secondary-dark;
-    }
   }
 
   &--primary {
@@ -94,6 +93,29 @@
         path {
           fill: $secondary;
         }
+      }
+    }
+  }
+
+  &--compact {
+    @include tbody2;
+
+    padding: rem($spacer-unit) rem($spacer-unit * 2);
+  }
+
+  &--icon {
+
+    &-left {
+
+      .c-icon {
+        margin-right: rem($spacer-unit);
+      }
+    }
+
+    &-right {
+
+      .c-icon {
+        margin-left: rem($spacer-unit);
       }
     }
   }
