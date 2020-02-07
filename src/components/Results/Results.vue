@@ -31,9 +31,13 @@
         </div>
       </article>
     </section>
-    <a v-if="this.$listeners.loadMore && isMoreResults" href="#" class="load-more btn btn-custom" @click.prevent="loadMore">
-      Cargar más {{ nextResultsLabel }}
-    </a>
+    <div class="o-grid o-grid--center">
+      <div class="o-grid__col">
+        <a v-if="this.$listeners.loadMore && isMoreResults" href="#" class="c-button c-button--secondary" @click.prevent="loadMore">
+          Cargar más {{ nextResultsLabel }}
+        </a>
+      </div>
+    </div>
   </div>
 </template>
 
