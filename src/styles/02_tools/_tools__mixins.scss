@@ -184,6 +184,30 @@
   }
 }
 
+//borders
+@mixin borders() {
+
+  .u-border {
+    border: 1px solid $neutral;
+  }
+
+  @each $side in (left, right, top, bottom) {
+
+    .u-border-#{$side} {
+      border-#{$side}: 1px solid $neutral;
+    }
+
+    @each $bp-key, $bp-value in $breakpoints {
+      @media (min-width: $bp-value) {
+
+        .u-border-#{$side}#{$breakpoint-class}#{$bp-key} {
+          border-#{$side}: 1px solid $neutral;
+        }
+      }
+    }
+  }
+}
+
 //Text styles
 @mixin th1 {
   font-family: $font-primary;
