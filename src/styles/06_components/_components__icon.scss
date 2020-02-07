@@ -4,7 +4,7 @@
     &--#{$color-name} {
 
       path {
-        fill: $color-value;
+        fill: $color-value !important;
       }
     }
   }
