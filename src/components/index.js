@@ -13,6 +13,8 @@ import TipiTopicCard from './TopicCard/TopicCard.vue';
 import TipiTopicLink from './TopicLink/TopicLink.vue';
 import TipiTwoCircles from './TwoCircles/TwoCircles.vue';
 import TipiSplash from './Splash/Splash.vue';
+import D3Sunburst from './Charts/Sunburst/d3.sunburst.vue';
+import D3WordsCloud from './Charts/WordsCloud/d3.wordscloud.vue';
 
 export {
   TipiResults,
@@ -30,4 +32,6 @@ export {
   TipiTopicLink,
   TipiTwoCircles,
   TipiSplash,
+  D3Sunburst,
+  D3WordsCloud,
 };
