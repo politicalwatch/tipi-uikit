@@ -15,6 +15,7 @@ import TipiTwoCircles from './TwoCircles/TwoCircles.vue';
 import TipiSplash from './Splash/Splash.vue';
 import D3Sunburst from './Charts/Sunburst/d3.sunburst.vue';
 import D3WordsCloud from './Charts/WordsCloud/d3.wordscloud.vue';
+import D3BarChart from './Charts/Barchart/d3.barchart.vue';
 
 export {
   TipiResults,
@@ -34,4 +35,5 @@ export {
   TipiSplash,
   D3Sunburst,
   D3WordsCloud,
+  D3BarChart,
 };
