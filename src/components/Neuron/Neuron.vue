@@ -35,7 +35,7 @@ export default {
       //Calculate the position of a node
       function calculatePosition(d, i) {
         let angle = map(i, 0, data.length, 0, Math.PI*2);
-        let pos = polar(angle, d["related"] ? 100 : 50);
+        let pos = polar(angle, d["related"] ? 100 : 75);
         return [pos[0] + width/2, pos[1] + height/2];
       }
 
