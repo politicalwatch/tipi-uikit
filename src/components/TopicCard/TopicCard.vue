@@ -8,7 +8,7 @@
       <div class="o-grid__col u-12 u-8@sm">
         <h1 class="c-topic-card__title">{{ topic.name }}</h1>
         <div class="c-topic-card__description">
-          <p v-for="d in topic.description" :key="d" class="topic-desc">
+          <p v-for="d in topic.description" :key="d">
             {{ d }}
           </p>
         </div>
