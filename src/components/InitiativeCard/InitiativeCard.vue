@@ -1,7 +1,7 @@
 <template>
 <div>
   <article class="c-initiative-card">
-    <div class="c-initiative-card__topics c-topics" v-if="extendedLayout" v-html="getTopics(initiative)"></div>
+    <tipi-topic-pill class="c-initiative-card__topics" v-if="extendedLayout" :topicsStyles="topicsStyles" :initiative="initiative"/>
     <h2 class="c-initiative-card__title">
       <router-link :to="{path: '/initiatives/' + initiative.id}">{{ initiative.title }}</router-link>
     </h2>
@@ -33,11 +33,13 @@
 const moment = require('moment');
 moment.locale('es');
 import TipiIcon from '../Icon/Icon.vue';
+import TipiTopicPill from '../TopicPill/TopicPill.vue';
 
 export default {
-  name: 'InitiativeCard',
+  name: 'TipiInitiativeCard',
   components: {
     TipiIcon,
+    TipiTopicPill,
   },
   data: function() {
     return{
@@ -58,20 +60,6 @@ export default {
     getDeputies: function(initiative) {
       return initiative.deputies.length ?
         initiative.deputies.join('<br/>') :
-        '';
-    },
-    getTopics: function(initiative) {
-      if (this.topicsStyles && initiative.hasOwnProperty('topics')) {
-        return initiative.topics.map(element => {
-          return `
-            <div class="c-topics__topic" style="background-color:${this.topicsStyles[element].color}">
-              ${this.topicsStyles[element].shortname}
-            </div>
-          `;
-        }).join('');
-      }
-      return initiative.hasOwnProperty('topics') ?
-        initiative.topics.join('<br/>') :
         '';
     },
   },
