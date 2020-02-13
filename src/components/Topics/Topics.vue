@@ -1,23 +1,35 @@
 <template>
-  <p v-if="topics">
-  <span class="meta">{{ meta }}</span>
-  <br>
-  <ul class="list-unstyled">
-    <li v-for="topic in topics" v-bind:key="topic" class="value">
-      <router-link :to="{ name: 'results', params: { data: paramsData(topic) } }">{{ topic }}</router-link>
-      <br>
-      <div v-for="subtopic in getSubtopics(topic)" v-bind:key="subtopic+' - '+topic" class="subtopic">
-        <router-link :to="{ name: 'results', params: { data: paramsData(topic, subtopic) } }">{{ subtopic }} </router-link>
-        <br>
-        <span v-for="tag in getTags(subtopic)" v-bind:key="tag+' - '+topic" class="tag">
-          <router-link :to="{ name: 'results', params: { data: paramsData(topic, subtopic, tag) } }">{{ tag }} </router-link>
-        </span>
-        <br>
-      </div>
+  <div class="c-topics c-topics--extended" v-if="topics">
+    <h6 class="c-topics__label">{{ meta }}</h6>
+    <ul class="c-topics__list">
+      <li v-for="topic in topics" v-bind:key="topic" class="c-topics__list-topic">
+        <router-link
+          class="c-topics__topic"
+          :style="`background-color:${topicsStyles[topic].color}`"
+          :to="{ name: 'results', params: { data: paramsData(topic) } }">
+          {{ topic }}
+        </router-link>
 
-    </li>
-  </ul>
-  </p>
+        <ul v-if="getSubtopics(topic)" class="c-topics__list-subtopic">
+          <li v-for="subtopic in getSubtopics(topic)" v-bind:key="subtopic+' - '+topic" class="c-topics__subtopic">
+            <router-link class="c-topics__link" :to="{ name: 'results', params: { data: paramsData(topic, subtopic) } }">
+              {{ subtopic }}
+            </router-link>
+
+            <ul v-if="getTags(subtopic)" class="c-topics__list-tags">
+              <li v-for="tag in getTags(subtopic)" v-bind:key="tag+' - '+topic" class="c-topics__tag">
+                <router-link
+                  class="c-topics__link"
+                  :to="{ name: 'results', params: { data: paramsData(topic, subtopic, tag) } }">
+                  {{ tag }}
+                </router-link>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -25,11 +37,12 @@ const qs = require('qs');
 
 export default {
   name: 'tipi-topics',
-  props: [
-    'meta',
-    'topics',
-    'tags',
-  ],
+  props: {
+    meta: String,
+    topics: Array,
+    tags: Array,
+    topicsStyles: Object,
+  },
   methods: {
     getSubtopics(topic) {
       return [...new Set(this.$props.tags.filter(tag => tag.topic === topic).map(tag => tag.subtopic))];
@@ -47,24 +60,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss">
-.value {
-  margin-bottom: 40px;
-
-  .subtopic {
-    font-size: 0.8em;
-    margin-left: 20px;
-    margin-bottom: 20px;
-
-    .tag {
-      background-color: #efefef;
-      color: #222;
-      padding: 5px;
-      margin: 0 5px 5px 5px;
-      font-size: 0.8em;
-      font-weight: normal;
-    }
-  }
-}
-</style>
