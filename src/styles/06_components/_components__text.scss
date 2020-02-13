@@ -1,0 +1,53 @@
+.c-text {
+  margin-bottom: rem($spacer-unit * 4);
+
+  &__label {
+    @include overline;
+
+    color: $secondary;
+    margin: 0 0 rem($spacer-unit) 0;
+  }
+
+  &__value {
+    margin: 0;
+    color: $secondary-dark;
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    &-item {
+      display: flex;
+      align-items: center;
+
+      &::before {
+        display: none;
+      }
+
+      a {
+        color: $secondary-dark;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &__wrapper {
+    font-weight: 500;
+  }
+
+  &__image {
+    border: solid 2px $secondary;
+    width: rem($spacer-unit * 6);
+    height: rem($spacer-unit * 6);
+    object-fit: cover;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: rem($spacer-unit * 2);
+  }
+}
