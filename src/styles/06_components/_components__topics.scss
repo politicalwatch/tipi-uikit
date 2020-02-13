@@ -11,12 +11,20 @@
     text-decoration: none;
   }
 
+  &__label {
+    @include overline;
+
+    color: $secondary;
+    margin: 0 0 rem($spacer-unit) 0;
+  }
+
   &--extended {
     display: block;
 
     .c-topics {
 
       &__list {
+        margin-top: rem($spacer-unit * 2);
 
         &-subtopic {
           margin-top: rem($spacer-unit);
