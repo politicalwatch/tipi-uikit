@@ -112,6 +112,18 @@
       background-color: transparent;
     }
 
+    &__content {
+
+      li {
+        background-color: $white;
+        margin-bottom: rem($spacer-unit / 2);
+
+        &::before {
+          display: none;
+        }
+      }
+    }
+
     &__content-wrapper {
       border: none;
       border-radius: 0;
