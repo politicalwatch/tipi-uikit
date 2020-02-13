@@ -3,10 +3,9 @@
     <h6 class="c-text__label">{{ meta }}</h6>
     <p v-if="!source" class="c-text__value" v-html="show(value)"></p>
     <ul class="c-text__list" v-if="source">
-      <li v-for="(v, i) in value" :key="i" class="c-text__list-item">
+      <li v-for="(v, i) in value" :key="i" class="c-text__list-item" :class="{ 'c-text__list-item--image' : hasImage(v) }">
         <router-link
-          :to="{ path: `/${type}/${getPeopleFromName(v).id}` }"
-          v-if="getPeopleFromName(v) && getPeopleFromName(v).image">
+          :to="{ path: `/${type}/${getPeopleFromName(v).id}` }" v-if="hasImage(v)">
           <img class="c-text__image" :alt="v" :src="getPeopleFromName(v).image" />
         </router-link>
 
@@ -37,6 +36,9 @@ export default {
     show: function(value) {
       if (value.constructor === Array) return value.join('<br/>');
       return value;
+    },
+    hasImage: function(name)  {
+      return this.getPeopleFromName(name) && this.getPeopleFromName(name).image;
     },
     is: function(value) {
       if (value === undefined) return false;
