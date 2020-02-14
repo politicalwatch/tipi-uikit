@@ -58,7 +58,7 @@ export default {
           "ODS 14": "#007dbc",
           "ODS 15": "#5cb84d",
           "ODS 16": "#02558b",
-          "ODS 15": "#183668",
+          "ODS 17": "#183668",
         },
         "notRelated": "#cecece",
         "center": "#222",
