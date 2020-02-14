@@ -10,7 +10,7 @@
         </router-link>
 
         <div class="c-text__wrapper" v-if="getPeopleFromName(v)">
-          <router-link :to="{ path: `/${type}/${getPeopleFromName(v).id}` }">{{ getPeopleFromName(v).name }} <span>{{ getPeopleFromName(v).parliamentarygroup }}</span></router-link>
+          <router-link :to="{ path: `/${type}/${getPeopleFromName(v).id}` }">{{ getPeopleFromName(v).name }} <span v-if="!hideGroup">{{ getPeopleFromName(v).parliamentarygroup }}</span></router-link>
         </div>
 
         <span v-else>{{ v }}</span>
@@ -27,6 +27,7 @@ export default {
     value: [String, Array],
     type: String,
     source: Array,
+    hideGroup: Boolean,
   },
   methods: {
     getPeopleFromName: function (string) {
