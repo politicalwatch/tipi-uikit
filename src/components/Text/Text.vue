@@ -10,7 +10,7 @@
         </router-link>
 
         <div class="c-text__wrapper" v-if="getPeopleFromName(v)">
-          <router-link :to="{ path: `/${type}/${getPeopleFromName(v).id}` }">{{ getPeopleFromName(v).name }}</router-link>
+          <router-link :to="{ path: `/${type}/${getPeopleFromName(v).id}` }">{{ getPeopleFromName(v).name }} <span>{{ getPeopleFromName(v).parliamentarygroup }}</span></router-link>
         </div>
 
         <span v-else>{{ v }}</span>

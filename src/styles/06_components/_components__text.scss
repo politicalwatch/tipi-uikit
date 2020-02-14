@@ -38,18 +38,28 @@
 
       &--image {
         @include tbody2;
+
+        line-height: 1.43;
       }
     }
   }
 
   &__wrapper {
     font-weight: 500;
+
+    span {
+      @include overline;
+
+      display: block;
+      font-weight: 400;
+      color: $secondary;
+    }
   }
 
   &__image {
     border: solid 2px $secondary;
-    width: rem($spacer-unit * 6);
-    height: rem($spacer-unit * 6);
+    width: rem($spacer-unit * 7);
+    height: rem($spacer-unit * 7);
     object-fit: cover;
     border-radius: 50%;
     vertical-align: middle;
