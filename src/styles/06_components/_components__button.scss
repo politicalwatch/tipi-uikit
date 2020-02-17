@@ -103,6 +103,45 @@
     padding: rem($spacer-unit) rem($spacer-unit * 2);
   }
 
+  &--outline {
+    background-color: transparent;
+    border: 2px solid $white;
+    color: $white;
+
+    .c-icon {
+
+      path {
+        fill: $white;
+      }
+    }
+
+    &:hover {
+      color: $secondary-dark;
+      background-color: $white;
+      text-decoration: none;
+
+      .c-icon {
+
+        path {
+          fill: $secondary-dark;
+        }
+      }
+    }
+
+    &.disabled,
+    &[disabled] {
+      color: $secondary;
+      border-color: $secondary;
+
+      .c-icon {
+
+        path {
+          fill: $secondary;
+        }
+      }
+    }
+  }
+
   &--icon {
 
     &-left {

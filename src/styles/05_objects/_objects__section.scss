@@ -7,4 +7,15 @@
     padding-bottom: rem($o-section-gap-lg);
     padding-top: rem($o-section-gap-lg);
   }
+
+  &--double {
+    padding-bottom: rem($o-section-gap * 2);
+    padding-top: rem($o-section-gap * 2);
+    flex-grow: 1;
+
+    @media (min-width: $md) {
+      padding-bottom: rem($o-section-gap-lg * 2);
+      padding-top: rem($o-section-gap-lg * 2);
+    }
+  }
 }
