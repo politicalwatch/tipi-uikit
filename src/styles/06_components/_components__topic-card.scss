@@ -10,6 +10,7 @@
     width: 100%;
     display: block;
     margin-bottom: rem($spacer-unit * 4);
+    max-height: 150px;
   }
 
   &__title {

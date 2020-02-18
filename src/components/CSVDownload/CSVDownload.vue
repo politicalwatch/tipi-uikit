@@ -19,7 +19,7 @@
       :fields="csvFields"
       :downloadName="getNameFromCSV()"
       id="downloadCSV"
-      class="c-button c-button--compact c-button--icon-right">
+      class="c-button c-button--icon-right" :class="buttonClass">
         {{ label }}
         <span class="c-icon c-icon--type-download">
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" fill="none" viewBox="0 0 12 16">
@@ -52,6 +52,10 @@ export default {
     label: {
       type: String,
       default: 'Descarga datos',
+    },
+    buttonClass: {
+      type: String,
+      default: 'c-button--compact',
     },
   },
   methods: {

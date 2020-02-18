@@ -180,11 +180,17 @@
       padding: 0;
     }
 
+    &__tags-wrap {
+      line-height: 1;
+    }
+
     &__tag {
       border-radius: 0;
       background-color: $secondary-light;
       padding: rem($spacer-unit) rem($spacer-unit * 4) rem($spacer-unit) rem($spacer-unit);
       color: $secondary-dark;
+      margin-top: rem($spacer-unit / 2);
+      margin-bottom: rem(-$spacer-unit / 2);
 
       &-icon {
         line-height: 29px;
