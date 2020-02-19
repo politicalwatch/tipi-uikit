@@ -46,6 +46,7 @@
 
   &__wrapper {
     font-weight: 500;
+    flex: 1;
 
     span {
       @include overline;
