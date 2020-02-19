@@ -8,7 +8,6 @@ import TipiText from './Text/Text.vue';
 import TipiTopics from './Topics/Topics.vue';
 import TipiInitiativeMeta from './InitiativeMeta/InitiativeMeta.vue';
 import TipiNeuron from './Neuron/Neuron.vue';
-import TipiRelatedInitiatives from './RelatedInitiatives/RelatedInitiatives.vue';
 import TipiTopicCard from './TopicCard/TopicCard.vue';
 import TipiTopicLink from './TopicLink/TopicLink.vue';
 import TipiTwoCircles from './TwoCircles/TwoCircles.vue';
@@ -28,7 +27,6 @@ export {
   TipiTopics,
   TipiInitiativeMeta,
   TipiNeuron,
-  TipiRelatedInitiatives,
   TipiTopicCard,
   TipiTopicLink,
   TipiTwoCircles,
