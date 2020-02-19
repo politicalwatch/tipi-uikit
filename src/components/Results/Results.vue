@@ -6,9 +6,9 @@
         <tipi-initiative-card :initiative="initiative" :extendedLayout="extendedLayout" :topicsStyles="topicsStyles" />
       </div>
     </section>
-    <div class="o-grid o-grid--center">
+    <div class="o-grid o-grid--center" v-if="this.$listeners.loadMore && isMoreResults">
       <div class="o-grid__col">
-        <a v-if="this.$listeners.loadMore && isMoreResults" href="#" class="c-button c-button--secondary" @click.prevent="loadMore">
+        <a href="#" class="c-button c-button--secondary" @click.prevent="loadMore">
           Cargar más {{ nextResultsLabel }}
         </a>
       </div>
@@ -53,17 +53,30 @@ export default {
     loadMore: function() {
       this.$emit('loadMore');
     },
+    setupMasonry: function() {
+      let grid = document.querySelector('.o-masonry');
+      if (grid) {
+        let msnry = new Masonry(grid, {
+          columnWidth: '.o-masonry__item',
+          percentPosition: true,
+          itemSelector: '.o-masonry__item',
+        });
+        msnry.layout();
+      }
+    },
   },
-  updated: function() {
-    var grid = document.querySelector('.o-masonry');
-    if (grid) {
-      var msnry = new Masonry(grid, {
-        columnWidth: '.o-masonry__item',
-        percentPosition: true,
-        itemSelector: '.o-masonry__item',
-      });
-      msnry.layout();
-    }
+  watch: {
+    initiatives: function (n) {
+      if (this.initiatives && this.initiatives.length && !this.loadingResults) {
+        this.setupMasonry();
+      }
+    },
+  },
+  mounted: function () {
+    this.setupMasonry();
+    window.addEventListener('resize', function() {
+      this.setupMasonry();
+    }.bind(this));
   },
 };
 </script>
