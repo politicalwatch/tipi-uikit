@@ -60,4 +60,26 @@
       text-align: left;
     }
   }
+
+  &__links {
+    @include th6;
+
+    color: $secondary-dark;
+    text-align: center;
+
+    @media (min-width: $md) {
+      text-align: left;
+    }
+
+    a {
+      color: $secondary-dark;
+      text-decoration: none;
+      display: block;
+
+      @media (min-width: $md) {
+        display: inline-block;
+        margin-right: rem($spacer-unit * 2);
+      }
+    }
+  }
 }

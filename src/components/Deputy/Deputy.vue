@@ -12,6 +12,9 @@
               {{ parliamentaryGroup.name }}
             </router-link>
           </h3>
+          <div class="c-deputy__links">
+            <slot/>
+          </div>
         </div>
       </div>
     </div>
