@@ -2,6 +2,7 @@
 <div>
   <article class="c-initiative-card">
     <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :initiative="initiative"/>
+    <tipi-initiative-meta v-if="extendedLayout" :initiative="initiative" />
     <h2 class="c-initiative-card__title">
       <router-link :to="{path: '/initiatives/' + initiative.id}">{{ initiative.title }}</router-link>
     </h2>
@@ -34,12 +35,14 @@ const moment = require('moment');
 moment.locale('es');
 import TipiIcon from '../Icon/Icon.vue';
 import TipiTopicPill from '../TopicPill/TopicPill.vue';
+import TipiInitiativeMeta from '../InitiativeMeta/InitiativeMeta.vue';
 
 export default {
   name: 'TipiInitiativeCard',
   components: {
     TipiIcon,
     TipiTopicPill,
+    TipiInitiativeMeta,
   },
   data: function() {
     return{
@@ -52,6 +55,7 @@ export default {
     extendedLayout: Boolean,
   },
   methods: {
+
     getAuthors: function(initiative) {
       return initiative.authors.length ?
         initiative.authors.join('<br/>') :

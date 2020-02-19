@@ -39,4 +39,39 @@
       margin-right: rem($spacer-unit);
     }
   }
+
+  .c-initiative-card & {
+
+    .c-initiative-meta {
+
+      &__status {
+        text-align: left;
+        border-left: rem($spacer-unit / 2) solid $primary;
+        padding: 0 0 0 rem($spacer-unit);
+        margin-bottom: rem($spacer-unit * 2);
+
+        strong {
+          font-weight: normal;
+        }
+
+        &--neutral {
+          background-color: transparent;
+          border-color: $neutral;
+          color: $neutral;
+        }
+
+        &--completed {
+          background-color: transparent;
+          border-color: $completed;
+          color: $completed;
+        }
+
+        &--error {
+          background-color: transparent;
+          border-color: $error;
+          color: $error;
+        }
+      }
+    }
+  }
 }
