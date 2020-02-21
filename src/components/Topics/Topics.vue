@@ -2,7 +2,7 @@
   <div class="c-topics c-topics--extended" v-if="topics">
     <h6 class="c-topics__label">{{ meta }}</h6>
     <ul class="c-topics__list">
-      <li v-for="topic in topics" v-bind:key="topic" class="c-topics__list-topic">
+      <li v-for="topic in sortedTopics" v-bind:key="topic" class="c-topics__list-topic">
         <router-link
           class="c-topics__topic"
           :style="`background-color:${topicsStyles[topic].color}`"
@@ -34,6 +34,7 @@
 
 <script>
 const qs = require('qs');
+import * as Utils from '../../utils';
 
 export default {
   name: 'tipi-topics',
@@ -42,6 +43,11 @@ export default {
     topics: Array,
     tags: Array,
     topicsStyles: Object,
+  },
+  computed: {
+    sortedTopics: function() {
+      return this.$props.topics.slice().sort(Utils.naturalSort);
+    },
   },
   methods: {
     getSubtopics(topic) {
