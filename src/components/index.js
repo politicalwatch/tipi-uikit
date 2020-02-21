@@ -15,6 +15,7 @@ import TipiSplash from './Splash/Splash.vue';
 import TipiIcon from './Icon/Icon.vue';
 import TipiInitiativeCard from './InitiativeCard/InitiativeCard.vue';
 import TipiTopicPill from './TopicPill/TopicPill.vue';
+import TipiLoader from './Loader/Loader.vue';
 
 export {
   TipiResults,
@@ -34,4 +35,5 @@ export {
   TipiIcon,
   TipiInitiativeCard,
   TipiTopicPill,
+  TipiLoader,
 };

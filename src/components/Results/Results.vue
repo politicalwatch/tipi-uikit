@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="this.loadingResults" class="u-text-center"><h5>Cargando resultados...</h5></div>
+    <tipi-loader v-if="this.loadingResults" title="Cargando resultados" subtitle="Puede llevar algun tiempo" />
     <section class="o-masonry o-grid" v-if="this.initiatives && this.initiatives.length && !this.loadingResults">
       <div class="o-grid__col u-12 u-4@sm o-masonry__item" v-for="(initiative, index) in this.initiatives" :key="index">
         <tipi-initiative-card :initiative="initiative" :extendedLayout="extendedLayout" :topicsStyles="topicsStyles" />
@@ -18,6 +18,7 @@
 
 <script>
 import TipiInitiativeCard from '../InitiativeCard/InitiativeCard.vue';
+import TipiLoader from '../Loader/Loader.vue';
 import Masonry from "masonry-layout";
 
 
@@ -25,6 +26,7 @@ export default {
   name: 'TipiResults',
   components: {
     TipiInitiativeCard,
+    TipiLoader,
   },
   props: {
     loadingResults: Boolean,
