@@ -14,7 +14,7 @@ export default {
   methods: {
     getTopics: function(initiative) {
       if (this.topicsStyles && initiative.hasOwnProperty('topics')) {
-        return initiative.topics.sort(Utils.naturalSort).map(element => {
+        return initiative.topics.slice().sort(Utils.naturalSort).map(element => {
           return `
             <div class="c-topics__topic" style="background-color:${this.topicsStyles[element].color}">
               ${this.topicsStyles[element].shortname}
