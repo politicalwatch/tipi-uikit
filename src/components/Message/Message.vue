@@ -1,5 +1,5 @@
 <template>
-  <div :class="`c-message c-message--${ type }`">
+  <div :class="`c-message c-message--${ type } ${icon ? 'c-message--icon' : ''}`">
     <div class="c-message__wrapper">
       <tipi-icon class="c-message__icon" v-if="icon" :icon="type" />
       <slot/>
@@ -20,7 +20,7 @@ export default {
       type: String,
       default: 'success',
       validator: function(value) {
-        return ["success", "error"].includes(value);
+        return ["success", "error", "info"].includes(value);
       },
     },
     icon: Boolean,
