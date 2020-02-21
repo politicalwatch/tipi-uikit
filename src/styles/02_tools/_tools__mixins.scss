@@ -63,14 +63,14 @@
     @each $space in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10) {
 
       .u-margin-#{$side}-#{$space} {
-        margin-#{$side}: rem($spacer-unit * $space);
+        margin-#{$side}: rem($spacer-unit * $space) !important;
       }
 
       @each $bp-key, $bp-value in $breakpoints {
         @media (min-width: $bp-value) {
 
           .u-margin-#{$side}-#{$space}#{$breakpoint-class}#{$bp-key} {
-            margin-#{$side}: rem($spacer-unit * $space);
+            margin-#{$side}: rem($spacer-unit * $space) !important;
           }
         }
       }
@@ -80,13 +80,13 @@
   @each $space in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10) {
 
     .u-margin-#{$space} {
-      margin: rem($spacer-unit * $space);
+      margin: rem($spacer-unit * $space) !important;
     }
 
     @each $bp-key, $bp-value in $breakpoints {
       @media (min-width: $bp-value) {
         .u-margin-#{$space}#{$breakpoint-class}#{$bp-key} {
-          margin: rem($spacer-unit * $space);
+          margin: rem($spacer-unit * $space) !important;
         }
       }
     }
@@ -98,14 +98,14 @@
     @each $space in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10) {
 
       .u-padding-#{$side}-#{$space} {
-        padding-#{$side}: rem($spacer-unit * $space);
+        padding-#{$side}: rem($spacer-unit * $space) !important;
       }
 
       @each $bp-key, $bp-value in $breakpoints {
         @media (min-width: $bp-value) {
 
           .u-padding-#{$side}-#{$space}#{$breakpoint-class}#{$bp-key} {
-            padding-#{$side}: rem($spacer-unit * $space);
+            padding-#{$side}: rem($spacer-unit * $space) !important;
           }
         }
       }
@@ -115,13 +115,13 @@
   @each $space in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10) {
 
     .u-padding-#{$space} {
-      padding: rem($spacer-unit * $space);
+      padding: rem($spacer-unit * $space) !important;
     }
 
     @each $bp-key, $bp-value in $breakpoints {
       @media (min-width: $bp-value) {
         .u-padding-#{$space}#{$breakpoint-class}#{$bp-key} {
-          padding: rem($spacer-unit * $space);
+          padding: rem($spacer-unit * $space) !important;
         }
       }
     }

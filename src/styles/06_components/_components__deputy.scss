@@ -17,7 +17,7 @@
     display: block;
 
     @media (min-width: $md) {
-      margin: 0;
+      margin: 0 0 0 auto;
       width: rem($spacer-unit * 20);
       height: rem($spacer-unit * 20);
     }
