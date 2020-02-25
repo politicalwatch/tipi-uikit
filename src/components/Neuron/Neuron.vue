@@ -46,7 +46,7 @@ export default {
       }
 
       //Configurations
-      let color = {
+      color = {
         "related": {
           "ODS 1": "#eb1c2d",
           "ODS 2": "#d3a029",
