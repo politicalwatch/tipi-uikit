@@ -1,20 +1,22 @@
 <template>
-  <p v-if="is(value)">
-    <span class="meta">{{ meta }}</span>
-    <br>
-    <span v-if="!source" class="value" v-html="show(value)"></span>
-    <span v-if="source">
-      <span v-for="(v, i) in value" :key="i" class="value" style="display:block;">
-        <router-link :to="{ path: `/${type}/${getPeopleFromName(v).id}` }" v-if="getPeopleFromName(v)">
-          <span v-if="getPeopleFromName(v).image" class="foto mediana">
-            <img :alt="v" :src="getPeopleFromName(v).image" />
-          </span>
-          {{ getPeopleFromName(v).name }}
+  <div class="c-text" v-if="is(value)">
+    <h6 class="c-text__label">{{ meta }}</h6>
+    <p v-if="!source" class="c-text__value" v-html="show(value)"></p>
+    <ul class="c-text__list" v-if="source">
+      <li v-for="(v, i) in value" :key="i" class="c-text__list-item" :class="{ 'c-text__list-item--image' : hasImage(v) }">
+        <router-link
+          :to="{ path: `/${type}/${getPeopleFromName(v).id}` }" v-if="hasImage(v)">
+          <img class="c-text__image" :alt="v" :src="getPeopleFromName(v).image" />
         </router-link>
+
+        <div class="c-text__wrapper" v-if="getPeopleFromName(v)">
+          <router-link :to="{ path: `/${type}/${getPeopleFromName(v).id}` }">{{ getPeopleFromName(v).name }} <span v-if="!hideGroup">{{ getPeopleFromName(v).parliamentarygroup }}</span></router-link>
+        </div>
+
         <span v-else>{{ v }}</span>
-      </span>
-    </span>
-  </p>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -25,6 +27,7 @@ export default {
     value: [String, Array],
     type: String,
     source: Array,
+    hideGroup: Boolean,
   },
   methods: {
     getPeopleFromName: function (string) {
@@ -34,6 +37,9 @@ export default {
     show: function(value) {
       if (value.constructor === Array) return value.join('<br/>');
       return value;
+    },
+    hasImage: function(name)  {
+      return this.getPeopleFromName(name) && this.getPeopleFromName(name).image;
     },
     is: function(value) {
       if (value === undefined) return false;

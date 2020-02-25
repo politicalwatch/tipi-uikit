@@ -5,8 +5,13 @@
       :class="{ disabled: !canDownloadCSV }"
       :title="!canDownloadCSV ? 'Demasiados resultados para poder descargar. Afina la búsqueda' : 'Descarga CSV con todos los resultados'"
       @click.prevent="loadCSVItems"
-      class="pull-right" href="#">
-      <i class="fa fa-download" aria-hidden="true"></i>&nbsp;{{ label }}
+      class="c-button c-button--compact c-button--icon-right" href="#">
+        {{ label }}
+        <span class="c-icon c-icon--type-download">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" fill="none" viewBox="0 0 12 16">
+            <path fill="#2D4252" d="M12 5.647H8.571V0H3.43v5.647H0l6 6.588 6-6.588zm-12 8.47V16h12v-1.882H0z"></path>
+          </svg>
+        </span>
     </a>
     <vue-csv-downloader
       v-else
@@ -14,8 +19,13 @@
       :fields="csvFields"
       :downloadName="getNameFromCSV()"
       id="downloadCSV"
-      class="pull-right">
-      <i class="fa fa-download" aria-hidden="true"></i>&nbsp;{{ label }}
+      class="c-button c-button--icon-right" :class="buttonClass">
+        {{ label }}
+        <span class="c-icon c-icon--type-download">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" fill="none" viewBox="0 0 12 16">
+            <path fill="#2D4252" d="M12 5.647H8.571V0H3.43v5.647H0l6 6.588 6-6.588zm-12 8.47V16h12v-1.882H0z"></path>
+          </svg>
+        </span>
     </vue-csv-downloader>
   </span>
 </template>
@@ -43,6 +53,10 @@ export default {
       type: String,
       default: 'Descarga datos',
     },
+    buttonClass: {
+      type: String,
+      default: 'c-button--compact',
+    },
   },
   methods: {
     loadCSVItems: function(event) {
@@ -55,13 +69,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss">
-  a.disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-  span.btn a {
-    color: #fff;
-  }
-</style>

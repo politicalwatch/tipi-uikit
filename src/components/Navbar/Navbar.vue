@@ -1,62 +1,61 @@
 <template>
-  <div>
-    <div class="disclaimer" v-if="!closedDisclaimer && disclaimerLink.hasOwnProperty('name')">
+  <header class="c-navbar">
+    <div class="c-disclaimer" v-if="!closedDisclaimer && disclaimerLink.hasOwnProperty('name')">
       <router-link :to="{name: disclaimerLink.route}">{{ disclaimerLink.name }}</router-link>
-      <a class="close-disclaimer pull-right" href="#" @click="closeDisclaimer">&times;</a>
+      <a class="c-disclaimer__close" href="#" @click="closeDisclaimer"><icon icon="close" color="#fff" /></a>
     </div>
-    <div class="cascade"></div>
-    <nav class="navbar navbar-default"><div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/"><img :src="logo"></a>
-        </div>
-        <div id="main-menu" class="collapse navbar-collapse" aria-expanded="false">
-          <ul class="nav navbar-nav navbar-right">
-            <li
-            v-for="link in links"
-            :key="link.route"
-            v-show="link.condition">
-              <router-link :to="{name: link.route }" class="menuitem">{{ link.name }}</router-link>
-            </li>
-          </ul>
-        </div>
+    <div  v-if="preImage" class="c-decorator" :style="`background-image: url(${preImage})`"></div>
+    <div class="c-navbar__wrapper o-container">
+      <div class="c-navbar__brand">
+        <a class="c-navbar__brand-link" href="/"><img class="c-navbar__brand-logo" :src="logo"></a>
       </div>
-    </nav>
-  </div>
+      <button
+        type="button"
+        class="c-navbar__menu-toggle"
+        :class="{ 'is-active' : menuVisible }"
+        v-on:click="toggleMenu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="u-hide">Menú</span>
+      </button>
+      <nav class="c-navbar__menu" :class="{ 'is-active' : menuVisible }">
+        <ul class="c-menu">
+          <li
+          class="c-menu__item"
+          v-for="link in links"
+          :key="link.route"
+          v-show="link.condition">
+            <router-link :to="{name: link.route }" class="c-menu__link">{{ link.name }}</router-link>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 </template>
 
 <script>
+import Icon from "../Icon/Icon.vue";
+
 export default {
   name: 'TipiNavbar',
+  components: {
+    Icon,
+  },
   props: {
     links: Array,
     disclaimerLink: {
       type: Object,
       default: function() { return {}; },
     },
+    preImage: String,
     logo: String,
   },
   data: function () {
     return {
       closedMessage: false,
+      menuVisible: false,
     };
-  },
-  mounted: function () {
-    let hamburger = document.querySelector('.navbar-toggle');
-    let menu = document.querySelector(hamburger.dataset.target);
-
-    function collapseMenu(e) {
-      e.preventDefault();
-      menu.classList.toggle('in');
-    }
-
-    hamburger.addEventListener('click', collapseMenu);
   },
   computed: {
     closedDisclaimer: function () {
@@ -67,6 +66,9 @@ export default {
     closeDisclaimer: function() {
       window.sessionStorage.setItem('closedDisclaimer', true);
       this.closedMessage = true;
+    },
+    toggleMenu: function() {
+      this.menuVisible = !this.menuVisible;
     },
   },
 };

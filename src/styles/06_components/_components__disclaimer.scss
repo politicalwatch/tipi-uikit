@@ -1,0 +1,17 @@
+.c-disclaimer {
+  @include overline;
+
+  text-transform: none;
+  color: $white;
+  background-color: $secondary-dark;
+  padding: rem($spacer-unit) rem($spacer-unit * 2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  a {
+    color: $white;
+    text-decoration: none;
+    margin-left: auto;
+  }
+}

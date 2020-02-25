@@ -1,19 +1,22 @@
 <template>
-  <div>
-    <div :class="`text-center state well color-${getColorByStatus(initiative.status)}`">
+  <div class="c-initiative-meta">
+    <div :class="`c-initiative-meta__status c-initiative-meta__status--${ getColorByStatus(initiative.status) }`">
       <strong>{{ initiative.status }}</strong>
     </div>
-    <p class="congress-link text-center">
-      <a :href="initiative.url" target="_blank" :title="`Ver ${initiative.title} en su fuente original`">
-        <i class="fa fa-institution"></i><span>{{ linkText }}</span>
-      </a>
-    </p>
+    <a class="c-initiative-meta__link" v-if="linkText" :href="initiative.url" target="_blank" :title="`Ver ${initiative.title} en su fuente original`">
+      <tipi-icon icon="building"/> {{ linkText }}
+    </a>
   </div>
 </template>
 
 <script>
+import TipiIcon from '../Icon/Icon.vue';
+
 export default {
   name: 'TipiInitiativeMeta',
+  components: {
+    TipiIcon,
+  },
   props: {
     initiative: Object,
     linkText: String,
@@ -21,9 +24,9 @@ export default {
       type: Object,
       default: function() {
         return {
-          'green': ['Aprobada', 'Respondida', 'Celebrada', 'Convertida en otra', 'Acumulada en otra'],
-          'black': ['En tramitación', 'Desconocida'],
-          'red': ['No admitida a trámite', 'No debatida', 'Rechazada', 'Retirada', 'Derogada', 'No celebrada'],
+          'completed': ['Aprobada', 'Respondida', 'Celebrada', 'Convertida en otra', 'Acumulada en otra'],
+          'neutral': ['En tramitación', 'Desconocida'],
+          'error': ['No admitida a trámite', 'No debatida', 'Rechazada', 'Retirada', 'Derogada', 'No celebrada'],
         };
       },
     },
@@ -33,7 +36,7 @@ export default {
       for (let color in this.colors) {
         if (this.colors[color].indexOf(status) != -1) return color;
       }
-      return 'black';
+      return 'neutral';
     },
   },
 };
