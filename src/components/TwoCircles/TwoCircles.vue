@@ -7,7 +7,16 @@ const d3 = require('d3');
 
 export default {
   name: 'TipiTwoCircles',
-  props: ['selection'],
+  props: {
+    selection: Object,
+    styles: {
+      type: Object,
+      default: function () {
+        return { topics: {}, defaultColor: "#cecece" };
+      },
+    },
+    topic: String,
+  },
   methods: {
     loadVizz: function() {
       //Configurations
@@ -49,12 +58,13 @@ export default {
       let maxRadius = 150;
       let minRadius = 5;
 
+      let styles = this.$props.styles;
+      let mainTopic = this.$props.topic;
       let data = [this.$props.selection.selected];
       let maxName = this.$props.selection.compareswith._id;
       let maxNumber = this.$props.selection.compareswith.initiatives;
-      let color_objetivo = color['objetivos'][maxName.split('-')[0].trim()];
-      let color_meta = color['metas'][maxName.split('.')[0].trim()];
-      let maxColor = (color_objetivo) ? color_objetivo : color_meta;
+      let mainColor = styles.topics[mainTopic] ? styles.topics[mainTopic].color : styles.defaultColor;
+      let maxColor = styles.topics[maxName] ? styles.topics[maxName].color : mainColor;
 
       let node = svg.selectAll(".node")
         .data(data)
@@ -121,9 +131,7 @@ export default {
 
 
       function selectColor(d) {
-        let color_objetivo = color['objetivos'][d._id.split('-')[0].trim()];
-        let color_meta = color['metas'][d._id.split('.')[0].trim()];
-        return (color_objetivo) ? color_objetivo : color_meta;
+        return styles.topics[mainTopic] ? styles.topics[mainTopic].color : styles.defaultColor;
       }
 
     },

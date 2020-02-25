@@ -1,6 +1,6 @@
 {
   "name": "tipi-uikit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "main": "src/components/index.js",
   "scripts": {
@@ -14,6 +14,7 @@
     "d3": "^5.14.2",
     "html-loader": "^0.5.5",
     "masonry-layout": "^4.2.2",
+    "d3-cloud": "^1.2.5",
     "moment": "^2.24.0",
     "stylelint-config-standard": "^19.0.0",
     "vue": "^2.6.10",

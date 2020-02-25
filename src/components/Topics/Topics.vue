@@ -38,12 +38,20 @@ import * as Utils from '../../utils';
 
 export default {
   name: 'tipi-topics',
+<<<<<<< HEAD
   props: {
     meta: String,
     topics: Array,
     tags: Array,
     topicsStyles: Object,
   },
+=======
+  props: [
+    'meta',
+    'topics',
+    'tags',
+  ],
+>>>>>>> master
   computed: {
     sortedTopics: function() {
       return this.$props.topics.slice().sort(Utils.naturalSort);

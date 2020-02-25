@@ -10,9 +10,15 @@ export default {
   props: {
     initiative: Object,
     topics: Array,
+    styles: {
+      type: Object,
+      default: function () {
+        return { topics: {}, defaultColor: "#cecece" };
+      },
+    },
   },
   methods: {
-    loadVizz: function(topics, initiative) {
+    loadVizz: function(topics, initiative, styles, color = { "center": "#222" }) {
       //Mapping ranges
       function map(x, in_min, in_max, out_min, out_max) {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -72,7 +78,6 @@ export default {
       svg.selectAll("*").remove();
       let width = +svg.node().getBoundingClientRect().width;
       let height = +svg.node().getBoundingClientRect().height;
-
       function onDataReady(topics, initiative) {
         for(let d=0; d<topics.length; d++) {
           let newNode = {"name": topics[d].name, "related": false, "intensity": 0};
@@ -107,7 +112,7 @@ export default {
                     + "L " + pos[0] + " " + pos[1];
             })
           .attr("stroke-width",(d) => d["related"] ? '3px' : '1px')
-          .attr("stroke", (d) => d["related"] ? color["related"][d["name"].split('-')[0].trim()] : color["line"]);
+          .attr("stroke", (d) => d["related"] && styles.topics[d["name"]] ? styles.topics[d["name"]].color : styles.defaultColor);
 
         let node = svg.selectAll(".node")
           .data(data)
@@ -124,7 +129,7 @@ export default {
         node.append("circle")
           .attr("class", (d) => d["related"] ? "related" : "")
           .attr("r", (d) => d["related"] ? 15 : 10)
-          .style("fill", (d) => d["related"] ? color["related"][d["name"].split('-')[0].trim()] : color["notRelated"]);
+          .style("fill", (d) => d["related"] && styles.topics[d["name"]] ? styles.topics[d["name"]].color : styles.defaultColor);
 
         node.append("path")
           .attr("d", d3.arc()
@@ -133,7 +138,7 @@ export default {
           .startAngle(0)
           .endAngle((d) => Math.PI * 2 * d["intensity"]))
             .attr("class", (d) => d["related"] ? "related" : "")
-            .style("fill", (d) => d["related"] ? color["related"][d["name"].split('-')[0].trim()] : color["notRelated"]);
+            .style("fill", (d) => d["related"] && styles.topics[d["name"]] ? styles.topics[d["name"]].color : styles.defaultColor);
 
         node.append("text")
           .attr("class", "label_name")
@@ -158,11 +163,11 @@ export default {
   },
   watch: {
     '$route': function () {
-      this.loadVizz(this.$props.topics, this.$props.initiative);
+      this.loadVizz(this.$props.topics, this.$props.initiative, this.$props.styles);
     },
   },
   mounted: function () {
-    this.loadVizz(this.$props.topics, this.$props.initiative);
+    this.loadVizz(this.$props.topics, this.$props.initiative, this.$props.styles);
   },
 };
 </script>
