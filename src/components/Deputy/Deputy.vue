@@ -1,25 +1,21 @@
 <template>
-  <div class="tipi-deputy" v-if="deputy">
-    <div class="row">
-      <div class="col-sm-2">
-        <span class="foto grande">
-          <img class="img-responsive" :src="deputy.image" :alt="'Foto de ' + deputy.name">
-        </span>
-      </div>
-      <div class="col-sm-10">
-        <h3 v-if="parliamentaryGroup">
-          <router-link :to="{ path: '/parliamentarygroups/' + parliamentaryGroup.id }">
-            {{ parliamentaryGroup.name }}
-          </router-link>
-        </h3>
-        <ul class="list-unstyled">
-          <li v-if="deputy.email">
-            <a :href="'mailto:'+deputy.email" target="_blank"><i class="fa fa-envelope"></i>{{ deputy.email }}</a>
-          </li>
-          <li v-if="deputy.twitter">
-            <a :href="deputy.twitter" target="_blank"><i class="fa fa-twitter"></i> {{ deputy.twitter }}</a>
-          </li>
-        </ul>
+  <div class="c-deputy" v-if="deputy">
+    <div class="o-container">
+      <div class="o-grid  o-grid--reverse o-grid--align-center">
+        <div class="o-grid__col u-12 u-4@sm">
+          <img class="c-deputy__image" :src="deputy.image" :alt="'Foto de ' + deputy.name">
+        </div>
+        <div class="o-grid__col u-12 u-8@sm">
+          <h1 class="c-deputy__name">{{ deputy.name }}</h1>
+          <h3 class="c-deputy__group" v-if="parliamentaryGroup">
+            <router-link :to="{ path: '/parliamentarygroups/' + parliamentaryGroup.id }">
+              {{ parliamentaryGroup.name }}
+            </router-link>
+          </h3>
+          <div class="c-deputy__links">
+            <slot/>
+          </div>
+        </div>
       </div>
     </div>
   </div>

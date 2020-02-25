@@ -1,0 +1,87 @@
+.c-topics {
+  display: flex;
+  flex-wrap: wrap;
+
+  &__topic {
+    @include overline;
+
+    flex: 0 0 auto;
+    color: $white;
+    padding: rem($spacer-unit);
+    text-decoration: none;
+  }
+
+  &__label {
+    @include overline;
+
+    color: $secondary;
+    margin: 0 0 rem($spacer-unit) 0;
+  }
+
+  &--extended {
+    display: block;
+
+    .c-topics {
+
+      &__list {
+        margin-top: rem($spacer-unit * 2);
+
+        &-subtopic {
+          margin-top: rem($spacer-unit);
+        }
+
+        &-tags {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        &-topic {
+          margin-bottom: rem($spacer-unit * 4);
+        }
+      }
+
+      &__subtopic {
+        @include tbody2;
+
+        text-decoration: none;
+        font-weight: 500;
+
+        > .c-topics__link {
+          display: block;
+          margin: rem($spacer-unit) 0;
+          color: $secondary-dark;
+          text-decoration: none;
+        }
+      }
+
+      &__tag {
+        @include overline;
+
+        margin-right: rem($spacer-unit);
+        margin-bottom: rem($spacer-unit);
+        display: inline-block;
+        text-transform: none;
+        background-color: $secondary-light;
+        padding: rem($spacer-unit);
+        flex: 0 auto;
+
+        .c-topics__link {
+          color: $secondary-dark;
+          text-decoration: none;
+        }
+      }
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+
+      li {
+
+        &::before {
+          display: none;
+        }
+      }
+    }
+  }
+}

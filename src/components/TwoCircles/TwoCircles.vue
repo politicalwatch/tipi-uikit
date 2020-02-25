@@ -1,5 +1,5 @@
 <template>
-  <svg style="width:300px; height:500px"></svg>
+  <svg style="width: 300px; height: 500px;"></svg>
 </template>
 
 <script>
@@ -21,6 +21,35 @@ export default {
     loadVizz: function() {
       //Configurations
       let duration = 2000;
+      let color = {
+        "objetivos": {
+          "ODS 1": "#eb1c2d",
+          "ODS 2": "#d3a029",
+          "ODS 3": "#4c9f38",
+          "ODS 4": "#c52333",
+          "ODS 5": "#ed4135",
+          "ODS 6": "#00aed9",
+          "ODS 7": "#fdb713",
+          "ODS 8": "#8f1838",
+          "ODS 9": "#f06a38",
+          "ODS 10": "#dd1367",
+          "ODS 11": "#f69c39",
+          "ODS 12": "#cf8d2a",
+          "ODS 13": "#48773e",
+          "ODS 14": "#007dbc",
+          "ODS 15": "#5cb84d",
+          "ODS 16": "#02558b",
+          "ODS 17": "#183668",
+        },
+        "metas": {
+          "2": "#dea73a",
+          "6": "#00aed9",
+          "7": "#fdb713",
+          "11": "#f99d26",
+          "12": "#cf8d2a",
+          "15": "#3eb049",
+        },
+      };
 
       //Globals
       let svg = d3.select(this.$el);
@@ -120,6 +149,6 @@ export default {
 <style lang="scss">
   circle.compared,
   rect.compared {
-    opacity: .3;
+    opacity: 0.3;
   }
 </style>

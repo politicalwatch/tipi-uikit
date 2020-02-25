@@ -1,44 +1,33 @@
 <template>
   <div>
-    <div v-if="this.loadingResults" class="text-center"><h2>Cargando resultados...</h2></div>
-    <table
-      v-if="this.initiatives && this.initiatives.length && !this.loadingResults"
-      id="reactive-table-1"
-      class="table table-striped table-hover reactive-table">
-      <thead>
-        <tr>
-          <th class="col-md-6" fieldid="titulo">Titulo</th>
-          <th v-if="extendedLayout" class="col-md-2" fieldid="autor">Autor</th>
-          <th v-if="extendedLayout" class="col-md-1" fieldid="grupo">Grupo</th>
-          <th v-if="extendedLayout" class="col-md-2" fieldid="temas">Temas</th>
-          <th class="sortable col-md-1" fieldid="actualizacion">
-            Fecha <i class="fa fa-sort-desc"></i>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(initiative, index) in this.initiatives" :key="index">
-          <td class="titulo">
-            <router-link :to="{path: '/initiatives/' + initiative.id}">{{ initiative.title }}</router-link>
-          </td>
-          <td v-if="extendedLayout" class="autor_diputado" v-html="getDeputies(initiative)"></td>
-          <td v-if="extendedLayout" class="autor_grupo" v-html="getAuthors(initiative)"></td>
-          <td v-if="extendedLayout" v-html="getTopics(initiative)"></td>
-          <td class="actualizacion"><span :sort="initiative.updated">{{ moment(initiative.updated).format('DD/MM/Y') }}</span></td>
-        </tr>
-      </tbody>
-    </table>
-    <a v-if="this.$listeners.loadMore && isMoreResults" href="#" class="load-more btn btn-custom" @click.prevent="loadMore">
-      Cargar más {{ nextResultsLabel }}
-    </a>
+    <tipi-loader v-if="this.loadingResults" title="Cargando resultados" subtitle="Puede llevar algun tiempo" />
+    <section class="o-masonry o-grid" v-if="this.initiatives && this.initiatives.length && !this.loadingResults">
+      <div class="o-grid__col u-12 u-4@sm o-masonry__item" v-for="(initiative, index) in this.initiatives" :key="index">
+        <tipi-initiative-card :initiative="initiative" :extendedLayout="extendedLayout" :topicsStyles="topicsStyles" />
+      </div>
+    </section>
+    <div class="o-grid o-grid--center" v-if="this.$listeners.loadMore && isMoreResults">
+      <div class="o-grid__col">
+        <a href="#" class="c-button c-button--secondary" @click.prevent="loadMore">
+          Cargar más {{ nextResultsLabel }}
+        </a>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-const moment = require('moment');
+import TipiInitiativeCard from '../InitiativeCard/InitiativeCard.vue';
+import TipiLoader from '../Loader/Loader.vue';
+import Masonry from "masonry-layout";
+
 
 export default {
   name: 'TipiResults',
+  components: {
+    TipiInitiativeCard,
+    TipiLoader,
+  },
   props: {
     loadingResults: Boolean,
     initiatives: {
@@ -47,11 +36,7 @@ export default {
     },
     queryMeta: Object,
     layout: String,
-  },
-  data: function() {
-    return{
-      moment: moment,
-    };
+    topicsStyles: Object,
   },
   computed: {
     isMoreResults: function() {
@@ -70,31 +55,30 @@ export default {
     loadMore: function() {
       this.$emit('loadMore');
     },
-    getAuthors: function(initiative) {
-      return initiative.authors.length ?
-        initiative.authors.join('<br/>') :
-        '';
+    setupMasonry: function() {
+      let grid = document.querySelector('.o-masonry');
+      if (grid) {
+        let msnry = new Masonry(grid, {
+          columnWidth: '.o-masonry__item',
+          percentPosition: true,
+          itemSelector: '.o-masonry__item',
+        });
+        msnry.layout();
+      }
     },
-    getDeputies: function(initiative) {
-      return initiative.deputies.length ?
-        initiative.deputies.join('<br/>') :
-        '';
+  },
+  watch: {
+    initiatives: function (n) {
+      if (this.initiatives && this.initiatives.length && !this.loadingResults) {
+        this.setupMasonry();
+      }
     },
-    getTopics: function(initiative) {
-      return initiative.hasOwnProperty('topics') ?
-        initiative.topics.join('<br/>') :
-        '';
-    },
+  },
+  mounted: function () {
+    this.setupMasonry();
+    window.addEventListener('resize', function() {
+      this.setupMasonry();
+    }.bind(this));
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-  .load-more {
-    display: block;
-    margin: 2rem auto;
-    max-width: 320px;
-    text-align: center;
-  }
-</style>

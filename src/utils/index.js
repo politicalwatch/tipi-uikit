@@ -1,3 +1,4 @@
+// case insensitive, digits to number interpolation
 export const naturalSort = function (as, bs) {
   let a, b, a1, b1, i = 0,
     L, rx = /(\d+)|(\D+)/g,

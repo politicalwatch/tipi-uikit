@@ -1,5 +1,5 @@
 <template>
-  <svg v-if="topics" style="width:100%; height:450px;"></svg>
+  <svg v-if="topics" style="width: 100%; height: 200px;"></svg>
 </template>
 
 <script>
@@ -41,9 +41,35 @@ export default {
       //Calculate the position of a node
       function calculatePosition(d, i) {
         let angle = map(i, 0, data.length, 0, Math.PI*2);
-        let pos = polar(angle, d["related"] ? 150 : 100);
+        let pos = polar(angle, d["related"] ? 100 : 75);
         return [pos[0] + width/2, pos[1] + height/2];
       }
+
+      //Configurations
+      color = {
+        "related": {
+          "ODS 1": "#eb1c2d",
+          "ODS 2": "#d3a029",
+          "ODS 3": "#4c9f38",
+          "ODS 4": "#c52333",
+          "ODS 5": "#ed4135",
+          "ODS 6": "#00aed9",
+          "ODS 7": "#fdb713",
+          "ODS 8": "#8f1838",
+          "ODS 9": "#f06a38",
+          "ODS 10": "#dd1367",
+          "ODS 11": "#f69c39",
+          "ODS 12": "#cf8d2a",
+          "ODS 13": "#48773e",
+          "ODS 14": "#007dbc",
+          "ODS 15": "#5cb84d",
+          "ODS 16": "#02558b",
+          "ODS 17": "#183668",
+        },
+        "notRelated": "#cecece",
+        "center": "#222",
+        "line": "#cecece",
+      };
 
       //TODO: Encapsulate this in a class so we can have multiple vizualisations in one page.
       //Globals
@@ -151,8 +177,9 @@ export default {
 .node {
   font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 10px;
+
   .label_name {
-    font-size: 20px;
+    font-size: 13px;
     font-weight: bold;
   }
 }
