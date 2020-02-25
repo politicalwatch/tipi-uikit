@@ -1,10 +1,10 @@
-import d3chart from '../d3.chart'
-import {select, selectAll} from 'd3-selection'
-import {scaleLinear, scaleOrdinal} from 'd3-scale'
-import {max, min} from 'd3-array'
-import {pie, arc} from 'd3-shape'
-import {transition} from 'd3-transition'
-import {interpolate} from 'd3-interpolate'
+import d3chart from '../d3.chart';
+import {select, selectAll} from 'd3-selection';
+import {scaleLinear, scaleOrdinal} from 'd3-scale';
+import {max, min} from 'd3-array';
+import {pie, arc} from 'd3-shape';
+import {transition} from 'd3-transition';
+import {interpolate} from 'd3-interpolate';
 import {easeLinear, easePolyIn, easePolyOut, easePoly,
     easePolyInOut, easeQuadIn, easeQuadOut, easeQuad, easeQuadInOut,
     easeCubicIn, easeCubicOut, easeCubic, easeCubicInOut, easeSinIn,
@@ -12,10 +12,10 @@ import {easeLinear, easePolyIn, easePolyOut, easePoly,
     easeExpInOut, easeCircleIn, easeCircleOut, easeCircle, easeCircleInOut,
     easeElasticIn, easeElastic, easeElasticOut, easeElasticInOut, easeBackIn,
     easeBackOut, easeBack, easeBackInOut, easeBounceIn, easeBounce,
-    easeBounceOut, easeBounceInOut} from 'd3-ease'
+    easeBounceOut, easeBounceInOut} from 'd3-ease';
 import {schemeCategory10, schemeAccent, schemeDark2, schemePaired,
     schemePastel1, schemePastel2, schemeSet1, schemeSet2, schemeSet3,
-    schemeTableau10} from 'd3-scale-chromatic'
+    schemeTableau10} from 'd3-scale-chromatic';
 
 const d3 = {select, selectAll, scaleLinear, scaleOrdinal, max, min, transition, pie, arc, interpolate,
     easeLinear, easePolyIn, easePolyOut, easePoly, easePolyInOut, easeQuadIn, easeQuadOut,
@@ -26,7 +26,7 @@ const d3 = {select, selectAll, scaleLinear, scaleOrdinal, max, min, transition, 
     easeBackOut, easeBack, easeBackInOut, easeBounceIn, easeBounce, easeBounceOut,
     easeBounceInOut, schemeCategory10, schemeAccent, schemeDark2, schemePaired,
     schemePastel1, schemePastel2, schemeSet1, schemeSet2, schemeSet3,
-    schemeTableau10}
+    schemeTableau10};
 
 /**
 * D3 Slices Chart
@@ -40,8 +40,8 @@ class d3sliceschart extends d3chart{
             value: 'value',
             color : {key: false, keys: false, scheme: false, current: '#1f77b4', default: '#AAA', axis: '#000'},
             radius: {inner: false, outter: false, padding: 0, round: 0},
-            transition: {duration: 350, ease: 'easeLinear'}
-        })
+            transition: {duration: 350, ease: 'easeLinear'},
+        });
     }
 
     /**
@@ -65,10 +65,10 @@ class d3sliceschart extends d3chart{
             const outRadius = this.cfg.radius.outter ? this.cfg.radius.outter : Math.min(this.cfg.width, this.cfg.height) / 2;
             this.cfg.radius.relation = this.cfg.radius.inner
                 ? this.cfg.radius.inner / outRadius
-                : 0
+                : 0;
         }
 
-        this.gcenter = this.g.append('g')
+        this.gcenter = this.g.append('g');
         this.setChartDimension();
         this.updateChart();
     }
@@ -85,7 +85,7 @@ class d3sliceschart extends d3chart{
         
         // Center element
         this.gcenter
-            .attr('transform', `translate(${this.cfg.width/2}, ${this.cfg.height/2})`)
+            .attr('transform', `translate(${this.cfg.width/2}, ${this.cfg.height/2})`);
     }
 
     /**
@@ -93,7 +93,7 @@ class d3sliceschart extends d3chart{
     */
     bindData(){
         this.itemg = this.gcenter.selectAll('.chart__slice-group')
-            .data(this.pie(this.data), d => d.data[this.cfg.key])
+            .data(this.pie(this.data), d => d.data[this.cfg.key]);
 
         // Set transition
         this.transition = d3.transition('t')
@@ -121,7 +121,7 @@ class d3sliceschart extends d3chart{
 
         this.rScale
           .range([this.inRadius, this.cfg.radius.outter])
-          .domain([0, d3.max(this.data, d => d[this.cfg.value])])
+          .domain([0, d3.max(this.data, d => d[this.cfg.value])]);
 
         // Set up color scheme
         if(this.cfg.color.scheme){
@@ -143,7 +143,7 @@ class d3sliceschart extends d3chart{
 
         const newg = this.itemg
             .enter().append('g')
-            .attr("class", "chart__slice-group chart__slice-group--sliceschart")
+            .attr("class", "chart__slice-group chart__slice-group--sliceschart");
 
         // BACKGROUNDS
         newg.append("path")
@@ -154,8 +154,8 @@ class d3sliceschart extends d3chart{
                 const i = d3.interpolate(d.startAngle+0.1, d.endAngle);
                 return t => {
                     d.endAngle = i(t); 
-                    return this.arc(d)
-                }
+                    return this.arc(d);
+                };
             })
             .style("fill", d=> this.cfg.color.default)
             .style('opacity', 1);
@@ -173,8 +173,8 @@ class d3sliceschart extends d3chart{
                     .cornerRadius(this.cfg.radius.round);
                 return t => {
                     d.endAngle = i(t); 
-                    return arc(d)
-                }
+                    return arc(d);
+                };
             })
             .style("fill", d=> this.colorElement(d.data))
             .style('opacity', 1);
@@ -230,4 +230,4 @@ class d3sliceschart extends d3chart{
 
 }
 
-export default d3sliceschart
+export default d3sliceschart;

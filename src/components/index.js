@@ -16,7 +16,7 @@ import TipiSplash from './Splash/Splash.vue';
 import D3Sunburst from './Charts/Sunburst/d3.sunburst.vue';
 import D3WordsCloud from './Charts/WordsCloud/d3.wordscloud.vue';
 import D3BarChart from './Charts/Barchart/d3.barchart.vue';
-import D3SlicesChart from './Charts/SlicesChart/d3.sliceschart.vue';
+import D3SlicesChart from './Charts/Sliceschart/d3.sliceschart.vue';
 
 export {
   TipiResults,
