@@ -19,6 +19,7 @@ import TipiLoader from './Loader/Loader.vue';
 import D3Sunburst from './Charts/Sunburst/d3.sunburst.vue';
 import D3WordsCloud from './Charts/WordsCloud/d3.wordscloud.vue';
 import D3BarChart from './Charts/Barchart/d3.barchart.vue';
+import D3SlicesChart from './Charts/Sliceschart/d3.sliceschart.vue';
 
 export {
   TipiResults,
@@ -42,4 +43,5 @@ export {
   D3Sunburst,
   D3WordsCloud,
   D3BarChart,
+  D3SlicesChart,
 };
