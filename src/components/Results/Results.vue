@@ -68,7 +68,7 @@ export default {
     },
   },
   watch: {
-    initiatives: function (n) {
+    initiatives: function () {
       if (this.initiatives && this.initiatives.length && !this.loadingResults) {
         this.setupMasonry();
       }
