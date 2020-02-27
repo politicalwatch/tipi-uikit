@@ -102,7 +102,7 @@ export default {
 
 
       function selectColor(d) {
-        console.log(d);
+        //console.log(d);
         return styles.topics[mainTopic] ? styles.topics[mainTopic].color : styles.defaultColor;
       }
 

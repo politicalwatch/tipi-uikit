@@ -1,7 +1,7 @@
 import d3chart from '../d3.chart';
 import {select, selectAll} from 'd3-selection';
 import {scaleLinear, scaleOrdinal} from 'd3-scale';
-import {max, min} from 'd3-array';
+import {max, min, sum} from 'd3-array';
 import {pie, arc} from 'd3-shape';
 import {transition} from 'd3-transition';
 import {interpolate} from 'd3-interpolate';
@@ -17,7 +17,7 @@ import {schemeCategory10, schemeAccent, schemeDark2, schemePaired,
     schemePastel1, schemePastel2, schemeSet1, schemeSet2, schemeSet3,
     schemeTableau10} from 'd3-scale-chromatic';
 
-const d3 = {select, selectAll, scaleLinear, scaleOrdinal, max, min, transition, pie, arc, interpolate,
+const d3 = {select, selectAll, scaleLinear, scaleOrdinal, max, min, sum, transition, pie, arc, interpolate,
     easeLinear, easePolyIn, easePolyOut, easePoly, easePolyInOut, easeQuadIn, easeQuadOut,
     easeQuad, easeQuadInOut, easeCubicIn, easeCubicOut, easeCubic, easeCubicInOut,
     easeSinIn, easeSinOut, easeSin, easeSinInOut, easeExpIn, easeExpOut, easeExp,
@@ -71,6 +71,11 @@ class d3sliceschart extends d3chart{
         this.gcenter = this.g.append('g');
         this.setChartDimension();
         this.updateChart();
+
+        this.centerText = this.g.append('text')
+            .attr('x', this.cfg.width / 2)
+            .attr('y', (this.cfg.height / 2) + 10)
+            .attr('text-anchor', 'middle');
     }
 
     /**
@@ -148,21 +153,32 @@ class d3sliceschart extends d3chart{
         // BACKGROUNDS
         newg.append("path")
             .attr("class", "chart__slice chart__slice--sliceschart")
+            //.on('mouseover', (d, i) => {
+            //    const key = d.data[this.cfg.key];
+            //    const value = d.data[this.cfg.value];
+            //    this.tooltip.html(() => {
+            //       return `<div>${key}: ${value}</div>`;
+            //    })
+            //    .classed('active', true);
+            //})
+            //.on('mouseout', () => {
+            //   this.tooltip.classed('active', false);
+            //})
+            //.on('mousemove', () => {
+            //   this.tooltip
+            //       .style('left', window.event['pageX'] - 28 + 'px')
+            //       .style('top', window.event['pageY'] - 40 + 'px');
+            //})
             .on('mouseover', (d, i) => {
+                const total = d3.sum(this.data, d => d.value);
+                const value = d.data.value > 0 && total > 0
+                    ? Math.round((d.data.value / total)*100)
+                    : 0;
                 const key = d.data[this.cfg.key];
-                const value = d.data[this.cfg.value];
-                this.tooltip.html(() => {
-                   return `<div>${key}: ${value}</div>`;
-                })
-                .classed('active', true);
+                this.centerText.text(`${key}: ${value}%`);
             })
             .on('mouseout', () => {
-               this.tooltip.classed('active', false);
-            })
-            .on('mousemove', () => {
-               this.tooltip
-                   .style('left', window.event['pageX'] - 28 + 'px')
-                   .style('top', window.event['pageY'] - 40 + 'px');
+                this.centerText.text('');
             })
             .transition(this.transition)
             .delay((d,i) => i * this.cfg.transition.duration)
