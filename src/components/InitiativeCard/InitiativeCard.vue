@@ -1,7 +1,7 @@
 <template>
 <div>
   <article class="c-initiative-card">
-    <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :initiative="initiative"/>
+    <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="initiative.topics"/>
     <tipi-initiative-meta v-if="extendedLayout" :initiative="initiative" />
     <h2 class="c-initiative-card__title">
       <router-link :to="{path: '/initiatives/' + initiative.id}">{{ initiative.title }}</router-link>
