@@ -26,7 +26,7 @@
           v-for="link in links"
           :key="link.route"
           v-show="link.condition">
-            <router-link :to="{name: link.route }" class="c-menu__link">{{ link.name }}</router-link>
+            <router-link @click="menuVisible ? toggleMenu : null" :to="{name: link.route }" class="c-menu__link">{{ link.name }}</router-link>
           </li>
         </ul>
       </nav>
