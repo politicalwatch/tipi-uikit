@@ -57,19 +57,19 @@
         &--neutral {
           background-color: transparent;
           border-color: $neutral;
-          color: $neutral;
+          color: $secondary-dark;
         }
 
         &--completed {
           background-color: transparent;
           border-color: $completed;
-          color: $completed;
+          color: $secondary-dark;
         }
 
         &--error {
           background-color: transparent;
           border-color: $error;
-          color: $error;
+          color: $secondary-dark;
         }
       }
     }

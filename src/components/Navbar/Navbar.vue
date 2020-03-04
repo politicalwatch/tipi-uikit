@@ -22,6 +22,7 @@
       <nav class="c-navbar__menu" :class="{ 'is-active' : menuVisible }">
         <ul class="c-menu">
           <li
+          @click="closeMenuMobile"
           class="c-menu__item"
           v-for="link in links"
           :key="link.route"
@@ -70,6 +71,11 @@ export default {
     toggleMenu: function() {
       this.menuVisible = !this.menuVisible;
     },
+    closeMenuMobile: function () {
+      if (this.menuVisible) {
+        this.menuVisible = false;
+      }
+    }
   },
 };
 </script>
