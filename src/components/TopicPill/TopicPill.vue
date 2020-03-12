@@ -14,7 +14,6 @@ export default {
   },
   methods: {
     getTopics: function(topics) {
-      console.log('view topic', topics.length);
       if (this.topicsStyles && topics.length) {
         return topics.slice().sort(Utils.naturalSort).map((element, i)=> {
           if (this.withLinks) {
