@@ -18,13 +18,13 @@
   }
 
   &:hover {
-    color: $secondary;
+    color: $primary;
     text-decoration: none;
 
     .c-icon {
 
       path {
-        fill: $secondary;
+        fill: $primary;
       }
     }
   }
@@ -33,6 +33,13 @@
   &[disabled] {
     color: $secondary;
     pointer-events: none;
+
+    .c-icon {
+
+      path {
+        fill: $secondary;
+      }
+    }
   }
 
   &--primary {
