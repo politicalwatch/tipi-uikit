@@ -38,6 +38,16 @@
     svg {
       margin-right: rem($spacer-unit);
     }
+
+    &:hover {
+      color: $primary;
+
+      svg {
+        path {
+          fill: $primary;
+        }
+      }
+    }
   }
 
   .c-initiative-card & {
