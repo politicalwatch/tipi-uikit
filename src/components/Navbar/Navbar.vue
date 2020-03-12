@@ -75,7 +75,7 @@ export default {
       if (this.menuVisible) {
         this.menuVisible = false;
       }
-    }
+    },
   },
 };
 </script>
