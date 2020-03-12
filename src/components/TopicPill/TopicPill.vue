@@ -14,7 +14,8 @@ export default {
   },
   methods: {
     getTopics: function(topics) {
-      if (this.topicsStyles && topics) {
+      console.log('view topic', topics.length);
+      if (this.topicsStyles && topics.length) {
         return topics.slice().sort(Utils.naturalSort).map((element, i)=> {
           if (this.withLinks) {
             return `
@@ -31,9 +32,11 @@ export default {
           }
         }).join('');
       }
-      return topics ?
+      return topics.length ?
         topics.join('<br/>') :
-        '';
+        `<div class="c-topics__topic" style="background-color: #000">
+          ${this.topicsStyles['no-topic'] ? this.topicsStyles['no-topic'].shortname : 'Sin topics'}
+        </div>`;
     },
   },
 };
