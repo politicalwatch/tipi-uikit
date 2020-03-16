@@ -1,6 +1,6 @@
 <template>
 <div>
-  <article class="c-initiative-card">
+  <article class="c-initiative-card" :id="`initiative-card-${initiative.id}`">
     <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="initiative.topics"/>
     <tipi-initiative-meta v-if="extendedLayout" :initiative="initiative" />
     <h2 class="c-initiative-card__title">
