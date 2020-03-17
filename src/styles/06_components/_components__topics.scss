@@ -6,9 +6,10 @@
     @include overline;
 
     flex: 0 0 auto;
-    color: $white;
+    color: $topic-pill-color;
     padding: rem($spacer-unit);
     text-decoration: none;
+    margin: 0 $topic-pill-separator $topic-pill-separator 0;
   }
 
   &__label {

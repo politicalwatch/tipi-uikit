@@ -1,7 +1,7 @@
 .c-menu {
   @include th6;
 
-  color: $secondary-dark;
+  color: $menu-link-color;
   list-style: none;
   text-align: center;
   padding-top: rem($spacer-unit * 4);
@@ -32,7 +32,7 @@
   }
 
   &__link {
-    color: $secondary-dark;
+    color: $menu-link-color;
     text-decoration: none;
 
     &:hover {
