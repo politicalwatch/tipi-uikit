@@ -177,6 +177,7 @@ class d3barchart extends d3chart {
       .ease(d3[this.cfg.transition.ease]);
 
     // Bars groups
+    this.g.selectAll('.chart__bar-group').remove();
     this.itemg = this.g.selectAll('.chart__bar-group')
       .data(this.data, d => d[this.cfg.key]);
   }
