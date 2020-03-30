@@ -42,6 +42,7 @@ class d3sunburst extends d3chart{
       key: '',
       value: '',
       color : {key: false, keys: false, scheme: false, current: '#1f77b4', default: '#AAA', axis: '#000'},
+      tooltip: { label: false, suffix: false },
       transition: {duration: 350, ease: 'easeLinear'},
     });
   }
@@ -147,9 +148,10 @@ class d3sunburst extends d3chart{
       .attr("class", "chart__slice chart__slice--sunburst")
       .style("fill", d => this.colorElement(d.data))
       .on('mouseover', d => {
-       this.tooltip.html(() => {
-         return `<div>${d.data[this.cfg.key]}: ${d.value}</div>`;
-       })
+        const text = this.cfg.tooltip.suffix
+          ? `<div>${d.data[this.cfg.key]}: ${d.value} ${this.cfg.tooltip.suffix}</div>`
+          : `<div>${d.data[this.cfg.key]}: ${d.value}</div>`;
+        this.tooltip.html(text)
        .classed('active', true);
       })
       .on('mouseout', () => {
