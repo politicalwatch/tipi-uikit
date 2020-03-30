@@ -84,7 +84,8 @@ class d3sunburst extends d3chart{
   bindData(){
     const partition = (data) => {
       const root = d3.hierarchy(data)
-          .sum(d => d[this.cfg.value]);
+          .sum(d => d[this.cfg.value])
+          .sort((a, b) => b.name - a.name);
       return d3.partition()(root);
     };
 
