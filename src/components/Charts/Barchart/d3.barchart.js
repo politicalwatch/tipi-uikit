@@ -48,7 +48,7 @@ class d3barchart extends d3chart {
       labelRotation: 0,
       color: { key: false, keys: false, scheme: false, current: "#1f77b4", default: "#AAA", axis: "#000" },
       axis: { yTitle: false, xTitle: false, yFormat: ".0f", xFormat: ".0f", yTicks: 10, xTicks: 10 },
-      tooltip: { label: false },
+      tooltip: { label: false, suffix: false },
       transition: { duration: 350, ease: "easeLinear" },
     });
   }
@@ -223,9 +223,10 @@ class d3barchart extends d3chart {
       .attr('width', 0)
       .on('mouseover', (d, i) => {
         const key = this.cfg.values[i % this.cfg.values.length];
-        this.tooltip.html(() => {
-          return `<div>${key}: ${d[key]}</div>`;
-        })
+        const text = this.cfg.tooltip.suffix
+          ? `<div>${key}: ${d[key]} ${this.cfg.tooltip.suffix}</div>`
+          : `<div>${key}: ${d[key]}</div>`;
+        this.tooltip.html(text)
        .classed('active', true);
       })
       .on('mouseout', () => {
