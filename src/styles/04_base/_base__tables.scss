@@ -9,7 +9,6 @@ table {
   thead {
 
     tr {
-
       @media (min-width: $md) {
         background-color: $secondary-dark;
       }
@@ -43,7 +42,7 @@ table {
       th,
       td {
         display: block;
-        padding: 0;
+        padding: rem($spacer-unit) 0 0 0;
 
         @media (min-width: $md) {
           display: table-cell;
@@ -54,7 +53,6 @@ table {
           position: relative;
           background-color: $secondary-light;
           display: flex;
-          align-items: center;
 
           @media (min-width: $md) {
             display: table-cell;
@@ -62,14 +60,16 @@ table {
 
           &::before {
             content: attr(data-label);
-            display: inline-block;
+            display: block;
             min-width: 120px;
             max-width: 33%;
             font-weight: bold;
             background-color: $secondary-dark;
             color: $white;
-            padding: rem($spacer-unit) rem($spacer-unit) rem($spacer-unit) rem($spacer-unit * 4);
+            padding: rem($spacer-unit) rem($spacer-unit) rem($spacer-unit) rem($spacer-unit * 2);
+            margin-top: rem(-$spacer-unit);
             margin-right: rem($spacer-unit * 4);
+            word-break: break-all;
 
             @media (min-width: $md) {
               display: none;
