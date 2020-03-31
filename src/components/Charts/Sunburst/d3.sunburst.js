@@ -3,6 +3,7 @@ import {select, selectAll} from 'd3-selection';
 import {scaleLinear, scaleOrdinal, scaleSqrt} from 'd3-scale';
 import {hierarchy, partition} from 'd3-hierarchy';
 import {arc} from 'd3-shape';
+import {path} from 'd3-path';
 import {transition} from 'd3-transition';
 import {interpolate} from 'd3-interpolate';
 import {easeLinear, easePolyIn, easePolyOut, easePoly,
@@ -18,7 +19,7 @@ import {schemeCategory10, schemeAccent, schemeDark2, schemePaired,
     schemeTableau10} from 'd3-scale-chromatic';
 
 const d3 = {select, selectAll, scaleLinear, scaleOrdinal, scaleSqrt, hierarchy,
-    partition, arc, transition, interpolate,
+    partition, arc, path, transition, interpolate,
     easeLinear, easePolyIn, easePolyOut, easePoly,
     easePolyInOut, easeQuadIn, easeQuadOut, easeQuad, easeQuadInOut,
     easeCubicIn, easeCubicOut, easeCubic, easeCubicInOut, easeSinIn,
@@ -44,6 +45,7 @@ class d3sunburst extends d3chart{
       color : {key: false, keys: false, scheme: false, current: '#1f77b4', default: '#AAA', axis: '#000'},
       tooltip: { label: false, suffix: false },
       transition: {duration: 350, ease: 'easeLinear'},
+      charSpace: 8,
     });
   }
 
@@ -178,6 +180,25 @@ class d3sunburst extends d3chart{
         };
       });
 
+    // LABELS
+    newg.append('path')
+      .attr('class', 'chart__line--hidden')
+      .attr('id', (_, i) => `hiddenArc${i}`)
+      .attr('d', d => this.middleArcLine(d));
+
+    this.labels = newg.append('text')
+      .attr('class', 'chart__labels')
+      .attr('display', 'none')
+      .attr('text-anchor', 'middle')
+      .attr('dy', 2)
+      .attr('font-size', '10px')
+      .style('opacity', 0);
+
+    this.labels.append('textPath')
+      .attr('startOffset','50%')
+      .attr('xlink:href', (_, i) => `#hiddenArc${i}` )
+      .text(d => d.data.name);
+
   }
 
   /**
@@ -201,6 +222,13 @@ class d3sunburst extends d3chart{
         };
       })
       .style("fill", d => this.colorElement(d.data));
+
+    this.labels
+      .attr('display', d => this.textFits(d) ? null : 'none')
+      .transition(this.transition)
+      .duration(this.cfg.transition.duration/2)
+      .delay(this.cfg.transition.duration/2)
+      .style('opacity', 1);
   }
 
   /**
@@ -217,9 +245,10 @@ class d3sunburst extends d3chart{
   * Check if text fits in available space
   */
   textFits(d){
-      const deltaAngle = this.xScale(d.x1) - this.xScale(d.x0);
-      const r = Math.max(0, (this.yScale(d.y0) + this.yScale(d.y1)) / 2);
-      return d.data[this.cfg.key].length * this.cfg.charSpace < r * deltaAngle;
+    if(!d.parent) return false;
+    const deltaAngle = this.xScale(d.x1) - this.xScale(d.x0);
+    const r = Math.max(0, (this.yScale(d.y0) + this.yScale(d.y1)) / 2);
+    return d.data[this.cfg.key].length * this.cfg.charSpace < r * deltaAngle;
   }
 
   /**
@@ -244,7 +273,38 @@ class d3sunburst extends d3chart{
           const d3 = this.hData.filter(j => j.data.name === d.data.name)[0];
           return this.arc(d3);
         });
+
+
+      transition.selectAll('.chart__line--hidden')
+          .attrTween('d', da => () => {
+            const d2 = this.hData.filter(j => j.data.name === da.data.name)[0];
+            return this.middleArcLine(d2);
+          });
+
+
+      transition.selectAll('.chart__labels')
+          .attrTween('display', da => () => {
+            const d2 = this.hData.filter(j => j.data.name === da.data.name)[0];
+            return this.textFits(d2)
+              ? null
+              : 'none';
+          });
+
   }
+
+  middleArcLine(d){
+      const halfPi = Math.PI/2;
+      const angles = [this.xScale(d.x0) - halfPi, this.xScale(d.x1) - halfPi];
+      const r = Math.max(0, (this.yScale(d.y0) + this.yScale(d.y1)) / 2);
+
+      const middleAngle = (angles[1] + angles[0]) / 2;
+      const invertDirection = middleAngle > 0 && middleAngle < Math.PI;
+      if (invertDirection) { angles.reverse(); }
+
+      const path = d3.path();
+      path.arc(0, 0, r, angles[0], angles[1], invertDirection);
+      return path.toString();
+  };
 }
 
 export default d3sunburst;
