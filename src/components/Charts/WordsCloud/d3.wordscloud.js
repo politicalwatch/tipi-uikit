@@ -28,6 +28,8 @@ const d3 = { select, selectAll, scaleOrdinal, scaleLinear, min, max, extent, tra
   schemeCategory10, schemeAccent, schemeDark2, schemePaired, schemePastel1, schemePastel2,
   schemeSet1, schemeSet2, schemeSet3, schemeTableau10 };
 
+const pluralize = require('pluralize');
+
 /**
  * D3 Words Cloud
  */
@@ -37,10 +39,12 @@ class d3wordscloud extends d3chart {
     super(selection, data, config, {
       margin: { top: 20, right: 20, bottom: 20, left: 20 },
       key: 'word',
-      value: 'size',
+      size: 'size',
+      value: 'value',
       fontFamily: 'Arial',
       angle: {steps: 2, start: 0, end: 90},
       color: { key: false, keys: false, scheme: false, current: '#1f77b4', default: '#AAA', axis: '#000' },
+      tooltip: { label: false, suffix: false, suffixPlural: false },
       transition: { duration: 500, ease: 'easeLinear' },
     });
   }
@@ -52,6 +56,10 @@ class d3wordscloud extends d3chart {
     // Set up dimensions
     this.getDimensions();
     this.initChartFrame('wordscloud');
+
+    if(this.cfg.tooltip.suffix && this.cfg.tooltip.suffixPlural) {
+      pluralize.addIrregularRule(this.cfg.tooltip.suffix, this.cfg.tooltip.suffixPlural);
+    }
 
     this.gcenter = this.g.append('g');
     this.tData = [];
@@ -68,7 +76,8 @@ class d3wordscloud extends d3chart {
       .size([ this.cfg.width, this.cfg.height ])
       .words(this.data.map(d => ({
         text: d[this.cfg.key],
-        size: d[this.cfg.value],
+        size: d[this.cfg.size],
+        value: d[this.cfg.value],
         color: this.colorElement(d, 'text'),
       })))
       .rotate(() => this.wordsAngle(this.cfg.angle))
@@ -148,6 +157,24 @@ class d3wordscloud extends d3chart {
       .attr("text-anchor", "middle")
       .attr('fill', d => d.color)
       .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
+      .on('mouseover', d => {
+        const label = this.cfg.tooltip.suffixPlural
+          ? pluralize(this.cfg.tooltip.suffix, d.value)
+          : this.cfg.tooltip.suffix;
+        const text = this.cfg.tooltip.suffix
+          ? `<div>${d.text}: ${d.value} ${label}</div>`
+          : `<div>${d.text}: ${d.value}</div>`;
+        this.tooltip.html(text)
+          .classed('active', true);
+      })
+      .on('mouseout', () => {
+       this.tooltip.classed('active', false);
+      })
+      .on('mousemove', () => {
+       this.tooltip
+         .style('left', window.event['pageX'] - 28 + 'px')
+         .style('top', window.event['pageY'] - 40 + 'px');
+      })
       .text(d => d.text);
   }
 

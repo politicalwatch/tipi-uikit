@@ -33,6 +33,8 @@ const d3 = {select, selectAll, scaleLinear, scaleOrdinal, scaleSqrt, hierarchy,
     schemeTableau10,
 };
 
+const pluralize = require('pluralize');
+
 /**
 * D3 Sunburst
 */
@@ -43,7 +45,7 @@ class d3sunburst extends d3chart{
       key: '',
       value: '',
       color : {key: false, keys: false, scheme: false, current: '#1f77b4', default: '#AAA', axis: '#000'},
-      tooltip: { label: false, suffix: false },
+      tooltip: { label: false, suffix: false, suffixPlural: false },
       transition: {duration: 350, ease: 'easeLinear'},
       charSpace: 8,
     });
@@ -57,6 +59,10 @@ class d3sunburst extends d3chart{
     // Set up dimensions
     this.getDimensions();
     this.initChartFrame('sunburst');
+
+    if(this.cfg.tooltip.suffix && this.cfg.tooltip.suffixPlural) {
+      pluralize.addIrregularRule(this.cfg.tooltip.suffix, this.cfg.tooltip.suffixPlural);
+    }
 
     // Center group
     this.gcenter = this.g.append('g');
@@ -151,8 +157,11 @@ class d3sunburst extends d3chart{
       .attr("class", "chart__slice chart__slice--sunburst")
       .style("fill", d => this.colorElement(d.data))
       .on('mouseover', d => {
+        const label = this.cfg.tooltip.suffixPlural
+          ? pluralize(this.cfg.tooltip.suffix, d.value)
+          : this.cfg.tooltip.suffix;
         const text = this.cfg.tooltip.suffix
-          ? `<div>${d.data[this.cfg.key]}: ${d.value} ${this.cfg.tooltip.suffix}</div>`
+          ? `<div>${d.data[this.cfg.key]}: ${d.value} ${label}</div>`
           : `<div>${d.data[this.cfg.key]}: ${d.value}</div>`;
         this.tooltip.html(text)
        .classed('active', true);

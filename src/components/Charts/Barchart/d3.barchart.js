@@ -33,6 +33,8 @@ const d3 = {
   schemePastel2, schemeSet1, schemeSet2, schemeSet3, schemeTableau10,
 };
 
+const pluralize = require('pluralize');
+
 /**
  * D3 Bar Chart
  */
@@ -48,7 +50,7 @@ class d3barchart extends d3chart {
       labelRotation: 0,
       color: { key: false, keys: false, scheme: false, current: "#1f77b4", default: "#AAA", axis: "#000" },
       axis: { yTitle: false, xTitle: false, yFormat: ".0f", xFormat: ".0f", yTicks: 10, xTicks: 10 },
-      tooltip: { label: false, suffix: false },
+      tooltip: { label: false, suffix: false, suffixPlural: false },
       transition: { duration: 350, ease: "easeLinear" },
     });
   }
@@ -61,6 +63,10 @@ class d3barchart extends d3chart {
     // Set up dimensions
     this.getDimensions();
     this.initChartFrame('barchart');
+
+    if(this.cfg.tooltip.suffix && this.cfg.tooltip.suffixPlural) {
+      pluralize.addIrregularRule(this.cfg.tooltip.suffix, this.cfg.tooltip.suffixPlural);
+    }
 
     // Set up scales
     this.xScale = d3.scaleBand();
@@ -223,8 +229,11 @@ class d3barchart extends d3chart {
       .attr('width', 0)
       .on('mouseover', (d, i) => {
         const key = this.cfg.values[i % this.cfg.values.length];
+        const label = this.cfg.tooltip.suffixPlural
+          ? pluralize(this.cfg.tooltip.suffix, d[key])
+          : this.cfg.tooltip.suffix;
         const text = this.cfg.tooltip.suffix
-          ? `<div>${key}: ${d[key]} ${this.cfg.tooltip.suffix}</div>`
+          ? `<div>${key}: ${d[key]} ${label}</div>`
           : `<div>${key}: ${d[key]}</div>`;
         this.tooltip.html(text)
        .classed('active', true);
