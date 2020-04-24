@@ -273,7 +273,7 @@
     display: block;
     background: transparent;
     appearance: none;
-    color: $secondary;
+    color: $secondary-dark;
     padding: 0;
 
     &::placeholder {
@@ -318,8 +318,7 @@
             border: 0;
             width: rem(10px);
             height: rem($spacer-unit * 2);
-            background: $white;
-            mask-image: url('../assets/svg/icon-chevron-left.svg');
+            background: url('../assets/svg/icon-chevron-left.svg') transparent;
           }
         }
 
@@ -349,8 +348,7 @@
             border: 0;
             width: rem(10px);
             height: rem($spacer-unit * 2);
-            background: $white;
-            mask-image: url('../assets/svg/icon-chevron-right.svg');
+            background: url('../assets/svg/icon-chevron-right.svg') transparent;
           }
         }
       }
