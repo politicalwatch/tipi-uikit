@@ -312,7 +312,7 @@
           background-color: $secondary;
 
           &:not(.disabled):hover {
-            background-color: $secondary-dark;
+            background-color: $secondary-light;
           }
 
           &::after {
@@ -342,7 +342,7 @@
           background-color: $secondary;
 
           &:not(.disabled):hover {
-            background-color: $secondary-dark;
+            background-color: $secondary-light;
           }
 
           &::after {
