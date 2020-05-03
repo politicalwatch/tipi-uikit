@@ -20,6 +20,14 @@
     font-size: 12px;
   }
 
+  /* Download */
+  &__source {
+    font-size: 12px;
+    span {
+      cursor: pointer;
+    }
+  }
+
   /* Tooltip */
   &__tooltip {
     position: absolute;

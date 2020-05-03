@@ -3,10 +3,15 @@
     <div v-if="title" class="chart__title">{{ title }}</div>
     <div ref="chart" :style="{ height: `${this.height}px` }"></div>
     <div v-if="source" class="chart__source">{{ source }}</div>
+    <div v-if="download" class="chart__source">
+      <span @click="downloadSVG">{{ download }}</span>
+    </div>
   </div>
 </template>
 
 <script>
+import { saveSvgAsPng } from 'save-svg-as-png';
+
 export default {
   name: 'D3Chart',
   data() {
@@ -36,6 +41,18 @@ export default {
     height: {
       type: Number,
       default: 300,
+    },
+    download: {
+      type: String,
+      default: 'Descargar',
+    },
+  },
+  methods: {
+    downloadSVG() {
+      const node = this.$refs.chart.getElementsByClassName('chart')[0];
+      saveSvgAsPng(node, 'chart.png', {
+        backgroundColor: '#FFF',
+      });
     },
   },
   watch: {

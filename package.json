@@ -16,6 +16,7 @@
     "masonry-layout": "^4.2.2",
     "d3-cloud": "^1.2.5",
     "moment": "^2.24.0",
+    "save-svg-as-png": "^1.4.17",
     "stylelint-config-standard": "^19.0.0",
     "vue": "^2.6.10",
     "vue-csv-downloader": "^1.0.3"
