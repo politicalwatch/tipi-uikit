@@ -1,8 +1,8 @@
 <template>
     <transition-group tag="div" class="tipichart" name="barfade">
-      <div class="tipichart__row" v-for="d in rows" :key="d.topic">
+      <div class="tipichart__row" v-for="d in rows" :key="d.topic" :style="rowStyle">
 
-        <div class="tipichart__tooltip">
+        <div class="tipichart__tooltip" :style="{bottom: `${barHeight}px`}">
           <div class="tipichart__tip">{{ d.topic }} {{ d.percent }}%</div>
         </div>
 
@@ -37,9 +37,37 @@ export default {
       required: true,
       default: () => ({}),
     },
+    barHeight: {
+      type: Number,
+      required: false,
+      default: 24,
+    },
+    barGap: {
+      type: Number,
+      required: false,
+      default: 12,
+    },
+    barColor: {
+      type: String,
+      required: false,
+      default: '#fbc239',
+    },
+    barBackgroundColor: {
+      type: String,
+      required: false,
+      default: '#f4f6f8',
+    },
   },
   mounted() {
     this.calculeRows();
+  },
+  computed: {
+    rowStyle() {
+      return {
+        height: `${this.barHeight}px`,
+        marginBottom: `${this.barGap}px`,
+      };
+    },
   },
   methods: {
     calculeRows() {
@@ -56,15 +84,19 @@ export default {
             times: d.times,
             percent: Math.floor((d.times/totalTimes)*100),
             iconStyle: {
+              flex: `0 0 ${this.barHeight}px`,
+              height: `${this.barHeight}px`,
+              backgroundSize: `${this.barHeight}px`,
               backgroundImage: `url(/img/topics/${this.styles.topics[d.topic].image})`,
             },
             backbarStyle: {
-              // backgroundColor: this.styles.defaultColor, // default color provided not matches page styles
-              backgroundColor: '#f4f6f8',
+              height: `${this.barHeight}px`,
+              backgroundColor: this.barBackgroundColor,
             },
             overbarStyle: {
-              backgroundColor: this.styles.topics[d.topic].color,
+              height: `${this.barHeight}px`,
               width: `${(d.times/totalTimes)*100}%`,
+              backgroundColor: this.barColor,
             },
           });
         } else {
@@ -82,14 +114,8 @@ export default {
 
 <style lang="scss">
 .tipichart {
-  $bar-height: 20px;
-  $vertical-separation: 12px;
-  $icon-bar-separation: 6px;
-
   &__row {
     display: flex;
-    height: $bar-height;
-    margin-bottom: $vertical-separation;
     position: relative;
     &:hover .tipichart__tooltip {
       display: block;
@@ -97,7 +123,6 @@ export default {
   }
   &__tooltip {
     position: absolute;
-    bottom: calc(#{$bar-height});
     left: 0;
     width: 100%;
     z-index: 99;
@@ -115,22 +140,17 @@ export default {
     border-radius: 3px;
   }
   &__icon {
-    flex: 0 0 $bar-height;
-    height: $bar-height;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: $bar-height;
-    margin-right: $icon-bar-separation;
+    margin-right: 6px;
   }
   &__bar {
     flex: 1 1 auto;
-    background: red;
     overflow: hidden;
     border-radius: 3px;
     position: relative;
   }
   &__backbar {
-    height: $bar-height;
     width: 100%;
   }
   &__overbar {
@@ -138,7 +158,6 @@ export default {
     z-index: 9;
     top: 0;
     left: 0;
-    height: $bar-height;
     transition: width 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95) 350ms;
   }
 }
