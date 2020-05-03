@@ -48,6 +48,9 @@ export default {
     datum(vals) {
       this.chart.updateData([ ...vals ]);
     },
+    height(val) {
+      setTimeout(() =>{ this.chart.resizeChart(); }, 10);
+    },
   },
   beforeDestroy() {
     this.chart.destroyChart();
