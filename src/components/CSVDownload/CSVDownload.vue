@@ -47,7 +47,7 @@ export default {
     canDownloadCSV: Boolean,
     csvFields: {
       type: Array,
-      default: function() { return ['title', 'reference', 'initiative_type_alt', 'authors', 'deputies', 'topics', 'subtopics', 'tags', 'place', 'status', 'updated', 'url']; },
+      default: function() { return ['title', 'reference', 'initiative_type_alt', 'authors', 'deputies', 'topics', 'subtopics', 'tags', 'place', 'status',  'created','updated', 'url']; },
     },
     label: {
       type: String,
