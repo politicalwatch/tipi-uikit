@@ -106,7 +106,7 @@ export default {
           rows[idx].percent = Math.floor((rows[idx].times/totalTimes)*100);
         }
       });
-      this.rows = rows;
+      this.rows = rows.sort((a, b) => b.times - a.times);
     },
   },
 };
