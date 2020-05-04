@@ -25,6 +25,13 @@
     font-size: 12px;
     span {
       cursor: pointer;
+      background: #f4f6f8;
+      color: #394d5c;
+      padding: 2px 5px;
+      transition: opacity 250ms ease;
+      &:hover {
+        opacity: 0.5;
+      }
     }
   }
 
