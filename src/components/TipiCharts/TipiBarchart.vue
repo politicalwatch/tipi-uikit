@@ -57,6 +57,11 @@ export default {
       required: false,
       default: '#f4f6f8',
     },
+    barOrder: {
+      type: String,
+      required: false,
+      default: 'desc',
+    },
   },
   mounted() {
     this.calculeRows();
@@ -106,7 +111,9 @@ export default {
           rows[idx].percent = Math.floor((rows[idx].times/totalTimes)*100);
         }
       });
-      this.rows = rows.sort((a, b) => b.times - a.times);
+      this.rows = this.barOrder === 'asc'
+        ? rows.sort((a, b) => a.times - b.times)
+        : rows.sort((a, b) => b.times - a.times);
     },
   },
 };
