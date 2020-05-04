@@ -19,7 +19,7 @@
 
 
 <script>
-import { Utils } from 'tipi-uikit';
+import * as Utils from '../../utils';
 
 export default {
   name: 'TipiBarchart',
