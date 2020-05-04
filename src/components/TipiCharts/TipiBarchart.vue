@@ -19,6 +19,8 @@
 
 
 <script>
+import { Utils } from 'tipi-uikit';
+
 export default {
   name: 'TipiBarchart',
   data() {
@@ -60,7 +62,7 @@ export default {
     barOrder: {
       type: String,
       required: false,
-      default: 'desc',
+      default: 'desc', // Options: alphabetically, asc, desc
     },
   },
   mounted() {
@@ -111,9 +113,11 @@ export default {
           rows[idx].percent = Math.floor((rows[idx].times/totalTimes)*100);
         }
       });
-      this.rows = this.barOrder === 'asc'
-        ? rows.sort((a, b) => a.times - b.times)
-        : rows.sort((a, b) => b.times - a.times);
+      this.rows = this.barOrder === 'alphabetically'
+        ? rows.sort((a, b) => Utils.naturalSort(a.topic, b.topic))
+        : this.barOrder === 'asc'
+          ? rows.sort((a, b) => a.times - b.times)
+          : rows.sort((a, b) => b.times - a.times);
     },
   },
 };
