@@ -89,7 +89,7 @@ export default {
           rows.push({
             topic: d.topic,
             times: d.times,
-            percent: Math.floor((d.times/totalTimes)*100),
+            percent: Math.ceil((d.times/totalTimes)*100),
             iconStyle: {
               flex: `0 0 ${this.barHeight}px`,
               height: `${this.barHeight}px`,
@@ -110,7 +110,7 @@ export default {
           // Existing topic -> update values (sum ocurrences)
           rows[idx].times += d.times;
           rows[idx].overbarStyle.width = `${(rows[idx].times/totalTimes)*100}%`;
-          rows[idx].percent = Math.floor((rows[idx].times/totalTimes)*100);
+          rows[idx].percent = Math.ceil((rows[idx].times/totalTimes)*100);
         }
       });
       this.rows = this.barOrder === 'alphabetically'
