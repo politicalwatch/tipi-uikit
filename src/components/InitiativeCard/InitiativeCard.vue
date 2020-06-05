@@ -4,7 +4,7 @@
     <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="initiative.topics"/>
     <tipi-initiative-meta v-if="extendedLayout" :initiative="initiative" />
     <h2 class="c-initiative-card__title">
-      <router-link v-if="initiative.id" :to="{path: '/initiatives/' + initiative.id}">{{ initiative.title }}</router-link>
+      <router-link v-if="initiative.id" :to="{name: 'initiative', params: { id: initiative.id }}">{{ initiative.title }}</router-link>
       <span v-else>{{ initiative.title }}</span>
     </h2>
     <div class="c-initiative-card__authors" v-if="getDeputies(initiative) && extendedLayout">
@@ -20,7 +20,7 @@
         <p class="c-initiative-card__date">Actualizado {{ moment(initiative.updated).fromNow() }}</p>
       </div>
       <div class="o-grid__col o-grid__col--right">
-        <router-link v-if="initiative.id" :to="{path: '/initiatives/' + initiative.id}" v-slot="{ href }">
+        <router-link v-if="initiative.id" :to="{name: 'initiative', params: { id: initiative.id }}" v-slot="{ href }">
           <a :href="href" target="_blank">
             <tipi-icon icon="open-blank" class="c-icon--secondary"/>
           </a>
