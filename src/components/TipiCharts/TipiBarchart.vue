@@ -19,6 +19,8 @@
 
 
 <script>
+import * as Utils from '../../utils';
+
 export default {
   name: 'TipiBarchart',
   data() {
@@ -57,6 +59,11 @@ export default {
       required: false,
       default: '#f4f6f8',
     },
+    barOrder: {
+      type: String,
+      required: false,
+      default: 'desc', // Options: alphabetically, asc, desc
+    },
   },
   mounted() {
     this.calculeRows();
@@ -82,7 +89,7 @@ export default {
           rows.push({
             topic: d.topic,
             times: d.times,
-            percent: Math.floor((d.times/totalTimes)*100),
+            percent: Math.ceil((d.times/totalTimes)*100),
             iconStyle: {
               flex: `0 0 ${this.barHeight}px`,
               height: `${this.barHeight}px`,
@@ -103,10 +110,14 @@ export default {
           // Existing topic -> update values (sum ocurrences)
           rows[idx].times += d.times;
           rows[idx].overbarStyle.width = `${(rows[idx].times/totalTimes)*100}%`;
-          rows[idx].percent = Math.floor((rows[idx].times/totalTimes)*100);
+          rows[idx].percent = Math.ceil((rows[idx].times/totalTimes)*100);
         }
       });
-      this.rows = rows;
+      this.rows = this.barOrder === 'alphabetically'
+        ? rows.sort((a, b) => Utils.naturalSort(a.topic, b.topic))
+        : this.barOrder === 'asc'
+          ? rows.sort((a, b) => a.times - b.times)
+          : rows.sort((a, b) => b.times - a.times);
     },
   },
 };
