@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="c-topic-link">
-      <router-link :to="{path: `/${path}/${topic.id}`}" class="c-topic-link__image-link" :style="`background-color: ${color}`">
+      <router-link :to="{name: 'topic', params: {id: topic.id }}" class="c-topic-link__image-link" :style="`background-color: ${color}`">
         <img :src="topicImage" :alt="`Imagen de ${topic.name}`" class="c-topic-link__image">
       </router-link>
       <h4 class="c-topic-link__name">
-        <router-link :to="{path: `/${path}/${topic.id}`}">
+        <router-link :to="{name: path}/${topic.id}`}">
           {{ topic.name }}
         </router-link>
       </h4>
@@ -17,10 +17,6 @@
 export default {
   name: 'TipiTopicLink',
   props: {
-    path: {
-      type: String,
-      default: 'ods',
-    },
     color: {
       type: String,
       default: '#000',
