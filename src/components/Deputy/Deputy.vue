@@ -8,7 +8,7 @@
         <div class="o-grid__col u-12 u-8@sm">
           <h1 class="c-deputy__name">{{ deputy.name }}</h1>
           <h3 class="c-deputy__group" v-if="parliamentaryGroup">
-            <router-link :to="{ path: '/parliamentarygroups/' + parliamentaryGroup.id }">
+            <router-link :to="{ name: 'parliamentarygroup', params: {id: parliamentaryGroup.id }}">
               {{ parliamentaryGroup.name }}
             </router-link>
           </h3>
