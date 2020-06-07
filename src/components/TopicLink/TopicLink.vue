@@ -5,7 +5,7 @@
         <img :src="topicImage" :alt="`Imagen de ${topic.name}`" class="c-topic-link__image">
       </router-link>
       <h4 class="c-topic-link__name">
-        <router-link :to="{name: path}/${topic.id}`}">
+        <router-link :to="{name: 'topic', params: {id: topic.id }}">
           {{ topic.name }}
         </router-link>
       </h4>
