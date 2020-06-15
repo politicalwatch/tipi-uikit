@@ -1,23 +1,23 @@
 <template>
   <div>
     <tipi-loader v-if="this.loadingResults" title="Cargando resultados" subtitle="Puede llevar algun tiempo" />
-    <section class="o-masonry o-grid" v-if="this.initiatives && this.initiatives.length && !this.loadingResults">
-      <div class="o-grid__col u-12 u-4@sm o-masonry__item" v-for="(initiative, index) in this.initiatives" :key="index">
-        <tipi-initiative-card :initiative="initiative" :extendedLayout="extendedLayout" :topicsStyles="topicsStyles" />
+      <section class="o-masonry o-grid" v-if="this.initiatives && this.initiatives.length && !this.loadingResults">
+        <div class="o-grid__col u-12 u-4@sm o-masonry__item" v-for="(initiative, index) in this.initiatives" :key="index">
+          <tipi-initiative-card :initiative="initiative" :extendedLayout="extendedLayout" :topicsStyles="topicsStyles" :metaDeputies="metaDeputies" :metaGroupsOthers="metaGroupsOthers" />
+        </div>
+      </section>
+      <div class="o-grid o-grid--center" v-if="this.$listeners.loadMore && isMoreResults">
+        <div class="o-grid__col">
+          <a href="#" class="c-button c-button--secondary" @click.prevent="loadMore">
+            Cargar má{{ nextResultsLabel }}
+          </a>
+        </div>
       </div>
-    </section>
-    <div class="o-grid o-grid--center" v-if="this.$listeners.loadMore && isMoreResults">
-      <div class="o-grid__col">
-        <a href="#" class="c-button c-button--secondary" @click.prevent="loadMore">
-          Cargar más {{ nextResultsLabel }}
-        </a>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-import TipiInitiativeCard from '../InitiativeCard/InitiativeCard.vue';
+  import TipiInitiativeCard from '../InitiativeCard/InitiativeCard.vue';
 import TipiLoader from '../Loader/Loader.vue';
 import Masonry from "masonry-layout";
 
@@ -37,6 +37,8 @@ export default {
     queryMeta: Object,
     layout: String,
     topicsStyles: Object,
+    metaDeputies: {type: String, default: 'Diputada/o'},
+    metaGroupsOthers: {type: String, default: 'Autor'},
   },
   computed: {
     isMoreResults: function() {
