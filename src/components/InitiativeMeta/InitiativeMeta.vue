@@ -20,7 +20,7 @@ export default {
   props: {
     initiative: Object,
     linkText: String,
-    colors: {
+    metaColors: {
       type: Object,
       default: function() {
         return {
@@ -33,8 +33,8 @@ export default {
   },
   methods: {
     getColorByStatus: function(status) {
-      for (let color in this.colors) {
-        if (this.colors[color].indexOf(status) != -1) return color;
+      for (let color in this.metaColors) {
+        if (this.metaColors[color].indexOf(status) != -1) return color;
       }
       return 'neutral';
     },

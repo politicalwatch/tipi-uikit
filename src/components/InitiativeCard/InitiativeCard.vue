@@ -2,7 +2,7 @@
   <div>
     <article class="c-initiative-card" :id="`initiative-card-${initiative.id}`">
       <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="initiative.topics"/>
-	<tipi-initiative-meta v-if="extendedLayout" :initiative="initiative" />
+	<tipi-initiative-meta v-if="extendedLayout" :initiative="initiative" :metaColors="metaColors" />
 	  <h2 class="c-initiative-card__title">
 	    <router-link v-if="initiative.id" :to="{name: 'initiative', params: { id: initiative.id }}">{{ initiative.title }}</router-link>
 	    <span v-else>{{ initiative.title }}</span>
@@ -56,6 +56,7 @@ export default {
     extendedLayout: Boolean,
     metaDeputies: String,
     metaGroupsOthers: String,
+    metaColors: {type: Object, default: undefined}
   },
   methods: {
 
