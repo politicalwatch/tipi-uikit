@@ -12,9 +12,9 @@
   "dependencies": {
     "core-js": "^3.4.8",
     "d3": "^5.14.2",
+    "d3-cloud": "^1.2.5",
     "html-loader": "^0.5.5",
     "masonry-layout": "^4.2.2",
-    "d3-cloud": "^1.2.5",
     "moment": "2.24.0",
     "save-svg-as-png": "^1.4.17",
     "stylelint-config-standard": "^19.0.0",
