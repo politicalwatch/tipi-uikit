@@ -39,7 +39,7 @@ export default {
     topicsStyles: Object,
     metaDeputies: {type: String, default: 'Diputada/o'},
     metaGroupsOthers: {type: String, default: 'Autor'},
-    metaColors: {type: Object, default: undefined}
+    metaColors: {type: Object, default: undefined},
   },
   computed: {
     isMoreResults: function() {

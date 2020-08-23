@@ -36,9 +36,9 @@ export default {
     getPeopleFromName: function (string) {
       if (string.hasOwnProperty('name')) return string;
       let regex_id = /\[.*\]/;
-      let has_id = regex_id.exec(string)
+      let has_id = regex_id.exec(string);
       if (!has_id) return this.source.find(s => s.name == string);
-      let peopleId = has_id[0].replace('[', '').replace(']', '')
+      let peopleId = has_id[0].replace('[', '').replace(']', '');
       return this.source.find(s => s.id == peopleId);
     },
     show: function(value) {

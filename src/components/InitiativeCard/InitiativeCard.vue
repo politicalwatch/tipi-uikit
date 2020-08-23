@@ -56,7 +56,7 @@ export default {
     extendedLayout: Boolean,
     metaDeputies: String,
     metaGroupsOthers: String,
-    metaColors: {type: Object, default: undefined}
+    metaColors: {type: Object, default: undefined},
   },
   methods: {
 
@@ -71,7 +71,7 @@ export default {
       return initiative.deputies.map(d => {
 	var has_id = regex_id.exec(d);
 	if (!has_id) return d;
-	return d.replace(has_id[0], '').trim()
+	return d.replace(has_id[0], '').trim();
       }).join('<br/>');
     },
   },
