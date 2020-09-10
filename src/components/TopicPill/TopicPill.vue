@@ -33,8 +33,8 @@ export default {
       }
       return topics.length ?
         topics.join('<br/>') :
-        `<div class="c-topics__topic" style="background-color: #000">
-          ${this.topicsStyles['no-topic'] ? this.topicsStyles['no-topic'].shortname : 'Sin topics'}
+        `<div class="c-topics__topic" style="background-color: #000; color: #fff;">
+          ${this.topicsStyles['no-topic'] ? this.topicsStyles['no-topic'].shortname : 'Sin temática'}
         </div>`;
     },
   },
