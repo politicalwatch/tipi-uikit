@@ -270,7 +270,7 @@ class d3barchart extends d3chart {
       .selectAll('.chart__bar')
       .transition(this.transition)
       .attr('fill', (d, i) => this.colorElement(d, this.cfg.values[i % this.cfg.values.length]))
-      .attr('opacity', (d, i) => i % 2 == 0 && this.hasComparissionData() ? 0.6 : 1)
+      .attr('opacity', (d, i) => i % 2 == 1 && this.hasComparissionData() ? 0.6 : 1)
       .attr('x', (d, i) => {
         return this.cfg.orientation !== 'horizontal'
           ? this.xScaleInn(this.cfg.values[i % this.cfg.values.length])
