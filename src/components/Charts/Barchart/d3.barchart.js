@@ -192,10 +192,22 @@ class d3barchart extends d3chart {
     return this.data.some(item => item["Texto comparado"] > 0)
   }
 
+  calculateTotals() {
+    const totalCompared = this.data.reduce((total, item) => { return total + item["Texto comparado"] }, 0)
+    const totalOriginal = this.data.reduce((total, item) => { return total + item["Texto original"] }, 0)
+    return { "Texto comparado": totalCompared, "Texto original": totalOriginal  }
+  }
+
+  calculatePercentage(value, total) {
+    return value * 100 / total
+  }
+
   /**
    * Add new chart's elements
    */
   enterElements() {
+    const totals = this.calculateTotals()
+
     const newbars = this.itemg
       .enter().append('g')
       .attr('class', 'chart__bar-group chart__bar-group--barchart')
@@ -235,9 +247,12 @@ class d3barchart extends d3chart {
         const label = this.cfg.tooltip.suffixPlural
           ? pluralize(this.cfg.tooltip.suffix, d[key])
           : this.cfg.tooltip.suffix;
+
+        const percentage = this.calculatePercentage(d[key], totals[key]).toFixed(2)
+
         const text = this.cfg.tooltip.suffix
-          ? `<div>${key}: ${d[key]} ${label}</div>`
-          : `<div>${key}: ${d[key]}</div>`;
+          ? `<div>${key}: ${percentage}% ${label}</div>`
+          : `<div>${key}: ${percentage}%</div>`;
         this.tooltip.html(text)
        .classed('active', true);
       })
