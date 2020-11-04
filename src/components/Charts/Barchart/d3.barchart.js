@@ -189,13 +189,13 @@ class d3barchart extends d3chart {
   }
 
   hasComparissionData() {
-    return this.data.some(item => item["Texto comparado"] > 0)
+    return this.data.some(item => item["Texto de referencia"] > 0)
   }
 
   calculateTotals() {
-    const totalCompared = this.data.reduce((total, item) => { return total + item["Texto comparado"] }, 0)
-    const totalOriginal = this.data.reduce((total, item) => { return total + item["Texto original"] }, 0)
-    return { "Texto comparado": totalCompared, "Texto original": totalOriginal  }
+    const totalCompared = this.data.reduce((total, item) => { return total + item["Texto de referencia"] }, 0)
+    const totalOriginal = this.data.reduce((total, item) => { return total + item["Texto escaneado"] }, 0)
+    return { "Texto de referencia": totalCompared, "Texto escaneado": totalOriginal  }
   }
 
   calculatePercentage(value, total) {
