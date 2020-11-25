@@ -51,6 +51,7 @@ class d3barchart extends d3chart {
       color: { key: false, keys: false, scheme: false, current: "#1f77b4", default: "#AAA", axis: "#000" },
       axis: { yTitle: false, xTitle: false, yFormat: ".0f", xFormat: ".0f", yTicks: 10, xTicks: 10 },
       tooltip: { label: false, suffix: false, suffixPlural: false },
+      keys: {"Texto escaneado": 'Texto escaneado', "Texto de referencia": 'Texto de referencia'},
       transition: { duration: 350, ease: "easeLinear" },
     });
   }
@@ -248,11 +249,13 @@ class d3barchart extends d3chart {
           ? pluralize(this.cfg.tooltip.suffix, d[key])
           : this.cfg.tooltip.suffix;
 
+        const labelKey = this.cfg.keys[key]
+
         const percentage = this.calculatePercentage(d[key], totals[key]).toFixed(2)
 
         const text = this.cfg.tooltip.suffix
-          ? `<div>${key}: ${percentage}% ${label}</div>`
-          : `<div>${key}: ${percentage}%</div>`;
+          ? `<div>${labelKey}: ${percentage}% ${label}</div>`
+          : `<div>${labelKey}: ${percentage}%</div>`;
         this.tooltip.html(text)
        .classed('active', true);
       })
