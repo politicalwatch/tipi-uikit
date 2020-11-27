@@ -1,7 +1,9 @@
 <template>
   <header class="c-navbar">
     <div class="c-disclaimer" v-if="!closedDisclaimer && disclaimerLink.hasOwnProperty('name')">
-      <router-link :to="{name: disclaimerLink.route}">{{ disclaimerLink.name }}</router-link>
+      <a v-if="disclaimerLink.external" :href="disclaimerLink.route" target="_blank" v-html="disclaimerLink.name"></a>
+      <router-link v-else :to="{name: disclaimerLink.route}" v-html="disclaimerLink.name"></router-link>
+
       <a class="c-disclaimer__close" href="#" @click="closeDisclaimer"><icon icon="close" color="#fff" /></a>
     </div>
     <div  v-if="preImage" class="c-decorator" :style="`background-image: url(${preImage})`"></div>
