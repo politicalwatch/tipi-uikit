@@ -29,7 +29,7 @@
           v-for="link in links"
           :key="link.route"
           v-show="link.condition">
-            <router-link :to="{name: link.route }" class="c-menu__link">{{ link.name }}</router-link>
+            <router-link :to="{name: link.route }" class="c-menu__link">{{ link.name }}<icon icon="{{ link.icon }}" v-if="link.name" /></router-link>
           </li>
         </ul>
       </nav>
