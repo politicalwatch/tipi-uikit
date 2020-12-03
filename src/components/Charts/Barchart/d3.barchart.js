@@ -190,24 +190,24 @@ class d3barchart extends d3chart {
   }
 
   hasComparissionData() {
-    return this.data.some(item => item["Texto de referencia"] > 0)
+    return this.data.some(item => item["Texto de referencia"] > 0);
   }
 
   calculateTotals() {
-    const totalCompared = this.data.reduce((total, item) => { return total + item["Texto de referencia"] }, 0)
-    const totalOriginal = this.data.reduce((total, item) => { return total + item["Texto escaneado"] }, 0)
-    return { "Texto de referencia": totalCompared, "Texto escaneado": totalOriginal  }
+    const totalCompared = this.data.reduce((total, item) => { return total + item["Texto de referencia"]; }, 0);
+    const totalOriginal = this.data.reduce((total, item) => { return total + item["Texto escaneado"]; }, 0);
+    return { "Texto de referencia": totalCompared, "Texto escaneado": totalOriginal  };
   }
 
   calculatePercentage(value, total) {
-    return value * 100 / total
+    return value * 100 / total;
   }
 
   /**
    * Add new chart's elements
    */
   enterElements() {
-    const totals = this.calculateTotals()
+    const totals = this.calculateTotals();
 
     const newbars = this.itemg
       .enter().append('g')
@@ -249,9 +249,9 @@ class d3barchart extends d3chart {
           ? pluralize(this.cfg.tooltip.suffix, d[key])
           : this.cfg.tooltip.suffix;
 
-        const labelKey = this.cfg.keys[key]
+        const labelKey = this.cfg.keys[key];
 
-        const percentage = this.calculatePercentage(d[key], totals[key]).toFixed(2)
+        const percentage = this.calculatePercentage(d[key], totals[key]).toFixed(2);
 
         const text = this.cfg.tooltip.suffix
           ? `<div>${labelKey}: ${percentage}% ${label}</div>`
