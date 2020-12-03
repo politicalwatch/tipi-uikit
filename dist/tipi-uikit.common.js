@@ -8307,11 +8307,13 @@ return getSize;
 
 var utils = __webpack_require__("d233");
 var formats = __webpack_require__("b313");
+var has = Object.prototype.hasOwnProperty;
 
 var arrayPrefixGenerators = {
     brackets: function brackets(prefix) { // eslint-disable-line func-name-matching
         return prefix + '[]';
     },
+    comma: 'comma',
     indices: function indices(prefix, key) { // eslint-disable-line func-name-matching
         return prefix + '[' + key + ']';
     },
@@ -8320,13 +8322,26 @@ var arrayPrefixGenerators = {
     }
 };
 
+var isArray = Array.isArray;
+var push = Array.prototype.push;
+var pushToArray = function (arr, valueOrArray) {
+    push.apply(arr, isArray(valueOrArray) ? valueOrArray : [valueOrArray]);
+};
+
 var toISO = Date.prototype.toISOString;
 
 var defaults = {
+    addQueryPrefix: false,
+    allowDots: false,
+    charset: 'utf-8',
+    charsetSentinel: false,
     delimiter: '&',
     encode: true,
     encoder: utils.encode,
     encodeValuesOnly: false,
+    formatter: formats.formatters[formats['default']],
+    // deprecated
+    indices: false,
     serializeDate: function serializeDate(date) { // eslint-disable-line func-name-matching
         return toISO.call(date);
     },
@@ -8346,16 +8361,21 @@ var stringify = function stringify( // eslint-disable-line func-name-matching
     allowDots,
     serializeDate,
     formatter,
-    encodeValuesOnly
+    encodeValuesOnly,
+    charset
 ) {
     var obj = object;
     if (typeof filter === 'function') {
         obj = filter(prefix, obj);
     } else if (obj instanceof Date) {
         obj = serializeDate(obj);
-    } else if (obj === null) {
+    } else if (generateArrayPrefix === 'comma' && isArray(obj)) {
+        obj = obj.join(',');
+    }
+
+    if (obj === null) {
         if (strictNullHandling) {
-            return encoder && !encodeValuesOnly ? encoder(prefix, defaults.encoder) : prefix;
+            return encoder && !encodeValuesOnly ? encoder(prefix, defaults.encoder, charset) : prefix;
         }
 
         obj = '';
@@ -8363,8 +8383,8 @@ var stringify = function stringify( // eslint-disable-line func-name-matching
 
     if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean' || utils.isBuffer(obj)) {
         if (encoder) {
-            var keyValue = encodeValuesOnly ? prefix : encoder(prefix, defaults.encoder);
-            return [formatter(keyValue) + '=' + formatter(encoder(obj, defaults.encoder))];
+            var keyValue = encodeValuesOnly ? prefix : encoder(prefix, defaults.encoder, charset);
+            return [formatter(keyValue) + '=' + formatter(encoder(obj, defaults.encoder, charset))];
         }
         return [formatter(prefix) + '=' + formatter(String(obj))];
     }
@@ -8376,7 +8396,7 @@ var stringify = function stringify( // eslint-disable-line func-name-matching
     }
 
     var objKeys;
-    if (Array.isArray(filter)) {
+    if (isArray(filter)) {
         objKeys = filter;
     } else {
         var keys = Object.keys(obj);
@@ -8390,10 +8410,10 @@ var stringify = function stringify( // eslint-disable-line func-name-matching
             continue;
         }
 
-        if (Array.isArray(obj)) {
-            values = values.concat(stringify(
+        if (isArray(obj)) {
+            pushToArray(values, stringify(
                 obj[key],
-                generateArrayPrefix(prefix, key),
+                typeof generateArrayPrefix === 'function' ? generateArrayPrefix(prefix, key) : prefix,
                 generateArrayPrefix,
                 strictNullHandling,
                 skipNulls,
@@ -8403,10 +8423,11 @@ var stringify = function stringify( // eslint-disable-line func-name-matching
                 allowDots,
                 serializeDate,
                 formatter,
-                encodeValuesOnly
+                encodeValuesOnly,
+                charset
             ));
         } else {
-            values = values.concat(stringify(
+            pushToArray(values, stringify(
                 obj[key],
                 prefix + (allowDots ? '.' + key : '[' + key + ']'),
                 generateArrayPrefix,
@@ -8418,7 +8439,8 @@ var stringify = function stringify( // eslint-disable-line func-name-matching
                 allowDots,
                 serializeDate,
                 formatter,
-                encodeValuesOnly
+                encodeValuesOnly,
+                charset
             ));
         }
     }
@@ -8426,36 +8448,63 @@ var stringify = function stringify( // eslint-disable-line func-name-matching
     return values;
 };
 
-module.exports = function (object, opts) {
-    var obj = object;
-    var options = opts ? utils.assign({}, opts) : {};
+var normalizeStringifyOptions = function normalizeStringifyOptions(opts) {
+    if (!opts) {
+        return defaults;
+    }
 
-    if (options.encoder !== null && options.encoder !== undefined && typeof options.encoder !== 'function') {
+    if (opts.encoder !== null && opts.encoder !== undefined && typeof opts.encoder !== 'function') {
         throw new TypeError('Encoder has to be a function.');
     }
 
-    var delimiter = typeof options.delimiter === 'undefined' ? defaults.delimiter : options.delimiter;
-    var strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
-    var skipNulls = typeof options.skipNulls === 'boolean' ? options.skipNulls : defaults.skipNulls;
-    var encode = typeof options.encode === 'boolean' ? options.encode : defaults.encode;
-    var encoder = typeof options.encoder === 'function' ? options.encoder : defaults.encoder;
-    var sort = typeof options.sort === 'function' ? options.sort : null;
-    var allowDots = typeof options.allowDots === 'undefined' ? false : options.allowDots;
-    var serializeDate = typeof options.serializeDate === 'function' ? options.serializeDate : defaults.serializeDate;
-    var encodeValuesOnly = typeof options.encodeValuesOnly === 'boolean' ? options.encodeValuesOnly : defaults.encodeValuesOnly;
-    if (typeof options.format === 'undefined') {
-        options.format = formats['default'];
-    } else if (!Object.prototype.hasOwnProperty.call(formats.formatters, options.format)) {
-        throw new TypeError('Unknown format option provided.');
+    var charset = opts.charset || defaults.charset;
+    if (typeof opts.charset !== 'undefined' && opts.charset !== 'utf-8' && opts.charset !== 'iso-8859-1') {
+        throw new TypeError('The charset option must be either utf-8, iso-8859-1, or undefined');
     }
-    var formatter = formats.formatters[options.format];
+
+    var format = formats['default'];
+    if (typeof opts.format !== 'undefined') {
+        if (!has.call(formats.formatters, opts.format)) {
+            throw new TypeError('Unknown format option provided.');
+        }
+        format = opts.format;
+    }
+    var formatter = formats.formatters[format];
+
+    var filter = defaults.filter;
+    if (typeof opts.filter === 'function' || isArray(opts.filter)) {
+        filter = opts.filter;
+    }
+
+    return {
+        addQueryPrefix: typeof opts.addQueryPrefix === 'boolean' ? opts.addQueryPrefix : defaults.addQueryPrefix,
+        allowDots: typeof opts.allowDots === 'undefined' ? defaults.allowDots : !!opts.allowDots,
+        charset: charset,
+        charsetSentinel: typeof opts.charsetSentinel === 'boolean' ? opts.charsetSentinel : defaults.charsetSentinel,
+        delimiter: typeof opts.delimiter === 'undefined' ? defaults.delimiter : opts.delimiter,
+        encode: typeof opts.encode === 'boolean' ? opts.encode : defaults.encode,
+        encoder: typeof opts.encoder === 'function' ? opts.encoder : defaults.encoder,
+        encodeValuesOnly: typeof opts.encodeValuesOnly === 'boolean' ? opts.encodeValuesOnly : defaults.encodeValuesOnly,
+        filter: filter,
+        formatter: formatter,
+        serializeDate: typeof opts.serializeDate === 'function' ? opts.serializeDate : defaults.serializeDate,
+        skipNulls: typeof opts.skipNulls === 'boolean' ? opts.skipNulls : defaults.skipNulls,
+        sort: typeof opts.sort === 'function' ? opts.sort : null,
+        strictNullHandling: typeof opts.strictNullHandling === 'boolean' ? opts.strictNullHandling : defaults.strictNullHandling
+    };
+};
+
+module.exports = function (object, opts) {
+    var obj = object;
+    var options = normalizeStringifyOptions(opts);
+
     var objKeys;
     var filter;
 
     if (typeof options.filter === 'function') {
         filter = options.filter;
         obj = filter('', obj);
-    } else if (Array.isArray(options.filter)) {
+    } else if (isArray(options.filter)) {
         filter = options.filter;
         objKeys = filter;
     }
@@ -8467,10 +8516,10 @@ module.exports = function (object, opts) {
     }
 
     var arrayFormat;
-    if (options.arrayFormat in arrayPrefixGenerators) {
-        arrayFormat = options.arrayFormat;
-    } else if ('indices' in options) {
-        arrayFormat = options.indices ? 'indices' : 'repeat';
+    if (opts && opts.arrayFormat in arrayPrefixGenerators) {
+        arrayFormat = opts.arrayFormat;
+    } else if (opts && 'indices' in opts) {
+        arrayFormat = opts.indices ? 'indices' : 'repeat';
     } else {
         arrayFormat = 'indices';
     }
@@ -8481,35 +8530,45 @@ module.exports = function (object, opts) {
         objKeys = Object.keys(obj);
     }
 
-    if (sort) {
-        objKeys.sort(sort);
+    if (options.sort) {
+        objKeys.sort(options.sort);
     }
 
     for (var i = 0; i < objKeys.length; ++i) {
         var key = objKeys[i];
 
-        if (skipNulls && obj[key] === null) {
+        if (options.skipNulls && obj[key] === null) {
             continue;
         }
-
-        keys = keys.concat(stringify(
+        pushToArray(keys, stringify(
             obj[key],
             key,
             generateArrayPrefix,
-            strictNullHandling,
-            skipNulls,
-            encode ? encoder : null,
-            filter,
-            sort,
-            allowDots,
-            serializeDate,
-            formatter,
-            encodeValuesOnly
+            options.strictNullHandling,
+            options.skipNulls,
+            options.encode ? options.encoder : null,
+            options.filter,
+            options.sort,
+            options.allowDots,
+            options.serializeDate,
+            options.formatter,
+            options.encodeValuesOnly,
+            options.charset
         ));
     }
 
-    var joined = keys.join(delimiter);
+    var joined = keys.join(options.delimiter);
     var prefix = options.addQueryPrefix === true ? '?' : '';
+
+    if (options.charsetSentinel) {
+        if (options.charset === 'iso-8859-1') {
+            // encodeURIComponent('&#10003;'), the "numeric entity" representation of a checkmark
+            prefix += 'utf8=%26%2310003%3B&';
+        } else {
+            // encodeURIComponent('✓')
+            prefix += 'utf8=%E2%9C%93&';
+        }
+    }
 
     return joined.length > 0 ? prefix + joined : '';
 };
@@ -25496,6 +25555,381 @@ module.exports = function (Iterable, NAME, IteratorConstructor, next, DEFAULT, I
 
 /***/ }),
 
+/***/ "7ea2":
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Module dependencies.
+ */
+var os = __webpack_require__("3c43");
+var lodashGet = __webpack_require__("c832");
+var lodashFlatten = __webpack_require__("2fb4");
+var lodashUniq = __webpack_require__("c36e");
+var lodashSet = __webpack_require__("f4c4");
+var lodashCloneDeep = __webpack_require__("cd3f");
+var flatten = __webpack_require__("1149");
+
+/**
+ * @name Json2CsvParams
+ * @typedef {Object}
+ * @property {Array} data - array of JSON objects
+ * @property {Array} [fields] - see documentation for details
+ * @property {String[]} [fieldNames] - names for fields at the same indexes. Must be same length as fields array
+ *                                   (Optional. Maintained for backwards compatibility. Use fields config object for more features)
+ * @property {String} [del=","] - delimiter of columns
+ * @property {String} [defaultValue="<empty>"] - default value to use when missing data
+ * @property {String} [quotes='"'] - quotes around cell values and column names
+ * @property {String} [doubleQuotes='""'] - the value to replace double quotes in strings
+ * @property {Boolean} [hasCSVColumnTitle=true] - determines whether or not CSV file will contain a title column
+ * @property {String} [eol=''] - it gets added to each row of data
+ * @property {String} [newLine] - overrides the default OS line ending (\n on Unix \r\n on Windows)
+ * @property {Boolean} [flatten=false] - flattens nested JSON using flat (https://www.npmjs.com/package/flat)
+ * @property {String[]} [unwindPath] - similar to MongoDB's $unwind, Deconstructs an array field from the input JSON to output a row for each element
+ * @property {Boolean} [excelStrings] - converts string data into normalized Excel style data
+ * @property {Boolean} [includeEmptyRows=false] - includes empty rows
+ * @property {Boolean} [withBOM=false] - includes BOM character at the beginning of the csv
+ */
+
+/**
+ * Main function that converts json to csv.
+ *
+ * @param {Json2CsvParams} params Function parameters containing data, fields,
+ * delimiter (default is ','), hasCSVColumnTitle (default is true)
+ * and default value (default is '')
+ * @param {Function} [callback] Callback function
+ *   if error, returning error in call back.
+ *   if csv is created successfully, returning csv output to callback.
+ */
+module.exports = function (params, callback) {
+  var hasCallback = typeof callback === 'function';
+  var err;
+
+  try {
+    checkParams(params);
+  } catch (err) {
+    if (hasCallback) {
+      return process.nextTick(function () {
+        callback(err);
+      });
+    } else {
+      throw err;
+    }
+  }
+
+  var titles = createColumnTitles(params);
+  var csv = createColumnContent(params, titles);
+
+  if (hasCallback) {
+    return process.nextTick(function () {
+      callback(null, csv);
+    });
+  } else {
+    return csv;
+  }
+};
+
+
+/**
+ * Check passing params.
+ *
+ * Note that this modifies params.
+ *
+ * @param {Json2CsvParams} params Function parameters containing data, fields,
+ * delimiter, default value, mark quotes and hasCSVColumnTitle
+ */
+function checkParams(params) {
+  params.data = params.data || [];
+
+  // if data is an Object, not in array [{}], then just create 1 item array.
+  // So from now all data in array of object format.
+  if (!Array.isArray(params.data)) {
+    params.data = [params.data];
+  }
+
+  if (params.flatten) {
+    params.data = params.data.map(flatten);
+  }
+
+  // Set params.fields default to first data element's keys
+  if (!params.fields && (params.data.length === 0 || typeof params.data[0] !== 'object')) {
+    throw new Error('params should include "fields" and/or non-empty "data" array of objects');
+  }
+
+  if (!params.fields) {
+    var dataFields = params.data.map(function (item) {
+      return Object.keys(item);
+    });
+
+    dataFields = lodashFlatten(dataFields);
+    params.fields = lodashUniq(dataFields);
+  }
+
+
+  //#check fieldNames
+  if (params.fieldNames && params.fieldNames.length !== params.fields.length) {
+    throw new Error('fieldNames and fields should be of the same length, if fieldNames is provided.');
+  }
+
+  // Get fieldNames from fields
+  params.fieldNames = params.fields.map(function (field, i) {
+    if (params.fieldNames && typeof field === 'string') {
+      return params.fieldNames[i];
+    }
+    return (typeof field === 'string') ? field : (field.label || field.value);
+  });
+
+  //#check delimiter
+  params.del = params.del || ',';
+
+  //#check end of line character
+  params.eol = params.eol || '';
+
+  //#check quotation mark
+  params.quotes = typeof params.quotes === 'string' ? params.quotes : '"';
+
+  //#check double quotes
+  params.doubleQuotes = typeof params.doubleQuotes === 'string' ? params.doubleQuotes : Array(3).join(params.quotes);
+
+  //#check default value
+  params.defaultValue = params.defaultValue;
+
+  //#check hasCSVColumnTitle, if it is not explicitly set to false then true.
+  params.hasCSVColumnTitle = params.hasCSVColumnTitle !== false;
+
+  //#check include empty rows, defaults to false
+  params.includeEmptyRows = params.includeEmptyRows || false;
+
+  //#check with BOM, defaults to false
+  params.withBOM = params.withBOM || false;
+
+  //#check unwindPath, defaults to empty array
+  params.unwindPath = params.unwindPath || [];
+
+  // if unwindPath is not in array [{}], then just create 1 item array.
+  if (!Array.isArray(params.unwindPath)) {
+    params.unwindPath = [params.unwindPath];
+  }
+}
+
+/**
+ * Create the title row with all the provided fields as column headings
+ *
+ * @param {Json2CsvParams} params Function parameters containing data, fields and delimiter
+ * @returns {String} titles as a string
+ */
+function createColumnTitles(params) {
+  var str = '';
+
+  //if CSV has column title, then create it
+  if (params.hasCSVColumnTitle) {
+    params.fieldNames.forEach(function (element) {
+      if (str !== '') {
+        str += params.del;
+      }
+      str += JSON.stringify(element).replace(/\"/g, params.quotes);
+    });
+  }
+
+  return str;
+}
+
+/**
+ * Replace the quotation marks of the field element if needed (can be a not string-like item)
+ *
+ * @param {string} stringifiedElement The field element after JSON.stringify()
+ * @param {string} quotes The params.quotes value. At this point we know that is not equal to double (")
+ */
+function replaceQuotationMarks(stringifiedElement, quotes) {
+  var lastCharIndex = stringifiedElement.length - 1;
+
+  //check if it's an string-like element
+  if (stringifiedElement[0] === '"' && stringifiedElement[lastCharIndex] === '"') {
+    //split the stringified field element because Strings are immutable
+    var splitElement = stringifiedElement.split('');
+
+    //replace the quotation marks
+    splitElement[0] = quotes;
+    splitElement[lastCharIndex] = quotes;
+
+    //join again
+    stringifiedElement = splitElement.join('');
+  }
+
+  return stringifiedElement;
+}
+
+/**
+ * Create the content column by column and row by row below the title
+ *
+ * @param {Object} params Function parameters containing data, fields and delimiter
+ * @param {String} str Title row as a string
+ * @returns {String} csv string
+ */
+function createColumnContent(params, str) {
+  createDataRows(params.data, params.unwindPath).forEach(function (dataElement) {
+    //if null do nothing, if empty object without includeEmptyRows do nothing
+    if (dataElement && (Object.getOwnPropertyNames(dataElement).length > 0 || params.includeEmptyRows)) {
+      var line = '';
+      var eol = params.newLine || os.EOL || '\n';
+
+      params.fields.forEach(function (fieldElement) {
+        var val;
+        var defaultValue = params.defaultValue;
+        var stringify = true;
+        if (typeof fieldElement === 'object' && 'default' in fieldElement) {
+          defaultValue = fieldElement.default;
+        }
+
+        if (fieldElement && (typeof fieldElement === 'string' || typeof fieldElement.value === 'string')) {
+          var path = (typeof fieldElement === 'string') ? fieldElement : fieldElement.value;
+          val = lodashGet(dataElement, path, defaultValue);
+        } else if (fieldElement && typeof fieldElement.value === 'function') {
+          var field = {
+            label: fieldElement.label,
+            default: fieldElement.default
+          };
+          val = fieldElement.value(dataElement, field, params.data);
+          if (fieldElement.stringify !== undefined) {
+            stringify = fieldElement.stringify;
+          }
+        }
+
+        if (val === null || val === undefined){
+          val = defaultValue;
+        }
+
+        if (val !== undefined) {
+          if (params.preserveNewLinesInValues && typeof val === 'string') {
+            val = val
+              .replace(/\n/g, '\u2028')
+              .replace(/\r/g, '\u2029');
+          }
+
+          var stringifiedElement = val;
+          if (stringify) {
+            stringifiedElement = JSON.stringify(val);
+          }
+
+          if (params.preserveNewLinesInValues && typeof val === 'string') {
+            stringifiedElement = stringifiedElement
+              .replace(/\u2028/g, '\n')
+              .replace(/\u2029/g, '\r');
+          }
+
+          if (typeof val === 'object') {
+            // In some cases (e.g. val is a Date), stringifiedElement is already a quoted string.
+            // Strip the leading and trailing quotes if so, so we don't end up double-quoting it
+            stringifiedElement = replaceQuotationMarks(stringifiedElement, '');
+
+            // If val is a normal object, we want to escape its JSON so any commas etc
+            // don't get interpreted as field separators
+            stringifiedElement = JSON.stringify(stringifiedElement);
+          }
+
+          if (params.quotes !== '"') {
+            stringifiedElement = replaceQuotationMarks(stringifiedElement, params.quotes);
+          }
+
+          //JSON.stringify('\\') results in a string with two backslash
+          //characters in it. I.e. '\\\\'.
+          stringifiedElement = stringifiedElement.replace(/\\\\/g, '\\');
+
+          if (params.excelStrings && typeof val === 'string') {
+            stringifiedElement = '"="' + stringifiedElement + '""';
+          }
+
+          //Replace single quotes with double quotes.  Single quotes are preceeded by
+          //a backslash,  and it's not at the end of the stringifiedElement.
+          stringifiedElement = stringifiedElement.replace(/(\\")(?=.)/g, params.doubleQuotes);
+
+          line += stringifiedElement;
+        }
+
+        line += params.del;
+      });
+
+      //remove last delimeter by its length
+      line = line.substring(0, line.length - params.del.length);
+
+      //Remove the final excess backslashes from the stringified value.
+      line = line.replace(/\\\\/g,'\\');
+
+      //If header exists, add it, otherwise, print only content
+      if (str !== '') {
+        str += eol + line + params.eol;
+      } else {
+        str = line + params.eol;
+      }
+    }
+  });
+  // Add BOM character if required
+  if (params.withBOM) {
+    str = '\ufeff' + str;
+  }
+
+  return str;
+}
+
+/**
+ * Performs the unwind recursively in specified sequence
+ *
+ * @param {Array} originalData The params.data value. Original array of JSON objects
+ * @param {String[]} unwindPaths The params.unwindPath value. Unwind strings to be used to deconstruct array
+ * @returns {Array} Array of objects containing all rows after unwind of chosen paths
+ */
+function createDataRows(originalData, unwindPaths) {
+  var dataRows = [];
+  if (unwindPaths.length) {
+    originalData.forEach(function(dataElement) {
+      var dataRow = [dataElement];
+
+      unwindPaths.forEach(function(unwindPath) {
+        dataRow = unwindRows(dataRow, unwindPath);
+      });
+
+      Array.prototype.push.apply(dataRows, dataRow);
+    });
+  } else {
+    dataRows = originalData;
+  }
+
+  return dataRows;
+}
+
+/**
+ * Performs the unwind logic if necessary to convert single JSON document into multiple rows
+ *
+ * @param {Array} inputRows Array contaning single or multiple rows to unwind
+ * @param {String} unwindPath Single path to do unwind
+ * @returns {Array} Array of rows processed
+ */
+function unwindRows(inputRows, unwindPath) {
+  var outputRows = [];
+  inputRows.forEach(function(dataEl) {
+    var unwindArray = lodashGet(dataEl, unwindPath);
+    var isArr = Array.isArray(unwindArray);
+
+    if (isArr && unwindArray.length) {
+      unwindArray.forEach(function(unwindEl) {
+        var dataCopy = lodashCloneDeep(dataEl);
+        lodashSet(dataCopy, unwindPath, unwindEl);
+        outputRows.push(dataCopy);
+      });
+    } else if (isArr && !unwindArray.length) {
+      var dataCopy = lodashCloneDeep(dataEl);
+      lodashSet(dataCopy, unwindPath, undefined);
+      outputRows.push(dataCopy);
+    } else {
+      outputRows.push(dataEl);
+    }
+  });
+  return outputRows;
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("4362")))
+
+/***/ }),
+
 /***/ "7f33":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28604,21 +29038,63 @@ var defaults = {
     allowDots: false,
     allowPrototypes: false,
     arrayLimit: 20,
+    charset: 'utf-8',
+    charsetSentinel: false,
+    comma: false,
     decoder: utils.decode,
     delimiter: '&',
     depth: 5,
+    ignoreQueryPrefix: false,
+    interpretNumericEntities: false,
     parameterLimit: 1000,
+    parseArrays: true,
     plainObjects: false,
     strictNullHandling: false
 };
+
+var interpretNumericEntities = function (str) {
+    return str.replace(/&#(\d+);/g, function ($0, numberStr) {
+        return String.fromCharCode(parseInt(numberStr, 10));
+    });
+};
+
+// This is what browsers will submit when the ✓ character occurs in an
+// application/x-www-form-urlencoded body and the encoding of the page containing
+// the form is iso-8859-1, or when the submitted form has an accept-charset
+// attribute of iso-8859-1. Presumably also with other charsets that do not contain
+// the ✓ character, such as us-ascii.
+var isoSentinel = 'utf8=%26%2310003%3B'; // encodeURIComponent('&#10003;')
+
+// These are the percent-encoded utf-8 octets representing a checkmark, indicating that the request actually is utf-8 encoded.
+var charsetSentinel = 'utf8=%E2%9C%93'; // encodeURIComponent('✓')
 
 var parseValues = function parseQueryStringValues(str, options) {
     var obj = {};
     var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, '') : str;
     var limit = options.parameterLimit === Infinity ? undefined : options.parameterLimit;
     var parts = cleanStr.split(options.delimiter, limit);
+    var skipIndex = -1; // Keep track of where the utf8 sentinel was found
+    var i;
 
-    for (var i = 0; i < parts.length; ++i) {
+    var charset = options.charset;
+    if (options.charsetSentinel) {
+        for (i = 0; i < parts.length; ++i) {
+            if (parts[i].indexOf('utf8=') === 0) {
+                if (parts[i] === charsetSentinel) {
+                    charset = 'utf-8';
+                } else if (parts[i] === isoSentinel) {
+                    charset = 'iso-8859-1';
+                }
+                skipIndex = i;
+                i = parts.length; // The eslint settings do not allow break;
+            }
+        }
+    }
+
+    for (i = 0; i < parts.length; ++i) {
+        if (i === skipIndex) {
+            continue;
+        }
         var part = parts[i];
 
         var bracketEqualsPos = part.indexOf(']=');
@@ -28626,14 +29102,23 @@ var parseValues = function parseQueryStringValues(str, options) {
 
         var key, val;
         if (pos === -1) {
-            key = options.decoder(part, defaults.decoder);
+            key = options.decoder(part, defaults.decoder, charset);
             val = options.strictNullHandling ? null : '';
         } else {
-            key = options.decoder(part.slice(0, pos), defaults.decoder);
-            val = options.decoder(part.slice(pos + 1), defaults.decoder);
+            key = options.decoder(part.slice(0, pos), defaults.decoder, charset);
+            val = options.decoder(part.slice(pos + 1), defaults.decoder, charset);
         }
+
+        if (val && options.interpretNumericEntities && charset === 'iso-8859-1') {
+            val = interpretNumericEntities(val);
+        }
+
+        if (val && options.comma && val.indexOf(',') > -1) {
+            val = val.split(',');
+        }
+
         if (has.call(obj, key)) {
-            obj[key] = [].concat(obj[key]).concat(val);
+            obj[key] = utils.combine(obj[key], val);
         } else {
             obj[key] = val;
         }
@@ -28649,14 +29134,15 @@ var parseObject = function (chain, val, options) {
         var obj;
         var root = chain[i];
 
-        if (root === '[]') {
-            obj = [];
-            obj = obj.concat(leaf);
+        if (root === '[]' && options.parseArrays) {
+            obj = [].concat(leaf);
         } else {
             obj = options.plainObjects ? Object.create(null) : {};
             var cleanRoot = root.charAt(0) === '[' && root.charAt(root.length - 1) === ']' ? root.slice(1, -1) : root;
             var index = parseInt(cleanRoot, 10);
-            if (
+            if (!options.parseArrays && cleanRoot === '') {
+                obj = { 0: leaf };
+            } else if (
                 !isNaN(index)
                 && root !== cleanRoot
                 && String(index) === cleanRoot
@@ -28698,8 +29184,7 @@ var parseKeys = function parseQueryStringKeys(givenKey, val, options) {
 
     var keys = [];
     if (parent) {
-        // If we aren't using plain objects, optionally prefix keys
-        // that would overwrite object prototype properties
+        // If we aren't using plain objects, optionally prefix keys that would overwrite object prototype properties
         if (!options.plainObjects && has.call(Object.prototype, parent)) {
             if (!options.allowPrototypes) {
                 return;
@@ -28731,24 +29216,41 @@ var parseKeys = function parseQueryStringKeys(givenKey, val, options) {
     return parseObject(keys, val, options);
 };
 
-module.exports = function (str, opts) {
-    var options = opts ? utils.assign({}, opts) : {};
+var normalizeParseOptions = function normalizeParseOptions(opts) {
+    if (!opts) {
+        return defaults;
+    }
 
-    if (options.decoder !== null && options.decoder !== undefined && typeof options.decoder !== 'function') {
+    if (opts.decoder !== null && opts.decoder !== undefined && typeof opts.decoder !== 'function') {
         throw new TypeError('Decoder has to be a function.');
     }
 
-    options.ignoreQueryPrefix = options.ignoreQueryPrefix === true;
-    options.delimiter = typeof options.delimiter === 'string' || utils.isRegExp(options.delimiter) ? options.delimiter : defaults.delimiter;
-    options.depth = typeof options.depth === 'number' ? options.depth : defaults.depth;
-    options.arrayLimit = typeof options.arrayLimit === 'number' ? options.arrayLimit : defaults.arrayLimit;
-    options.parseArrays = options.parseArrays !== false;
-    options.decoder = typeof options.decoder === 'function' ? options.decoder : defaults.decoder;
-    options.allowDots = typeof options.allowDots === 'boolean' ? options.allowDots : defaults.allowDots;
-    options.plainObjects = typeof options.plainObjects === 'boolean' ? options.plainObjects : defaults.plainObjects;
-    options.allowPrototypes = typeof options.allowPrototypes === 'boolean' ? options.allowPrototypes : defaults.allowPrototypes;
-    options.parameterLimit = typeof options.parameterLimit === 'number' ? options.parameterLimit : defaults.parameterLimit;
-    options.strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
+    if (typeof opts.charset !== 'undefined' && opts.charset !== 'utf-8' && opts.charset !== 'iso-8859-1') {
+        throw new Error('The charset option must be either utf-8, iso-8859-1, or undefined');
+    }
+    var charset = typeof opts.charset === 'undefined' ? defaults.charset : opts.charset;
+
+    return {
+        allowDots: typeof opts.allowDots === 'undefined' ? defaults.allowDots : !!opts.allowDots,
+        allowPrototypes: typeof opts.allowPrototypes === 'boolean' ? opts.allowPrototypes : defaults.allowPrototypes,
+        arrayLimit: typeof opts.arrayLimit === 'number' ? opts.arrayLimit : defaults.arrayLimit,
+        charset: charset,
+        charsetSentinel: typeof opts.charsetSentinel === 'boolean' ? opts.charsetSentinel : defaults.charsetSentinel,
+        comma: typeof opts.comma === 'boolean' ? opts.comma : defaults.comma,
+        decoder: typeof opts.decoder === 'function' ? opts.decoder : defaults.decoder,
+        delimiter: typeof opts.delimiter === 'string' || utils.isRegExp(opts.delimiter) ? opts.delimiter : defaults.delimiter,
+        depth: typeof opts.depth === 'number' ? opts.depth : defaults.depth,
+        ignoreQueryPrefix: opts.ignoreQueryPrefix === true,
+        interpretNumericEntities: typeof opts.interpretNumericEntities === 'boolean' ? opts.interpretNumericEntities : defaults.interpretNumericEntities,
+        parameterLimit: typeof opts.parameterLimit === 'number' ? opts.parameterLimit : defaults.parameterLimit,
+        parseArrays: opts.parseArrays !== false,
+        plainObjects: typeof opts.plainObjects === 'boolean' ? opts.plainObjects : defaults.plainObjects,
+        strictNullHandling: typeof opts.strictNullHandling === 'boolean' ? opts.strictNullHandling : defaults.strictNullHandling
+    };
+};
+
+module.exports = function (str, opts) {
+    var options = normalizeParseOptions(opts);
 
     if (str === '' || str === null || typeof str === 'undefined') {
         return options.plainObjects ? Object.create(null) : {};
@@ -47407,6 +47909,7 @@ exports.f = NASHORN_BUG ? function propertyIsEnumerable(V) {
 
 
 var has = Object.prototype.hasOwnProperty;
+var isArray = Array.isArray;
 
 var hexTable = (function () {
     var array = [];
@@ -47418,13 +47921,11 @@ var hexTable = (function () {
 }());
 
 var compactQueue = function compactQueue(queue) {
-    var obj;
-
-    while (queue.length) {
+    while (queue.length > 1) {
         var item = queue.pop();
-        obj = item.obj[item.prop];
+        var obj = item.obj[item.prop];
 
-        if (Array.isArray(obj)) {
+        if (isArray(obj)) {
             var compacted = [];
 
             for (var j = 0; j < obj.length; ++j) {
@@ -47436,8 +47937,6 @@ var compactQueue = function compactQueue(queue) {
             item.obj[item.prop] = compacted;
         }
     }
-
-    return obj;
 };
 
 var arrayToObject = function arrayToObject(source, options) {
@@ -47457,10 +47956,10 @@ var merge = function merge(target, source, options) {
     }
 
     if (typeof source !== 'object') {
-        if (Array.isArray(target)) {
+        if (isArray(target)) {
             target.push(source);
-        } else if (typeof target === 'object') {
-            if (options.plainObjects || options.allowPrototypes || !has.call(Object.prototype, source)) {
+        } else if (target && typeof target === 'object') {
+            if ((options && (options.plainObjects || options.allowPrototypes)) || !has.call(Object.prototype, source)) {
                 target[source] = true;
             }
         } else {
@@ -47470,20 +47969,21 @@ var merge = function merge(target, source, options) {
         return target;
     }
 
-    if (typeof target !== 'object') {
+    if (!target || typeof target !== 'object') {
         return [target].concat(source);
     }
 
     var mergeTarget = target;
-    if (Array.isArray(target) && !Array.isArray(source)) {
+    if (isArray(target) && !isArray(source)) {
         mergeTarget = arrayToObject(target, options);
     }
 
-    if (Array.isArray(target) && Array.isArray(source)) {
+    if (isArray(target) && isArray(source)) {
         source.forEach(function (item, i) {
             if (has.call(target, i)) {
-                if (target[i] && typeof target[i] === 'object') {
-                    target[i] = merge(target[i], item, options);
+                var targetItem = target[i];
+                if (targetItem && typeof targetItem === 'object' && item && typeof item === 'object') {
+                    target[i] = merge(targetItem, item, options);
                 } else {
                     target.push(item);
                 }
@@ -47513,15 +48013,21 @@ var assign = function assignSingleSource(target, source) {
     }, target);
 };
 
-var decode = function (str) {
+var decode = function (str, decoder, charset) {
+    var strWithoutPlus = str.replace(/\+/g, ' ');
+    if (charset === 'iso-8859-1') {
+        // unescape never throws, no try...catch needed:
+        return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
+    }
+    // utf-8
     try {
-        return decodeURIComponent(str.replace(/\+/g, ' '));
+        return decodeURIComponent(strWithoutPlus);
     } catch (e) {
-        return str;
+        return strWithoutPlus;
     }
 };
 
-var encode = function encode(str) {
+var encode = function encode(str, defaultEncoder, charset) {
     // This code was originally written by Brian White (mscdex) for the io.js core querystring library.
     // It has been adapted here for stricter adherence to RFC 3986
     if (str.length === 0) {
@@ -47529,6 +48035,12 @@ var encode = function encode(str) {
     }
 
     var string = typeof str === 'string' ? str : String(str);
+
+    if (charset === 'iso-8859-1') {
+        return escape(string).replace(/%u[0-9a-f]{4}/gi, function ($0) {
+            return '%26%23' + parseInt($0.slice(2), 16) + '%3B';
+        });
+    }
 
     var out = '';
     for (var i = 0; i < string.length; ++i) {
@@ -47592,7 +48104,9 @@ var compact = function compact(value) {
         }
     }
 
-    return compactQueue(queue);
+    compactQueue(queue);
+
+    return value;
 };
 
 var isRegExp = function isRegExp(obj) {
@@ -47600,16 +48114,21 @@ var isRegExp = function isRegExp(obj) {
 };
 
 var isBuffer = function isBuffer(obj) {
-    if (obj === null || typeof obj === 'undefined') {
+    if (!obj || typeof obj !== 'object') {
         return false;
     }
 
     return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
 };
 
+var combine = function combine(a, b) {
+    return [].concat(a, b);
+};
+
 module.exports = {
     arrayToObject: arrayToObject,
     assign: assign,
+    combine: combine,
     compact: compact,
     decode: decode,
     encode: encode,
@@ -47869,381 +48388,6 @@ if (!TO_STRING_TAG_SUPPORT) {
 /***/ }),
 
 /***/ "d3ca":
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(process) {/**
- * Module dependencies.
- */
-var os = __webpack_require__("3c43");
-var lodashGet = __webpack_require__("c832");
-var lodashFlatten = __webpack_require__("2fb4");
-var lodashUniq = __webpack_require__("c36e");
-var lodashSet = __webpack_require__("f4c4");
-var lodashCloneDeep = __webpack_require__("cd3f");
-var flatten = __webpack_require__("1149");
-
-/**
- * @name Json2CsvParams
- * @typedef {Object}
- * @property {Array} data - array of JSON objects
- * @property {Array} [fields] - see documentation for details
- * @property {String[]} [fieldNames] - names for fields at the same indexes. Must be same length as fields array
- *                                   (Optional. Maintained for backwards compatibility. Use fields config object for more features)
- * @property {String} [del=","] - delimiter of columns
- * @property {String} [defaultValue="<empty>"] - default value to use when missing data
- * @property {String} [quotes='"'] - quotes around cell values and column names
- * @property {String} [doubleQuotes='""'] - the value to replace double quotes in strings
- * @property {Boolean} [hasCSVColumnTitle=true] - determines whether or not CSV file will contain a title column
- * @property {String} [eol=''] - it gets added to each row of data
- * @property {String} [newLine] - overrides the default OS line ending (\n on Unix \r\n on Windows)
- * @property {Boolean} [flatten=false] - flattens nested JSON using flat (https://www.npmjs.com/package/flat)
- * @property {String[]} [unwindPath] - similar to MongoDB's $unwind, Deconstructs an array field from the input JSON to output a row for each element
- * @property {Boolean} [excelStrings] - converts string data into normalized Excel style data
- * @property {Boolean} [includeEmptyRows=false] - includes empty rows
- * @property {Boolean} [withBOM=false] - includes BOM character at the beginning of the csv
- */
-
-/**
- * Main function that converts json to csv.
- *
- * @param {Json2CsvParams} params Function parameters containing data, fields,
- * delimiter (default is ','), hasCSVColumnTitle (default is true)
- * and default value (default is '')
- * @param {Function} [callback] Callback function
- *   if error, returning error in call back.
- *   if csv is created successfully, returning csv output to callback.
- */
-module.exports = function (params, callback) {
-  var hasCallback = typeof callback === 'function';
-  var err;
-
-  try {
-    checkParams(params);
-  } catch (err) {
-    if (hasCallback) {
-      return process.nextTick(function () {
-        callback(err);
-      });
-    } else {
-      throw err;
-    }
-  }
-
-  var titles = createColumnTitles(params);
-  var csv = createColumnContent(params, titles);
-
-  if (hasCallback) {
-    return process.nextTick(function () {
-      callback(null, csv);
-    });
-  } else {
-    return csv;
-  }
-};
-
-
-/**
- * Check passing params.
- *
- * Note that this modifies params.
- *
- * @param {Json2CsvParams} params Function parameters containing data, fields,
- * delimiter, default value, mark quotes and hasCSVColumnTitle
- */
-function checkParams(params) {
-  params.data = params.data || [];
-
-  // if data is an Object, not in array [{}], then just create 1 item array.
-  // So from now all data in array of object format.
-  if (!Array.isArray(params.data)) {
-    params.data = [params.data];
-  }
-
-  if (params.flatten) {
-    params.data = params.data.map(flatten);
-  }
-
-  // Set params.fields default to first data element's keys
-  if (!params.fields && (params.data.length === 0 || typeof params.data[0] !== 'object')) {
-    throw new Error('params should include "fields" and/or non-empty "data" array of objects');
-  }
-
-  if (!params.fields) {
-    var dataFields = params.data.map(function (item) {
-      return Object.keys(item);
-    });
-
-    dataFields = lodashFlatten(dataFields);
-    params.fields = lodashUniq(dataFields);
-  }
-
-
-  //#check fieldNames
-  if (params.fieldNames && params.fieldNames.length !== params.fields.length) {
-    throw new Error('fieldNames and fields should be of the same length, if fieldNames is provided.');
-  }
-
-  // Get fieldNames from fields
-  params.fieldNames = params.fields.map(function (field, i) {
-    if (params.fieldNames && typeof field === 'string') {
-      return params.fieldNames[i];
-    }
-    return (typeof field === 'string') ? field : (field.label || field.value);
-  });
-
-  //#check delimiter
-  params.del = params.del || ',';
-
-  //#check end of line character
-  params.eol = params.eol || '';
-
-  //#check quotation mark
-  params.quotes = typeof params.quotes === 'string' ? params.quotes : '"';
-
-  //#check double quotes
-  params.doubleQuotes = typeof params.doubleQuotes === 'string' ? params.doubleQuotes : Array(3).join(params.quotes);
-
-  //#check default value
-  params.defaultValue = params.defaultValue;
-
-  //#check hasCSVColumnTitle, if it is not explicitly set to false then true.
-  params.hasCSVColumnTitle = params.hasCSVColumnTitle !== false;
-
-  //#check include empty rows, defaults to false
-  params.includeEmptyRows = params.includeEmptyRows || false;
-
-  //#check with BOM, defaults to false
-  params.withBOM = params.withBOM || false;
-
-  //#check unwindPath, defaults to empty array
-  params.unwindPath = params.unwindPath || [];
-
-  // if unwindPath is not in array [{}], then just create 1 item array.
-  if (!Array.isArray(params.unwindPath)) {
-    params.unwindPath = [params.unwindPath];
-  }
-}
-
-/**
- * Create the title row with all the provided fields as column headings
- *
- * @param {Json2CsvParams} params Function parameters containing data, fields and delimiter
- * @returns {String} titles as a string
- */
-function createColumnTitles(params) {
-  var str = '';
-
-  //if CSV has column title, then create it
-  if (params.hasCSVColumnTitle) {
-    params.fieldNames.forEach(function (element) {
-      if (str !== '') {
-        str += params.del;
-      }
-      str += JSON.stringify(element).replace(/\"/g, params.quotes);
-    });
-  }
-
-  return str;
-}
-
-/**
- * Replace the quotation marks of the field element if needed (can be a not string-like item)
- *
- * @param {string} stringifiedElement The field element after JSON.stringify()
- * @param {string} quotes The params.quotes value. At this point we know that is not equal to double (")
- */
-function replaceQuotationMarks(stringifiedElement, quotes) {
-  var lastCharIndex = stringifiedElement.length - 1;
-
-  //check if it's an string-like element
-  if (stringifiedElement[0] === '"' && stringifiedElement[lastCharIndex] === '"') {
-    //split the stringified field element because Strings are immutable
-    var splitElement = stringifiedElement.split('');
-
-    //replace the quotation marks
-    splitElement[0] = quotes;
-    splitElement[lastCharIndex] = quotes;
-
-    //join again
-    stringifiedElement = splitElement.join('');
-  }
-
-  return stringifiedElement;
-}
-
-/**
- * Create the content column by column and row by row below the title
- *
- * @param {Object} params Function parameters containing data, fields and delimiter
- * @param {String} str Title row as a string
- * @returns {String} csv string
- */
-function createColumnContent(params, str) {
-  createDataRows(params.data, params.unwindPath).forEach(function (dataElement) {
-    //if null do nothing, if empty object without includeEmptyRows do nothing
-    if (dataElement && (Object.getOwnPropertyNames(dataElement).length > 0 || params.includeEmptyRows)) {
-      var line = '';
-      var eol = params.newLine || os.EOL || '\n';
-
-      params.fields.forEach(function (fieldElement) {
-        var val;
-        var defaultValue = params.defaultValue;
-        var stringify = true;
-        if (typeof fieldElement === 'object' && 'default' in fieldElement) {
-          defaultValue = fieldElement.default;
-        }
-
-        if (fieldElement && (typeof fieldElement === 'string' || typeof fieldElement.value === 'string')) {
-          var path = (typeof fieldElement === 'string') ? fieldElement : fieldElement.value;
-          val = lodashGet(dataElement, path, defaultValue);
-        } else if (fieldElement && typeof fieldElement.value === 'function') {
-          var field = {
-            label: fieldElement.label,
-            default: fieldElement.default
-          };
-          val = fieldElement.value(dataElement, field, params.data);
-          if (fieldElement.stringify !== undefined) {
-            stringify = fieldElement.stringify;
-          }
-        }
-
-        if (val === null || val === undefined){
-          val = defaultValue;
-        }
-
-        if (val !== undefined) {
-          if (params.preserveNewLinesInValues && typeof val === 'string') {
-            val = val
-              .replace(/\n/g, '\u2028')
-              .replace(/\r/g, '\u2029');
-          }
-
-          var stringifiedElement = val;
-          if (stringify) {
-            stringifiedElement = JSON.stringify(val);
-          }
-
-          if (params.preserveNewLinesInValues && typeof val === 'string') {
-            stringifiedElement = stringifiedElement
-              .replace(/\u2028/g, '\n')
-              .replace(/\u2029/g, '\r');
-          }
-
-          if (typeof val === 'object') {
-            // In some cases (e.g. val is a Date), stringifiedElement is already a quoted string.
-            // Strip the leading and trailing quotes if so, so we don't end up double-quoting it
-            stringifiedElement = replaceQuotationMarks(stringifiedElement, '');
-
-            // If val is a normal object, we want to escape its JSON so any commas etc
-            // don't get interpreted as field separators
-            stringifiedElement = JSON.stringify(stringifiedElement);
-          }
-
-          if (params.quotes !== '"') {
-            stringifiedElement = replaceQuotationMarks(stringifiedElement, params.quotes);
-          }
-
-          //JSON.stringify('\\') results in a string with two backslash
-          //characters in it. I.e. '\\\\'.
-          stringifiedElement = stringifiedElement.replace(/\\\\/g, '\\');
-
-          if (params.excelStrings && typeof val === 'string') {
-            stringifiedElement = '"="' + stringifiedElement + '""';
-          }
-
-          //Replace single quotes with double quotes.  Single quotes are preceeded by
-          //a backslash,  and it's not at the end of the stringifiedElement.
-          stringifiedElement = stringifiedElement.replace(/(\\")(?=.)/g, params.doubleQuotes);
-
-          line += stringifiedElement;
-        }
-
-        line += params.del;
-      });
-
-      //remove last delimeter by its length
-      line = line.substring(0, line.length - params.del.length);
-
-      //Remove the final excess backslashes from the stringified value.
-      line = line.replace(/\\\\/g,'\\');
-
-      //If header exists, add it, otherwise, print only content
-      if (str !== '') {
-        str += eol + line + params.eol;
-      } else {
-        str = line + params.eol;
-      }
-    }
-  });
-  // Add BOM character if required
-  if (params.withBOM) {
-    str = '\ufeff' + str;
-  }
-
-  return str;
-}
-
-/**
- * Performs the unwind recursively in specified sequence
- *
- * @param {Array} originalData The params.data value. Original array of JSON objects
- * @param {String[]} unwindPaths The params.unwindPath value. Unwind strings to be used to deconstruct array
- * @returns {Array} Array of objects containing all rows after unwind of chosen paths
- */
-function createDataRows(originalData, unwindPaths) {
-  var dataRows = [];
-  if (unwindPaths.length) {
-    originalData.forEach(function(dataElement) {
-      var dataRow = [dataElement];
-
-      unwindPaths.forEach(function(unwindPath) {
-        dataRow = unwindRows(dataRow, unwindPath);
-      });
-
-      Array.prototype.push.apply(dataRows, dataRow);
-    });
-  } else {
-    dataRows = originalData;
-  }
-
-  return dataRows;
-}
-
-/**
- * Performs the unwind logic if necessary to convert single JSON document into multiple rows
- *
- * @param {Array} inputRows Array contaning single or multiple rows to unwind
- * @param {String} unwindPath Single path to do unwind
- * @returns {Array} Array of rows processed
- */
-function unwindRows(inputRows, unwindPath) {
-  var outputRows = [];
-  inputRows.forEach(function(dataEl) {
-    var unwindArray = lodashGet(dataEl, unwindPath);
-    var isArr = Array.isArray(unwindArray);
-
-    if (isArr && unwindArray.length) {
-      unwindArray.forEach(function(unwindEl) {
-        var dataCopy = lodashCloneDeep(dataEl);
-        lodashSet(dataCopy, unwindPath, unwindEl);
-        outputRows.push(dataCopy);
-      });
-    } else if (isArr && !unwindArray.length) {
-      var dataCopy = lodashCloneDeep(dataEl);
-      lodashSet(dataCopy, unwindPath, undefined);
-      outputRows.push(dataCopy);
-    } else {
-      outputRows.push(dataEl);
-    }
-  });
-  return outputRows;
-}
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("4362")))
-
-/***/ }),
-
-/***/ "d3ca2":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -54930,7 +55074,7 @@ var es_object_values = __webpack_require__("07ac");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom-collections.for-each.js
 var web_dom_collections_for_each = __webpack_require__("159b");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Results/Results.vue?vue&type=template&id=6452e342&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Results/Results.vue?vue&type=template&id=6452e342&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(this.loadingResults)?_c('tipi-loader',{attrs:{"title":"Cargando resultados","subtitle":"Puede llevar algun tiempo"}}):_vm._e(),(this.initiatives && this.initiatives.length && !this.loadingResults)?_c('section',{staticClass:"o-masonry o-grid"},_vm._l((this.initiatives),function(initiative,index){return _c('div',{key:index,staticClass:"o-grid__col u-12 u-4@sm o-masonry__item"},[_c('tipi-initiative-card',{attrs:{"initiative":initiative,"extendedLayout":_vm.extendedLayout,"topicsStyles":_vm.topicsStyles,"metaDeputies":_vm.metaDeputies,"metaGroupsOthers":_vm.metaGroupsOthers,"metaColors":_vm.metaColors}})],1)}),0):_vm._e(),(this.$listeners.loadMore && _vm.isMoreResults)?_c('div',{staticClass:"o-grid o-grid--center"},[_c('div',{staticClass:"o-grid__col"},[_c('a',{staticClass:"c-button c-button--secondary",attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.loadMore($event)}}},[_vm._v(" Cargar más "+_vm._s(_vm.nextResultsLabel)+" ")])])]):_vm._e()],1)}
 var staticRenderFns = []
 
@@ -54940,7 +55084,7 @@ var staticRenderFns = []
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/InitiativeCard/InitiativeCard.vue?vue&type=template&id=080c78c6&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/InitiativeCard/InitiativeCard.vue?vue&type=template&id=080c78c6&
 var InitiativeCardvue_type_template_id_080c78c6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('article',{staticClass:"c-initiative-card",attrs:{"id":("initiative-card-" + (_vm.initiative.id))}},[_c('tipi-topic-pill',{staticClass:"c-initiative-card__topics",attrs:{"topicsStyles":_vm.topicsStyles,"topics":_vm.initiative.topics}}),(_vm.extendedLayout)?_c('tipi-initiative-meta',{attrs:{"initiative":_vm.initiative,"metaColors":_vm.metaColors}}):_vm._e(),_c('h2',{staticClass:"c-initiative-card__title"},[(_vm.initiative.id)?_c('router-link',{attrs:{"to":{name: 'initiative', params: { id: _vm.initiative.id }}}},[_vm._v(_vm._s(_vm.initiative.title))]):_c('span',[_vm._v(_vm._s(_vm.initiative.title))])],1),(_vm.getDeputies(_vm.initiative) && _vm.extendedLayout)?_c('div',{staticClass:"c-initiative-card__authors"},[_c('h3',{staticClass:"c-initiative-card__label"},[_vm._v(_vm._s(_vm.metaDeputies))]),_c('p',{domProps:{"innerHTML":_vm._s(_vm.getDeputies(_vm.initiative))}})]):_vm._e(),(_vm.getAuthors(_vm.initiative) && _vm.extendedLayout)?_c('div',{staticClass:"c-initiative-card__authors"},[_c('h3',{staticClass:"c-initiative-card__label"},[_vm._v(_vm._s(_vm.metaGroupsOthers))]),_c('p',{domProps:{"innerHTML":_vm._s(_vm.getAuthors(_vm.initiative))}})]):_vm._e(),_c('div',{staticClass:"o-grid"},[_c('div',{staticClass:"o-grid__col"},[_c('p',{staticClass:"c-initiative-card__date"},[_vm._v("Actualizado "+_vm._s(_vm.moment(_vm.initiative.updated).fromNow()))])]),_c('div',{staticClass:"o-grid__col o-grid__col--right"},[(_vm.initiative.id)?_c('router-link',{attrs:{"to":{name: 'initiative', params: { id: _vm.initiative.id }}},scopedSlots:_vm._u([{key:"default",fn:function(ref){
 var href = ref.href;
 return [_c('a',{attrs:{"href":href,"target":"_blank"}},[_c('tipi-icon',{staticClass:"c-icon--secondary",attrs:{"icon":"open-blank"}})],1)]}}],null,false,1888673612)}):_vm._e()],1)])],1)])}
@@ -54964,7 +55108,7 @@ var es_string_replace = __webpack_require__("5319");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.string.trim.js
 var es_string_trim = __webpack_require__("498a");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Icon/Icon.vue?vue&type=template&id=0684e168&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Icon/Icon.vue?vue&type=template&id=0684e168&
 var Iconvue_type_template_id_0684e168_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"c-icon",class:("c-icon--type-" + _vm.icon),domProps:{"innerHTML":_vm._s(_vm.svg)}})}
 var Iconvue_type_template_id_0684e168_staticRenderFns = []
 
@@ -55123,7 +55267,7 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var Icon = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TopicPill/TopicPill.vue?vue&type=template&id=adac2fe8&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TopicPill/TopicPill.vue?vue&type=template&id=adac2fe8&
 var TopicPillvue_type_template_id_adac2fe8_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"c-topics",domProps:{"innerHTML":_vm._s(_vm.getTopics(_vm.topics))}})}
 var TopicPillvue_type_template_id_adac2fe8_staticRenderFns = []
 
@@ -55230,7 +55374,7 @@ var TopicPill_component = normalizeComponent(
 )
 
 /* harmony default export */ var TopicPill = (TopicPill_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/InitiativeMeta/InitiativeMeta.vue?vue&type=template&id=512ae4de&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/InitiativeMeta/InitiativeMeta.vue?vue&type=template&id=512ae4de&
 var InitiativeMetavue_type_template_id_512ae4de_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"c-initiative-meta"},[_c('div',{class:("c-initiative-meta__status c-initiative-meta__status--" + (_vm.getColorByStatus(_vm.initiative.status)))},[_c('strong',[_vm._v(_vm._s(_vm.initiative.status))])]),(_vm.linkText)?_c('a',{staticClass:"c-initiative-meta__link",attrs:{"href":_vm.initiative.url,"target":"_blank","title":("Ver " + (_vm.initiative.title) + " en su fuente original")}},[_c('tipi-icon',{attrs:{"icon":"building"}}),_vm._v(" "+_vm._s(_vm.linkText)+" ")],1):_vm._e()])}
 var InitiativeMetavue_type_template_id_512ae4de_staticRenderFns = []
 
@@ -55411,7 +55555,7 @@ var InitiativeCard_component = normalizeComponent(
 )
 
 /* harmony default export */ var InitiativeCard = (InitiativeCard_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Loader/Loader.vue?vue&type=template&id=3bdedd1d&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Loader/Loader.vue?vue&type=template&id=3bdedd1d&
 var Loadervue_type_template_id_3bdedd1d_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"c-loader"},[_vm._m(0),(_vm.title || _vm.subtitle)?_c('div',{staticClass:"c-loader__text"},[(_vm.title)?_c('h4',{staticClass:"c-loader__title"},[_vm._v(_vm._s(_vm.title))]):_vm._e(),_vm._v(" "+_vm._s(_vm.subtitle)+" ")]):_vm._e()])}
 var Loadervue_type_template_id_3bdedd1d_staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"c-loader__spinner"},[_c('div',{staticClass:"c-loader__spinner-dot"}),_c('div',{staticClass:"c-loader__spinner-dot"}),_c('div',{staticClass:"c-loader__spinner-dot"}),_c('div',{staticClass:"c-loader__spinner-dot"}),_c('div',{staticClass:"c-loader__spinner-dot"}),_c('div',{staticClass:"c-loader__spinner-dot"})])}]
 
@@ -55588,7 +55732,7 @@ var Results_component = normalizeComponent(
 )
 
 /* harmony default export */ var Results = (Results_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Message/Message.vue?vue&type=template&id=188c2639&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Message/Message.vue?vue&type=template&id=188c2639&
 var Messagevue_type_template_id_188c2639_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:("c-message c-message--" + _vm.type + " " + (_vm.icon ? 'c-message--icon' : ''))},[_c('div',{staticClass:"c-message__wrapper"},[(_vm.icon)?_c('tipi-icon',{staticClass:"c-message__icon",attrs:{"icon":_vm.type}}):_vm._e(),_vm._t("default")],2)])}
 var Messagevue_type_template_id_188c2639_staticRenderFns = []
 
@@ -55648,7 +55792,7 @@ var Message_component = normalizeComponent(
 )
 
 /* harmony default export */ var Message = (Message_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/CSVDownload/CSVDownload.vue?vue&type=template&id=2c341243&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/CSVDownload/CSVDownload.vue?vue&type=template&id=2c341243&
 var CSVDownloadvue_type_template_id_2c341243_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{directives:[{name:"show",rawName:"v-show",value:(_vm.initiatives.length),expression:"initiatives.length"}]},[(!_vm.csvItems.length)?_c('a',{staticClass:"c-button c-button--compact c-button--icon-right",class:{ disabled: !_vm.canDownloadCSV },attrs:{"title":!_vm.canDownloadCSV ? 'Demasiados resultados para poder descargar. Afina la búsqueda' : 'Descarga CSV con todos los resultados',"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.loadCSVItems($event)}}},[_vm._v(" "+_vm._s(_vm.label)+" "),_c('span',{staticClass:"c-icon c-icon--type-download"},[_c('svg',{attrs:{"xmlns":"http://www.w3.org/2000/svg","width":"12","height":"16","fill":"none","viewBox":"0 0 12 16"}},[_c('path',{attrs:{"fill":"#2D4252","d":"M12 5.647H8.571V0H3.43v5.647H0l6 6.588 6-6.588zm-12 8.47V16h12v-1.882H0z"}})])])]):_c('vue-csv-downloader',{staticClass:"c-button c-button--icon-right",class:_vm.buttonClass,attrs:{"data":_vm.csvItems,"fields":_vm.csvFields,"downloadName":_vm.getNameFromCSV(),"id":"downloadCSV"}},[_vm._v(" "+_vm._s(_vm.label)+" "),_c('span',{staticClass:"c-icon c-icon--type-download"},[_c('svg',{attrs:{"xmlns":"http://www.w3.org/2000/svg","width":"12","height":"16","fill":"none","viewBox":"0 0 12 16"}},[_c('path',{attrs:{"fill":"#2D4252","d":"M12 5.647H8.571V0H3.43v5.647H0l6 6.588 6-6.588zm-12 8.47V16h12v-1.882H0z"}})])])])],1)}
 var CSVDownloadvue_type_template_id_2c341243_staticRenderFns = []
 
@@ -55754,7 +55898,7 @@ var CSVDownload_component = normalizeComponent(
 )
 
 /* harmony default export */ var CSVDownload = (CSVDownload_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Header/Header.vue?vue&type=template&id=ff0cbbae&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Header/Header.vue?vue&type=template&id=ff0cbbae&
 var Headervue_type_template_id_ff0cbbae_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('header',{staticClass:"c-page-header",class:{ 'c-page-header--nosub' : !_vm.subtitle }},[_c('h1',{staticClass:"c-page-header__title"},[_vm._v(" "+_vm._s(_vm.title)+" ")]),(_vm.subtitle)?_c('p',{staticClass:"c-page-header__subtitle"},[_vm._v(_vm._s(_vm.subtitle))]):_vm._e()])}
 var Headervue_type_template_id_ff0cbbae_staticRenderFns = []
 
@@ -55797,14 +55941,15 @@ var Header_component = normalizeComponent(
 )
 
 /* harmony default export */ var Header = (Header_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Navbar/Navbar.vue?vue&type=template&id=cfe1575a&
-var Navbarvue_type_template_id_cfe1575a_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('header',{staticClass:"c-navbar"},[(!_vm.closedDisclaimer && _vm.disclaimerLink.hasOwnProperty('name'))?_c('div',{staticClass:"c-disclaimer"},[(_vm.disclaimerLink.external)?_c('a',{attrs:{"href":_vm.disclaimerLink.route,"target":"_blank"},domProps:{"innerHTML":_vm._s(_vm.disclaimerLink.name)}}):_c('router-link',{attrs:{"to":{name: _vm.disclaimerLink.route}},domProps:{"innerHTML":_vm._s(_vm.disclaimerLink.name)}}),_c('a',{staticClass:"c-disclaimer__close",attrs:{"href":"#"},on:{"click":_vm.closeDisclaimer}},[_c('icon',{attrs:{"icon":"close","color":"#fff"}})],1)],1):_vm._e(),(_vm.preImage)?_c('div',{staticClass:"c-decorator",style:(("background-image: url(" + _vm.preImage + ")"))}):_vm._e(),_c('div',{staticClass:"c-navbar__wrapper o-container"},[_c('div',{staticClass:"c-navbar__brand"},[_c('a',{staticClass:"c-navbar__brand-link",attrs:{"href":"/"}},[_c('img',{staticClass:"c-navbar__brand-logo",attrs:{"src":_vm.logo}})])]),_c('button',{staticClass:"c-navbar__menu-toggle",class:{ 'is-active' : _vm.menuVisible },attrs:{"type":"button"},on:{"click":_vm.toggleMenu}},[_c('span',{staticClass:"bar"}),_c('span',{staticClass:"bar"}),_c('span',{staticClass:"bar"}),_c('span',{staticClass:"u-hide"},[_vm._v("Menú")])]),_c('nav',{staticClass:"c-navbar__menu",class:{ 'is-active' : _vm.menuVisible }},[_c('ul',{staticClass:"c-menu"},_vm._l((_vm.links),function(link){return _c('li',{directives:[{name:"show",rawName:"v-show",value:(link.condition),expression:"link.condition"}],key:link.route,staticClass:"c-menu__item",on:{"click":_vm.closeMenuMobile}},[_c('router-link',{staticClass:"c-menu__link",attrs:{"to":{name: link.route }}},[_vm._v(_vm._s(link.name)),(link.name)?_c('icon',{attrs:{"icon":link.icon}}):_vm._e()],1)],1)}),0)])])])}
-var Navbarvue_type_template_id_cfe1575a_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Navbar/Navbar.vue?vue&type=template&id=5c6fb5dc&
+var Navbarvue_type_template_id_5c6fb5dc_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('header',{staticClass:"c-navbar"},[(!_vm.closedDisclaimer && _vm.disclaimerLink.hasOwnProperty('name'))?_c('div',{staticClass:"c-disclaimer"},[(_vm.disclaimerLink.external)?_c('a',{attrs:{"href":_vm.disclaimerLink.route,"target":"_blank"},domProps:{"innerHTML":_vm._s(_vm.disclaimerLink.name)}}):_c('router-link',{attrs:{"to":{name: _vm.disclaimerLink.route}},domProps:{"innerHTML":_vm._s(_vm.disclaimerLink.name)}}),_c('a',{staticClass:"c-disclaimer__close",attrs:{"href":"#"},on:{"click":_vm.closeDisclaimer}},[_c('icon',{attrs:{"icon":"close","color":"#fff"}})],1)],1):_vm._e(),(_vm.preImage)?_c('div',{staticClass:"c-decorator",style:(("background-image: url(" + _vm.preImage + ")"))}):_vm._e(),_c('div',{staticClass:"c-navbar__wrapper o-container"},[_c('div',{staticClass:"c-navbar__brand"},[_c('a',{staticClass:"c-navbar__brand-link",attrs:{"href":"/"}},[_c('img',{staticClass:"c-navbar__brand-logo",attrs:{"src":_vm.logo}})])]),_c('button',{staticClass:"c-navbar__menu-toggle",class:{ 'is-active' : _vm.menuVisible },attrs:{"type":"button"},on:{"click":_vm.toggleMenu}},[_c('span',{staticClass:"bar"}),_c('span',{staticClass:"bar"}),_c('span',{staticClass:"bar"}),_c('span',{staticClass:"u-hide"},[_vm._v("Menú")])]),_c('nav',{staticClass:"c-navbar__menu",class:{ 'is-active' : _vm.menuVisible }},[_c('ul',{staticClass:"c-menu"},_vm._l((_vm.links),function(link){return _c('li',{directives:[{name:"show",rawName:"v-show",value:(link.condition),expression:"link.condition"}],key:link.route,staticClass:"c-menu__item",on:{"click":_vm.closeMenuMobile}},[(link.external)?_c('a',{attrs:{"href":link.route,"target":"_blank"}},[_vm._v(_vm._s(link.name)),(link.icon)?_c('icon',{staticClass:"c-menu__icon",attrs:{"icon":link.icon}}):_vm._e()],1):_c('router-link',{staticClass:"c-menu__link",attrs:{"to":{name: link.route }}},[_vm._v(_vm._s(link.name)),(link.icon)?_c('icon',{staticClass:"c-menu__icon",attrs:{"icon":link.icon}}):_vm._e()],1)],1)}),0)])])])}
+var Navbarvue_type_template_id_5c6fb5dc_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/Navbar/Navbar.vue?vue&type=template&id=cfe1575a&
+// CONCATENATED MODULE: ./src/components/Navbar/Navbar.vue?vue&type=template&id=5c6fb5dc&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Navbar/Navbar.vue?vue&type=script&lang=js&
+//
 //
 //
 //
@@ -55899,8 +56044,8 @@ var Navbarvue_type_template_id_cfe1575a_staticRenderFns = []
 
 var Navbar_component = normalizeComponent(
   Navbar_Navbarvue_type_script_lang_js_,
-  Navbarvue_type_template_id_cfe1575a_render,
-  Navbarvue_type_template_id_cfe1575a_staticRenderFns,
+  Navbarvue_type_template_id_5c6fb5dc_render,
+  Navbarvue_type_template_id_5c6fb5dc_staticRenderFns,
   false,
   null,
   null,
@@ -55909,7 +56054,7 @@ var Navbar_component = normalizeComponent(
 )
 
 /* harmony default export */ var Navbar = (Navbar_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Deputy/Deputy.vue?vue&type=template&id=fd78d4d2&scoped=true&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Deputy/Deputy.vue?vue&type=template&id=fd78d4d2&scoped=true&
 var Deputyvue_type_template_id_fd78d4d2_scoped_true_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.deputy)?_c('div',{staticClass:"c-deputy"},[_c('div',{staticClass:"o-container"},[_c('div',{staticClass:"o-grid  o-grid--reverse o-grid--align-center"},[_c('div',{staticClass:"o-grid__col u-12 u-4@sm"},[_c('img',{staticClass:"c-deputy__image",attrs:{"src":_vm.deputy.image,"alt":'Foto de ' + _vm.deputy.name}})]),_c('div',{staticClass:"o-grid__col u-12 u-8@sm"},[_c('h1',{staticClass:"c-deputy__name"},[_vm._v(_vm._s(_vm.deputy.name))]),(_vm.parliamentaryGroup)?_c('h3',{staticClass:"c-deputy__group"},[_c('router-link',{attrs:{"to":{ name: 'parliamentarygroup', params: {id: _vm.parliamentaryGroup.id }}}},[_vm._v(" "+_vm._s(_vm.parliamentaryGroup.name)+" ")])],1):_vm._e(),_c('div',{staticClass:"c-deputy__links"},[_vm._t("default")],2)])])])]):_vm._e()}
 var Deputyvue_type_template_id_fd78d4d2_scoped_true_staticRenderFns = []
 
@@ -55969,7 +56114,7 @@ var Deputy_component = normalizeComponent(
 )
 
 /* harmony default export */ var Deputy = (Deputy_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Text/Text.vue?vue&type=template&id=2e9a4688&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Text/Text.vue?vue&type=template&id=2e9a4688&
 var Textvue_type_template_id_2e9a4688_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.is(_vm.value))?_c('div',{staticClass:"c-text"},[_c('h6',{staticClass:"c-text__label"},[_vm._v(_vm._s(_vm.meta))]),(!_vm.source)?_c('p',{staticClass:"c-text__value",domProps:{"innerHTML":_vm._s(_vm.show(_vm.value))}}):_vm._e(),(_vm.source)?_c('ul',{staticClass:"c-text__list"},_vm._l((_vm.value),function(v,i){return _c('li',{key:i,staticClass:"c-text__list-item",class:{ 'c-text__list-item--image' : _vm.hasImage(v) }},[(_vm.hasImage(v))?_c('router-link',{attrs:{"to":{ name: _vm.type, params: {id: _vm.getPeopleFromName(v).id }}}},[_c('img',{staticClass:"c-text__image",attrs:{"alt":v,"src":_vm.getPeopleFromName(v).image}})]):_vm._e(),(_vm.getPeopleFromName(v))?_c('div',{staticClass:"c-text__wrapper"},[_c('router-link',{attrs:{"to":{ name: _vm.type, params: {id: _vm.getPeopleFromName(v).id }}}},[_vm._v(" "+_vm._s(_vm.getPeopleFromName(v).name)+" "),(!_vm.hideGroup)?_c('span',[_vm._v(_vm._s(_vm.getPeopleFromName(v).parliamentarygroup))]):_vm._e()])],1):_c('span',[_vm._v(_vm._s(v))])],1)}),0):_vm._e()]):_vm._e()}
 var Textvue_type_template_id_2e9a4688_staticRenderFns = []
 
@@ -56071,7 +56216,7 @@ var Text_component = normalizeComponent(
 )
 
 /* harmony default export */ var Text = (Text_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Topics/Topics.vue?vue&type=template&id=1230eca4&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Topics/Topics.vue?vue&type=template&id=1230eca4&
 var Topicsvue_type_template_id_1230eca4_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.topics)?_c('div',{staticClass:"c-topics c-topics--extended"},[_c('h6',{staticClass:"c-topics__label"},[_vm._v(_vm._s(_vm.meta))]),_c('ul',{staticClass:"c-topics__list"},_vm._l((_vm.sortedTopics),function(topic,i){return _c('li',{key:topic,staticClass:"c-topics__list-topic"},[_c('router-link',{staticClass:"c-topics__topic",style:(("background-color:" + (_vm.topicsStyles[topic].color))),attrs:{"id":("topic-" + i),"to":{ name: 'results', params: { data: _vm.paramsData(topic) } }}},[_vm._v(" "+_vm._s(topic)+" ")]),(_vm.getSubtopics(topic))?_c('ul',{staticClass:"c-topics__list-subtopic"},_vm._l((_vm.getSubtopics(topic)),function(subtopic){return _c('li',{key:subtopic+' - '+topic,staticClass:"c-topics__subtopic"},[_c('router-link',{staticClass:"c-topics__link",attrs:{"to":{ name: 'results', params: { data: _vm.paramsData(topic, subtopic) } }}},[_vm._v(" "+_vm._s(subtopic)+" ")]),(_vm.getTags(subtopic))?_c('ul',{staticClass:"c-topics__list-tags"},_vm._l((_vm.getTags(subtopic)),function(tag){return _c('li',{key:tag+' - '+topic,staticClass:"c-topics__tag"},[_c('router-link',{staticClass:"c-topics__link",attrs:{"to":{ name: 'results', params: { data: _vm.paramsData(topic, subtopic, tag) } }}},[_vm._v(" "+_vm._s(tag)+" ")])],1)}),0):_vm._e()],1)}),0):_vm._e()],1)}),0)]):_vm._e()}
 var Topicsvue_type_template_id_1230eca4_staticRenderFns = []
 
@@ -56274,7 +56419,7 @@ var Topics_component = normalizeComponent(
 )
 
 /* harmony default export */ var Topics = (Topics_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Neuron/Neuron.vue?vue&type=template&id=71cba9d2&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Neuron/Neuron.vue?vue&type=template&id=71cba9d2&
 var Neuronvue_type_template_id_71cba9d2_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.topics)?_c('svg',{staticStyle:{"width":"100%","height":"200px"}}):_vm._e()}
 var Neuronvue_type_template_id_71cba9d2_staticRenderFns = []
 
@@ -56482,7 +56627,7 @@ var Neuron_component = normalizeComponent(
 )
 
 /* harmony default export */ var Neuron = (Neuron_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TopicCard/TopicCard.vue?vue&type=template&id=a650d6ea&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TopicCard/TopicCard.vue?vue&type=template&id=a650d6ea&
 var TopicCardvue_type_template_id_a650d6ea_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"c-topic-card",style:(("background-color: " + (_vm.getColor(_vm.topic))))},[_c('div',{staticClass:"o-container"},[_c('div',{staticClass:"o-grid o-grid--reverse"},[_c('div',{staticClass:"o-grid__col u-12 u-3@sm u-offset-1@sm"},[_c('img',{staticClass:"c-topic-card__image",attrs:{"src":("/img/topics/" + (_vm.getIcon(_vm.topic))),"alt":("Imagen de " + (_vm.topic.name))}})]),_c('div',{staticClass:"o-grid__col u-12 u-8@sm"},[_c('h1',{staticClass:"c-topic-card__title"},[_vm._v(_vm._s(_vm.topic.name))]),_c('div',{staticClass:"c-topic-card__description"},_vm._l((_vm.topic.description),function(d){return _c('p',{key:d},[_vm._v(" "+_vm._s(d)+" ")])}),0)])])])])}
 var TopicCardvue_type_template_id_a650d6ea_staticRenderFns = []
 
@@ -56553,7 +56698,7 @@ var TopicCard_component = normalizeComponent(
 )
 
 /* harmony default export */ var TopicCard = (TopicCard_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TopicLink/TopicLink.vue?vue&type=template&id=367caf4d&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TopicLink/TopicLink.vue?vue&type=template&id=367caf4d&
 var TopicLinkvue_type_template_id_367caf4d_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"c-topic-link"},[_c('router-link',{staticClass:"c-topic-link__image-link",style:(("background-color: " + _vm.color)),attrs:{"to":{name: 'topic', params: {id: _vm.topic.id }}}},[_c('img',{staticClass:"c-topic-link__image",attrs:{"src":_vm.topicImage,"alt":("Imagen de " + (_vm.topic.name))}})]),_c('h4',{staticClass:"c-topic-link__name"},[_c('router-link',{attrs:{"to":{name: 'topic', params: {id: _vm.topic.id }}}},[_vm._v(" "+_vm._s(_vm.topic.name)+" ")])],1)],1)])}
 var TopicLinkvue_type_template_id_367caf4d_staticRenderFns = []
 
@@ -56614,7 +56759,7 @@ var TopicLink_component = normalizeComponent(
 )
 
 /* harmony default export */ var TopicLink = (TopicLink_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TwoCircles/TwoCircles.vue?vue&type=template&id=3afdd748&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TwoCircles/TwoCircles.vue?vue&type=template&id=3afdd748&
 var TwoCirclesvue_type_template_id_3afdd748_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('svg',{staticStyle:{"width":"300px","height":"500px"}})}
 var TwoCirclesvue_type_template_id_3afdd748_staticRenderFns = []
 
@@ -56718,7 +56863,7 @@ var TwoCircles_component = normalizeComponent(
 )
 
 /* harmony default export */ var TwoCircles = (TwoCircles_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Splash/Splash.vue?vue&type=template&id=66ca5a0a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Splash/Splash.vue?vue&type=template&id=66ca5a0a&
 var Splashvue_type_template_id_66ca5a0a_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (!_vm.closedSplash)?_c('div',{staticClass:"c-splash"},[_c('div',{staticClass:"c-splash__outer"},[_c('div',{staticClass:"c-splash__inner"},[_vm._t("default"),_c('p',[_c('a',{staticClass:"c-splash__close",class:_vm.closeClass,attrs:{"href":"#"},on:{"click":_vm.closeSplash}},[_vm._v(_vm._s(_vm.closeText))])])],2)])]):_vm._e()}
 var Splashvue_type_template_id_66ca5a0a_staticRenderFns = []
 
@@ -56788,7 +56933,7 @@ var Splash_component = normalizeComponent(
 )
 
 /* harmony default export */ var Splash = (Splash_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TipiCharts/TipiBarchart.vue?vue&type=template&id=50ee3e2a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TipiCharts/TipiBarchart.vue?vue&type=template&id=50ee3e2a&
 var TipiBarchartvue_type_template_id_50ee3e2a_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('transition-group',{staticClass:"tipichart",attrs:{"tag":"div","name":"barfade"}},_vm._l((_vm.rows),function(d){return _c('div',{key:d.topic,staticClass:"tipichart__row",style:(_vm.rowStyle)},[_c('div',{staticClass:"tipichart__tooltip",style:({bottom: (_vm.barHeight + "px")})},[_c('div',{staticClass:"tipichart__tip"},[_vm._v(_vm._s(d.topic)+" "+_vm._s(d.percent)+"%")])]),_c('div',{staticClass:"tipichart__icon",style:(d.iconStyle)}),_c('div',{staticClass:"tipichart__bar"},[_c('div',{staticClass:"tipichart__backbar",style:(d.backbarStyle)}),_c('div',{staticClass:"tipichart__overbar",style:(d.overbarStyle)})])])}),0)}
 var TipiBarchartvue_type_template_id_50ee3e2a_staticRenderFns = []
 
@@ -56944,7 +57089,7 @@ var es_number_constructor = __webpack_require__("a9e3");
 // CONCATENATED MODULE: ./src/components/TipiCharts/TipiBarchart.vue?vue&type=script&lang=js&
  /* harmony default export */ var TipiCharts_TipiBarchartvue_type_script_lang_js_ = (TipiBarchartvue_type_script_lang_js_); 
 // EXTERNAL MODULE: ./src/components/TipiCharts/TipiBarchart.vue?vue&type=style&index=0&lang=scss&
-var TipiBarchartvue_type_style_index_0_lang_scss_ = __webpack_require__("d3ca2");
+var TipiBarchartvue_type_style_index_0_lang_scss_ = __webpack_require__("d3ca");
 
 // CONCATENATED MODULE: ./src/components/TipiCharts/TipiBarchart.vue
 
@@ -56967,7 +57112,7 @@ var TipiBarchart_component = normalizeComponent(
 )
 
 /* harmony default export */ var TipiBarchart = (TipiBarchart_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5e44d15f-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Charts/d3.chart.vue?vue&type=template&id=29658394&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Charts/d3.chart.vue?vue&type=template&id=29658394&
 var d3_chartvue_type_template_id_29658394_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart__wrapper"},[(_vm.title)?_c('div',{staticClass:"chart__title"},[_vm._v(_vm._s(_vm.title))]):_vm._e(),_c('div',{ref:"chart",style:({ height: ((this.height) + "px") })}),(_vm.source)?_c('div',{staticClass:"chart__source"},[_vm._v(_vm._s(_vm.source))]):_vm._e(),(_vm.download)?_c('div',{staticClass:"chart__source"},[_c('span',{on:{"click":_vm.downloadSVG}},[_vm._v(_vm._s(_vm.download))])]):_vm._e()])}
 var d3_chartvue_type_template_id_29658394_staticRenderFns = []
 
@@ -59450,7 +59595,7 @@ if (false) {}
 /* 3 */
 /***/ function(module, exports) {
 
-module.exports = __webpack_require__("d3ca");
+module.exports = __webpack_require__("7ea2");
 
 /***/ },
 /* 4 */
