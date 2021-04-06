@@ -29,7 +29,7 @@
     text-align: center;
     margin: 0 0 rem($spacer-unit) 0;
 
-    @media (min-width: $md) {
+    @media (min-width: $sm) {
       text-align: left;
     }
   }
@@ -41,7 +41,7 @@
     margin: 0 0 rem($spacer-unit) 0;
     text-align: center;
 
-    @media (min-width: $md) {
+    @media (min-width: $sm) {
       text-align: left;
     }
 
@@ -56,7 +56,7 @@
 
     text-align: center;
 
-    @media (min-width: $md) {
+    @media (min-width: $sm) {
       text-align: left;
     }
   }
@@ -67,7 +67,7 @@
     color: $secondary-dark;
     text-align: center;
 
-    @media (min-width: $md) {
+    @media (min-width: $sm) {
       text-align: left;
     }
 
