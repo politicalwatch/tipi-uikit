@@ -29,7 +29,7 @@
           v-for="link in links"
           :key="link.route"
           v-show="link.condition">
-            <a v-if="link.external" :href="link.route" target="_blank">{{ link.name }}<icon :icon="link.icon" class="c-menu__icon" v-if="link.icon" /></a>
+            <a v-if="link.external" :href="link.route" class="c-menu__link" target="_blank">{{ link.name }}<icon :icon="link.icon" class="c-menu__icon" v-if="link.icon" /></a>
             <router-link v-else :to="{name: link.route }" class="c-menu__link">{{ link.name }}<icon :icon="link.icon" class="c-menu__icon" v-if="link.icon" /></router-link>
           </li>
         </ul>
