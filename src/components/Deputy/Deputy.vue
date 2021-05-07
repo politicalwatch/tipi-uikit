@@ -83,7 +83,6 @@ export default {
       this.isCollapsed = !this.isCollapsed
     },
     addBirthdayClass: function () {
-        return 'c-deputy__birthday'
       const date = new Date(this.deputy.birthdate)
       const today = new Date()
       if (date.getDate() == today.getDate() && date.getMonth() == today.getMonth()) {
