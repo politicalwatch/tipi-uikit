@@ -1,5 +1,5 @@
 .c-deputy {
-  padding: rem($spacer-unit * 8) rem($spacer-unit * 4);
+  padding: rem($spacer-unit * 8) rem($spacer-unit * 4) rem($spacer-unit * 4);
   background-color: $secondary-light;
   color: $secondary-dark;
 
@@ -7,19 +7,40 @@
     margin-bottom: rem($spacer-unit * 4);
   }
 
+  &__image_container {
+    position: relative;
+    width: rem($spacer-unit * 20);
+    height: rem($spacer-unit * 20);
+    margin: 0 auto 30px;
+
+    @media (min-width: $md) {
+      width: rem($spacer-unit * 20);
+      height: rem($spacer-unit * 20);
+    }
+  }
+
   &__image {
-    width: rem($spacer-unit * 10);
-    height: rem($spacer-unit * 10);
+    width: rem($spacer-unit * 20);
+    height: rem($spacer-unit * 20);
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid $secondary;
     margin: 0 auto rem($spacer-unit) auto;
     display: block;
+    position: absolute;
+    z-index: 0;
 
     @media (min-width: $md) {
       margin: 0 0 0 auto;
       width: rem($spacer-unit * 20);
       height: rem($spacer-unit * 20);
+    }
+
+    &_party {
+      position: absolute;
+      z-index: 1;
+      bottom: 0;
+      left: 0;
     }
   }
 
@@ -81,5 +102,82 @@
         margin-right: rem($spacer-unit * 2);
       }
     }
+  }
+
+  &__extra {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    text-align: center;
+
+    @media (min-width: $md) {
+      text-align: left;
+    }
+  }
+
+  &__personal {
+    margin-right: 16px;
+
+    span {
+      margin-right: 4px;
+    }
+  }
+
+  &__more {
+    text-align: center;
+    margin-top: rem($spacer-unit * 8);
+
+    @media (min-width: $md) {
+      text-align: left;
+    }
+
+    a, a:hover {
+      color: $secondary-dark;
+      font-weight: 500;
+      text-decoration: none;
+
+      .c-icon {
+        margin-left: 8px;
+      }
+    }
+  }
+
+  &__info {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 14px;
+
+    h3 {
+      color: $secondary;
+      font-size: 12px;
+    }
+
+    p, a {
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    a {
+      font-weight: 500;
+      color: $secondary-dark;
+    }
+
+    span {
+      margin-right: 8px;
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    margin: 31px 0 64px;
+    background-color: $secondary;
+    display: block;
+  }
+
+  &__hidden {
+    display: none;
+  }
+
+  &__birthday {
+    background: url('../assets/birthday_bg.png');
   }
 }

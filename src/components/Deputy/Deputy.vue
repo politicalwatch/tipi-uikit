@@ -1,9 +1,12 @@
 <template>
-  <div class="c-deputy" v-if="deputy">
+  <div class="c-deputy" :class="addBirthdayClass()" v-if="deputy">
     <div class="o-container">
-      <div class="o-grid  o-grid--reverse o-grid--align-center">
+      <div class="o-grid  o-grid--reverse">
         <div class="o-grid__col u-12 u-4@sm">
-          <img class="c-deputy__image" :src="deputy.image" :alt="'Foto de ' + deputy.name">
+          <div class="c-deputy__image_container">
+            <img class="c-deputy__image" :src="deputy.image" :alt="'Foto de ' + deputy.name">
+            <img class="c-deputy__image_party" :src="deputy.party_logo" :alt="'Logo del ' + parliamentaryGroup.name">
+          </div>
         </div>
         <div class="o-grid__col u-12 u-8@sm">
           <h1 class="c-deputy__name">{{ deputy.name }}</h1>
@@ -12,9 +15,28 @@
               {{ parliamentaryGroup.name }}
             </router-link>
           </h3>
+          <div class="c-deputy__extra">
+            <span class="c-deputy__personal"><tipi-icon v-if="addBirthdayClass" icon="birthday"/>{{ getAge() }} años</span><span class="c-deputy__personal"><tipi-icon icon="location"/>{{ getConstituency() }}</span>
+          </div>
           <div class="c-deputy__links">
             <slot/>
           </div>
+        </div>
+        <div class="o-grid__col u-12 u-12@sm c-deputy__more">
+          <a href="#" @click="collapse">{{ getCollapseMessage() }}<tipi-icon :icon="getCollapseIcon()"/></a>
+        </div>
+        <div :class="getCollapsedClass()" class="c-deputy__divider o-grid__col u-12 u-12@sm"></div>
+        <div :class="getCollapsedClass()" class="o-grid__col u-12 u-4@sm">
+          <h3>Declaraciones</h3>
+          <p v-for="(link, title) in deputy.extra"><tipi-icon icon="document" /><a :href="link">{{ title }}</a></p>
+        </div>
+        <div :class="getCollapsedClass()" class="o-grid__col u-12 u-4@sm">
+          <h3>Cargos</h3>
+          <p v-for="position in deputy.public_position">{{ position }}</p>
+        </div>
+        <div :class="getCollapsedClass()" class="o-grid__col u-12 u-4@sm">
+          <h3>Ficha personal</h3>
+          <p v-for="entry in deputy.bio">{{ entry }}</p>
         </div>
       </div>
     </div>
@@ -22,12 +44,64 @@
 </template>
 
 <script>
+import TipiIcon from '../Icon/Icon.vue'
+
 export default {
   name: 'TipiDeputy',
+  components: {
+    TipiIcon,
+  },
+  data: function () {
+    return {
+      isCollapsed: true
+    }
+  },
   props: {
     deputy: Object,
     parliamentaryGroup: Object,
   },
+  methods: {
+    getCollapsedClass: function () {
+      if (this.isCollapsed) {
+        return 'c-deputy__hidden'
+      }
+      return 'c-deputy__info'
+    },
+    getCollapseIcon: function () {
+      if (this.isCollapsed) {
+        return 'plus'
+      }
+      return 'less'
+    },
+    getCollapseMessage: function () {
+      if (this.isCollapsed) {
+        return 'Mostrar más'
+      }
+      return 'Mostrar menos'
+    },
+    collapse: function () {
+      this.isCollapsed = !this.isCollapsed
+    },
+    addBirthdayClass: function () {
+        return 'c-deputy__birthday'
+      const date = new Date(this.deputy.birthdate)
+      const today = new Date()
+      if (date.getDate() == today.getDate() && date.getMonth() == today.getMonth()) {
+        return 'c-deputy__birthday'
+      }
+      return
+    },
+    getAge: function() {
+      const date = new Date(this.deputy.birthdate)
+      const today = new Date()
+      const age = today.getFullYear() - date.getFullYear()
+      return age
+    },
+    getConstituency: function() {
+      const constituency = this.deputy.constituency
+      return constituency.substring(13)
+    }
+  }
 };
 </script>
 

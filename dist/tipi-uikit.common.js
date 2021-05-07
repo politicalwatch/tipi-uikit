@@ -56054,14 +56054,17 @@ var Navbar_component = normalizeComponent(
 )
 
 /* harmony default export */ var Navbar = (Navbar_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Deputy/Deputy.vue?vue&type=template&id=fd78d4d2&scoped=true&
-var Deputyvue_type_template_id_fd78d4d2_scoped_true_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.deputy)?_c('div',{staticClass:"c-deputy"},[_c('div',{staticClass:"o-container"},[_c('div',{staticClass:"o-grid  o-grid--reverse o-grid--align-center"},[_c('div',{staticClass:"o-grid__col u-12 u-4@sm"},[_c('img',{staticClass:"c-deputy__image",attrs:{"src":_vm.deputy.image,"alt":'Foto de ' + _vm.deputy.name}})]),_c('div',{staticClass:"o-grid__col u-12 u-8@sm"},[_c('h1',{staticClass:"c-deputy__name"},[_vm._v(_vm._s(_vm.deputy.name))]),(_vm.parliamentaryGroup)?_c('h3',{staticClass:"c-deputy__group"},[_c('router-link',{attrs:{"to":{ name: 'parliamentarygroup', params: {id: _vm.parliamentaryGroup.id }}}},[_vm._v(" "+_vm._s(_vm.parliamentaryGroup.name)+" ")])],1):_vm._e(),_c('div',{staticClass:"c-deputy__links"},[_vm._t("default")],2)])])])]):_vm._e()}
-var Deputyvue_type_template_id_fd78d4d2_scoped_true_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"11571ed0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Deputy/Deputy.vue?vue&type=template&id=c4a33814&scoped=true&
+var Deputyvue_type_template_id_c4a33814_scoped_true_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.deputy)?_c('div',{staticClass:"c-deputy"},[_c('div',{staticClass:"o-container"},[_c('div',{staticClass:"o-grid  o-grid--reverse o-grid--align-center"},[_c('div',{staticClass:"o-grid__col u-12 u-4@sm"},[_c('div',{staticClass:"c-deputy__image_container"},[_c('img',{staticClass:"c-deputy__image",attrs:{"src":_vm.deputy.image,"alt":'Foto de ' + _vm.deputy.name}}),_c('img',{staticClass:"c-deputy__image_party",attrs:{"src":_vm.deputy.party_logo,"alt":'Logo del ' + _vm.parliamentaryGroup.name}})])]),_c('div',{staticClass:"o-grid__col u-12 u-8@sm"},[_c('h1',{staticClass:"c-deputy__name"},[_vm._v(_vm._s(_vm.deputy.name))]),(_vm.parliamentaryGroup)?_c('h3',{staticClass:"c-deputy__group"},[_c('router-link',{attrs:{"to":{ name: 'parliamentarygroup', params: {id: _vm.parliamentaryGroup.id }}}},[_vm._v(" "+_vm._s(_vm.parliamentaryGroup.name)+" ")])],1):_vm._e(),_c('div',{staticClass:"c-deputy__links"},[_vm._t("default")],2)])])])]):_vm._e()}
+var Deputyvue_type_template_id_c4a33814_scoped_true_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/Deputy/Deputy.vue?vue&type=template&id=fd78d4d2&scoped=true&
+// CONCATENATED MODULE: ./src/components/Deputy/Deputy.vue?vue&type=template&id=c4a33814&scoped=true&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Deputy/Deputy.vue?vue&type=script&lang=js&
+//
+//
+//
 //
 //
 //
@@ -56104,11 +56107,11 @@ var Deputyvue_type_template_id_fd78d4d2_scoped_true_staticRenderFns = []
 
 var Deputy_component = normalizeComponent(
   Deputy_Deputyvue_type_script_lang_js_,
-  Deputyvue_type_template_id_fd78d4d2_scoped_true_render,
-  Deputyvue_type_template_id_fd78d4d2_scoped_true_staticRenderFns,
+  Deputyvue_type_template_id_c4a33814_scoped_true_render,
+  Deputyvue_type_template_id_c4a33814_scoped_true_staticRenderFns,
   false,
   null,
-  "fd78d4d2",
+  "c4a33814",
   null
   
 )
