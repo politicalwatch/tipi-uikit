@@ -28,7 +28,7 @@
         <div :class="getCollapsedClass()" class="c-deputy__divider o-grid__col u-12 u-12@sm"></div>
         <div :class="getCollapsedClass()" class="o-grid__col u-12 u-4@sm">
           <h3>Declaraciones</h3>
-          <p v-for="(link, title) in deputy.extra" :key="title"><tipi-icon icon="document" /><a :href="link">{{ title }}</a></p>
+          <p v-for="(link, title) in deputy.extra.declarations" :key="title"><tipi-icon icon="document" /><a :href="link">{{ title }}</a></p>
         </div>
         <div :class="getCollapsedClass()" class="o-grid__col u-12 u-4@sm">
           <h3>Cargos</h3>
