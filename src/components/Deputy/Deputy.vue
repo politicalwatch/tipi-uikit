@@ -28,15 +28,15 @@
         <div :class="getCollapsedClass()" class="c-deputy__divider o-grid__col u-12 u-12@sm"></div>
         <div :class="getCollapsedClass()" class="o-grid__col u-12 u-4@sm">
           <h3>Declaraciones</h3>
-          <p v-for="(link, title) in deputy.extra"><tipi-icon icon="document" /><a :href="link">{{ title }}</a></p>
+          <p v-for="(link, title) in deputy.extra" :key="title"><tipi-icon icon="document" /><a :href="link">{{ title }}</a></p>
         </div>
         <div :class="getCollapsedClass()" class="o-grid__col u-12 u-4@sm">
           <h3>Cargos</h3>
-          <p v-for="position in deputy.public_position">{{ position }}</p>
+          <p v-for="position in deputy.public_position" :key="position">{{ position }}</p>
         </div>
         <div :class="getCollapsedClass()" class="o-grid__col u-12 u-4@sm">
           <h3>Ficha personal</h3>
-          <p v-for="entry in deputy.bio">{{ entry }}</p>
+          <p v-for="entry in deputy.bio" :key="entry">{{ entry }}</p>
         </div>
       </div>
     </div>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import TipiIcon from '../Icon/Icon.vue'
+import TipiIcon from '../Icon/Icon.vue';
 
 export default {
   name: 'TipiDeputy',
@@ -53,8 +53,8 @@ export default {
   },
   data: function () {
     return {
-      isCollapsed: true
-    }
+      isCollapsed: true,
+    };
   },
   props: {
     deputy: Object,
@@ -63,44 +63,43 @@ export default {
   methods: {
     getCollapsedClass: function () {
       if (this.isCollapsed) {
-        return 'c-deputy__hidden'
+        return 'c-deputy__hidden';
       }
-      return 'c-deputy__info'
+      return 'c-deputy__info';
     },
     getCollapseIcon: function () {
       if (this.isCollapsed) {
-        return 'plus'
+        return 'plus';
       }
-      return 'less'
+      return 'less';
     },
     getCollapseMessage: function () {
       if (this.isCollapsed) {
-        return 'Mostrar más'
+        return 'Mostrar más';
       }
-      return 'Mostrar menos'
+      return 'Mostrar menos';
     },
     collapse: function () {
-      this.isCollapsed = !this.isCollapsed
+      this.isCollapsed = !this.isCollapsed;
     },
     addBirthdayClass: function () {
-      const date = new Date(this.deputy.birthdate)
-      const today = new Date()
+      const date = new Date(this.deputy.birthdate);
+      const today = new Date();
       if (date.getDate() == today.getDate() && date.getMonth() == today.getMonth()) {
-        return 'c-deputy__birthday'
+        return 'c-deputy__birthday';
       }
-      return
     },
     getAge: function() {
-      const date = new Date(this.deputy.birthdate)
-      const today = new Date()
-      const age = today.getFullYear() - date.getFullYear()
-      return age
+      const date = new Date(this.deputy.birthdate);
+      const today = new Date();
+      const age = today.getFullYear() - date.getFullYear();
+      return age;
     },
     getConstituency: function() {
-      const constituency = this.deputy.constituency
-      return constituency.substring(13)
-    }
-  }
+      const constituency = this.deputy.constituency;
+      return constituency.substring(13);
+    },
+  },
 };
 </script>
 
