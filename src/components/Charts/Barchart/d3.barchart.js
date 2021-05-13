@@ -35,11 +35,13 @@ const d3 = {
 
 const pluralize = require('pluralize');
 
+const REFERENCE = "Texto de referencia"
+const SCANNED = "Texto escaneado"
+
 /**
  * D3 Bar Chart
  */
 class d3barchart extends d3chart {
-
   constructor(selection, data, config) {
     super(selection, data, config, {
       margin: { top: 10, right: 30, bottom: 20, left: 40 },
@@ -51,7 +53,7 @@ class d3barchart extends d3chart {
       color: { key: false, keys: false, scheme: false, current: "#1f77b4", default: "#AAA", axis: "#000" },
       axis: { yTitle: false, xTitle: false, yFormat: ".0f", xFormat: ".0f", yTicks: 10, xTicks: 10 },
       tooltip: { label: false, suffix: false, suffixPlural: false },
-      keys: {"Texto escaneado": 'Texto escaneado', "Texto de referencia": 'Texto de referencia'},
+      keys: {[SCANNED]: SCANNED, [REFERENCE]: REFERENCE},
       transition: { duration: 350, ease: "easeLinear" },
     });
   }
@@ -112,9 +114,10 @@ class d3barchart extends d3chart {
       .rangeRound([0, this.xScale.bandwidth()])
       .paddingInner(0.05);
 
+    const yMax = this.calculateBiggestNumber()
     this.yScale
       .rangeRound(this.cfg.orientation !== 'horizontal' ? [0, this.cfg.height] : [this.cfg.width, 0])
-      .domain([d3.max(this.data, d => d3.max(this.cfg.values.map(v => d[v]))), 0]);
+      .domain([yMax, 0]);
 
     if (this.cfg.color.scheme instanceof Array === true) {
       this.colorScale = d3.scaleOrdinal().range(this.cfg.color.scheme);
@@ -190,13 +193,47 @@ class d3barchart extends d3chart {
   }
 
   hasComparissionData() {
-    return this.data.some(item => item["Texto de referencia"] > 0);
+    return this.data.some(item => item[REFERENCE] > 0);
   }
 
   calculateTotals() {
-    const totalCompared = this.data.reduce((total, item) => { return total + item["Texto de referencia"]; }, 0);
-    const totalOriginal = this.data.reduce((total, item) => { return total + item["Texto escaneado"]; }, 0);
-    return { "Texto de referencia": totalCompared, "Texto escaneado": totalOriginal  };
+    const totalCompared = this.data.reduce((total, item) => { return total + item[REFERENCE]; }, 0);
+    const totalOriginal = this.data.reduce((total, item) => { return total + item[SCANNED]; }, 0);
+    return { [REFERENCE]: totalCompared, [SCANNED]: totalOriginal  };
+  }
+
+  calculateMaximums() {
+    const maxCompared = this.data.reduce((max, item) => this.getBiggerNumber(max, item[REFERENCE]), 0);
+    const maxOriginal = this.data.reduce((max, item) => this.getBiggerNumber(max, item[SCANNED]), 0);
+    return { [REFERENCE]: maxCompared, [SCANNED]: maxOriginal };
+  }
+
+  getBiggerNumber(a, b) {
+    if (a > b) {
+      return a;
+    }
+    return b;
+  }
+
+  calculateBiggestNumber() {
+    const totals = this.calculateTotals()
+    const maximums = this.calculateMaximums()
+
+    const referenceMax = maximums[REFERENCE]
+    const referenceTotal = totals[REFERENCE]
+
+    const scannedMax = maximums[SCANNED]
+    const scannedTotal = totals[SCANNED]
+
+    const referencePercentage = this.calculatePercentage(referenceMax, referenceTotal)
+    const scannedPercentage = this.calculatePercentage(scannedMax, scannedTotal)
+
+    const biggest = this.getBiggerNumber(referencePercentage, scannedPercentage)
+    return this.roundToNextStep(biggest)
+  }
+
+ roundToNextStep(x) {
+    return Math.ceil(x / 10) * 10;
   }
 
   calculatePercentage(value, total) {
@@ -274,6 +311,7 @@ class d3barchart extends d3chart {
    * Update chart's elements based on data change
    */
   updateElements() {
+    const totals = this.calculateTotals();
 
     // Bars groups
     this.itemg
@@ -300,9 +338,12 @@ class d3barchart extends d3chart {
           : this.xScaleInn(this.cfg.values[i % this.cfg.values.length]);
       })
       .attr('width', (d, i) => {
+        const key = this.cfg.values[i % this.cfg.values.length];
+        const percentage = this.calculatePercentage(d[key], totals[key])
+
         return this.cfg.orientation !== 'horizontal'
           ? this.xScaleInn.bandwidth()
-          : this.yScale(+d[this.cfg.values[i % this.cfg.values.length]]);
+          : this.yScale(percentage);
       })
       .attr('height', (d, i) => {
         return this.cfg.orientation !== 'horizontal'
