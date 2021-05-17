@@ -32,15 +32,6 @@
 
     @media (min-width: $md) {
       margin: 0 0 0 auto;
-      width: rem($spacer-unit * 20);
-      height: rem($spacer-unit * 20);
-    }
-
-    &_party {
-      position: absolute;
-      z-index: 1;
-      bottom: 0;
-      left: 0;
     }
   }
 

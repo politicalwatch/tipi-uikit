@@ -2,10 +2,10 @@
   <div class="c-deputy" :class="addBirthdayClass()" v-if="deputy">
     <div class="o-container">
       <div class="o-grid  o-grid--reverse">
-        <div class="o-grid__col u-12 u-4@sm">
+        <div class="o-grid__col u-4@sm">
           <div class="c-deputy__image_container">
             <img class="c-deputy__image" :src="deputy.image" :alt="'Foto de ' + deputy.name">
-            <img class="c-deputy__image_party" :src="deputy.party_logo" :alt="'Logo del ' + parliamentaryGroup.name">
+            <party-logo :party="deputy.party_name"/>
           </div>
         </div>
         <div class="o-grid__col u-12 u-8@sm">
@@ -45,11 +45,13 @@
 
 <script>
 import TipiIcon from '../Icon/Icon.vue';
+import PartyLogo from '../PartyLogo/PartyLogo.vue';
 
 export default {
   name: 'TipiDeputy',
   components: {
     TipiIcon,
+    PartyLogo,
   },
   data: function () {
     return {
