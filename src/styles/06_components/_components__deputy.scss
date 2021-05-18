@@ -136,6 +136,7 @@
     display: inline-block;
     vertical-align: top;
     font-size: 14px;
+    margin-top: rem($spacer-unit * 8);
 
     h3 {
       color: $secondary;
@@ -155,13 +156,6 @@
     span {
       margin-right: 8px;
     }
-  }
-
-  &__divider {
-    height: 1px;
-    margin: 31px 0 64px;
-    background-color: $secondary;
-    display: block;
   }
 
   &__hidden {

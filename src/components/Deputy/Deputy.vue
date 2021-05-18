@@ -25,7 +25,6 @@
         <div class="o-grid__col u-12 u-12@sm c-deputy__more">
           <a href="#" @click="collapse">{{ getCollapseMessage() }}<tipi-icon :icon="getCollapseIcon()"/></a>
         </div>
-        <div :class="getCollapsedClass()" class="c-deputy__divider o-grid__col u-12 u-12@sm"></div>
         <div :class="getCollapsedClass()" class="o-grid__col u-12 u-4@sm">
           <h3>Declaraciones</h3>
           <p v-for="(link, title) in deputy.extra.declarations" :key="title"><tipi-icon icon="document" /><a :href="link">{{ title }}</a></p>
@@ -99,7 +98,7 @@ export default {
     },
     getConstituency: function() {
       const constituency = this.deputy.constituency;
-      return constituency.substring(13);
+      return constituency;
     },
   },
 };
