@@ -16,7 +16,7 @@
             </router-link>
           </h3>
           <div class="c-deputy__extra">
-            <span class="c-deputy__personal"><tipi-icon v-if="addBirthdayClass" icon="birthday"/>{{ getAge() }} años</span><span class="c-deputy__personal"><tipi-icon icon="location"/>{{ getConstituency() }}</span>
+            <span class="c-deputy__personal"><tipi-icon v-if="addBirthdayClass()" icon="birthday"/>{{ getAge() }} años</span><span class="c-deputy__personal"><tipi-icon icon="location"/>{{ getConstituency() }}</span>
           </div>
           <div class="c-deputy__links">
             <slot/>
