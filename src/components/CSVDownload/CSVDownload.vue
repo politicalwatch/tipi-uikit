@@ -51,7 +51,7 @@ export default {
     },
     label: {
       type: String,
-      default: 'Descarga datos',
+      default: 'Descarga los datos',
     },
     buttonClass: {
       type: String,
