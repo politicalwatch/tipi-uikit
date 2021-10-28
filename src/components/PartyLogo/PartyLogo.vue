@@ -49,7 +49,6 @@ export default {
       if (this.party in this.logos) {
         logo = require(`../../assets/party_logos/${this.logos[this.party]}`);
       }
-      console.log(logo)
       return logo;
     },
   },
