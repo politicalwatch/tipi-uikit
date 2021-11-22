@@ -35,8 +35,8 @@ const d3 = {
 
 const pluralize = require('pluralize');
 
-const REFERENCE = "Texto de referencia"
-const SCANNED = "Texto escaneado"
+const REFERENCE = "Texto de referencia";
+const SCANNED = "Texto escaneado";
 
 /**
  * D3 Bar Chart
@@ -114,7 +114,7 @@ class d3barchart extends d3chart {
       .rangeRound([0, this.xScale.bandwidth()])
       .paddingInner(0.05);
 
-    const yMax = this.calculateBiggestNumber()
+    const yMax = this.calculateBiggestNumber();
     this.yScale
       .rangeRound(this.cfg.orientation !== 'horizontal' ? [0, this.cfg.height] : [this.cfg.width, 0])
       .domain([yMax, 0]);
@@ -216,20 +216,20 @@ class d3barchart extends d3chart {
   }
 
   calculateBiggestNumber() {
-    const totals = this.calculateTotals()
-    const maximums = this.calculateMaximums()
+    const totals = this.calculateTotals();
+    const maximums = this.calculateMaximums();
 
-    const referenceMax = maximums[REFERENCE]
-    const referenceTotal = totals[REFERENCE]
+    const referenceMax = maximums[REFERENCE];
+    const referenceTotal = totals[REFERENCE];
 
-    const scannedMax = maximums[SCANNED]
-    const scannedTotal = totals[SCANNED]
+    const scannedMax = maximums[SCANNED];
+    const scannedTotal = totals[SCANNED];
 
-    const referencePercentage = this.calculatePercentage(referenceMax, referenceTotal)
-    const scannedPercentage = this.calculatePercentage(scannedMax, scannedTotal)
+    const referencePercentage = this.calculatePercentage(referenceMax, referenceTotal);
+    const scannedPercentage = this.calculatePercentage(scannedMax, scannedTotal);
 
-    const biggest = this.getBiggerNumber(referencePercentage, scannedPercentage)
-    return this.roundToNextStep(biggest)
+    const biggest = this.getBiggerNumber(referencePercentage, scannedPercentage);
+    return this.roundToNextStep(biggest);
   }
 
  roundToNextStep(x) {
@@ -339,7 +339,7 @@ class d3barchart extends d3chart {
       })
       .attr('width', (d, i) => {
         const key = this.cfg.values[i % this.cfg.values.length];
-        const percentage = this.calculatePercentage(d[key], totals[key])
+        const percentage = this.calculatePercentage(d[key], totals[key]);
 
         return this.cfg.orientation !== 'horizontal'
           ? this.xScaleInn.bandwidth()

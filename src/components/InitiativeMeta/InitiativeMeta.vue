@@ -1,15 +1,14 @@
 <template>
   <div class="c-initiative-meta">
     <div :class="`c-initiative-meta__status c-initiative-meta__status--${ getColorByStatus(initiative.status) }`">
-      <strong>{{ initiative.status }}</strong>
+      <strong><tipi-icon :icon="getIcon(initiative)"></tipi-icon>{{ getStateMessage(initiative) }}</strong>
     </div>
-    <a class="c-initiative-meta__link" v-if="linkText" :href="initiative.url" target="_blank" :title="`Ver ${initiative.title} en su fuente original`">
-      <tipi-icon icon="building"/> {{ linkText }}
-    </a>
   </div>
 </template>
 
 <script>
+const moment = require('moment');
+moment.locale('es');
 import TipiIcon from '../Icon/Icon.vue';
 
 export default {
@@ -37,6 +36,22 @@ export default {
         if (this.metaColors[color].indexOf(status) != -1) return color;
       }
       return 'neutral';
+    },
+    getIcon: function(initiative) {
+      const color = this.getColorByStatus(initiative['status'])
+      const map = {'completed': 'success', 'neutral': 'clock', 'error': 'close-menu'}
+      return map[color]
+    },
+    getStateMessage: function(initiative) {
+      const color = this.getColorByStatus(initiative['status'])
+      let date = initiative['updated']
+      if (color == 'neutral') {
+        date = initiative['created']
+      }
+
+      const formattedDate = moment(date).fromNow()
+
+      return `${initiative['status']} ${formattedDate}`
     },
   },
 };

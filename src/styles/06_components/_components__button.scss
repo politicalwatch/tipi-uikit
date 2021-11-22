@@ -46,6 +46,7 @@
   &--primary {
     background-color: $primary;
     color: $white;
+    border-radius: 10px;
 
     &:hover {
       color: $white;
@@ -115,6 +116,7 @@
   &--compact {
     @include tbody2;
 
+    border-radius: 5px;
     padding: rem($spacer-unit) rem($spacer-unit * 2);
   }
 

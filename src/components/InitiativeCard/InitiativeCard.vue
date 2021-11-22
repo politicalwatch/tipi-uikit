@@ -1,8 +1,6 @@
 <template>
   <div>
     <article class="c-initiative-card" :id="`initiative-card-${initiative.id}`">
-      <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="getTopics(initiative)"/>
-    <tipi-initiative-meta v-if="extendedLayout" :initiative="initiative" :metaColors="metaColors" />
       <h2 class="c-initiative-card__title">
         <router-link v-if="initiative.id" :to="{name: 'initiative', params: { id: initiative.id }}">{{ initiative.title }}</router-link>
         <span v-else>{{ initiative.title }}</span>
@@ -15,9 +13,10 @@
         <h3 class="c-initiative-card__label">{{ metaGroupsOthers }}</h3>
         <p v-html="getAuthors(initiative)"></p>
       </div>
+      <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="initiative.topics"/>
       <div class="o-grid">
         <div class="o-grid__col">
-          <p class="c-initiative-card__date">Actualizado {{ moment(initiative.updated).fromNow() }}</p>
+          <tipi-initiative-meta v-if="extendedLayout" :initiative="initiative" :metaColors="metaColors" />
         </div>
         <div class="o-grid__col o-grid__col--right">
           <router-link v-if="initiative.id" :to="{name: 'initiative', params: { id: initiative.id }}" v-slot="{ href }">
