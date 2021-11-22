@@ -7,7 +7,6 @@
     color: $white;
     padding: rem($spacer-unit);
     text-align: center;
-    margin-bottom: rem($spacer-unit * 3);
 
     &--neutral {
       background-color: $neutral;
@@ -51,37 +50,41 @@
     }
   }
 
-  .c-initiative-card & {
+  .c-icon {
+    margin-right: 8px;
+  }
 
-    .c-initiative-meta {
+  &__status {
+    text-align: left;
+    padding: 0 0 0 rem($spacer-unit);
 
-      &__status {
-        text-align: left;
-        border-left: rem($spacer-unit / 2) solid $primary;
-        padding: 0 0 0 rem($spacer-unit);
-        margin-bottom: rem($spacer-unit * 2);
+    &--neutral {
+      background-color: transparent;
+      border-color: $neutral;
+      color: $neutral;
 
-        strong {
-          font-weight: normal;
-        }
+      svg path {
+        fill: $neutral;
+      }
+    }
 
-        &--neutral {
-          background-color: transparent;
-          border-color: $neutral;
-          color: $secondary-dark;
-        }
+    &--completed {
+      background-color: transparent;
+      border-color: $completed;
+      color: $completed;
 
-        &--completed {
-          background-color: transparent;
-          border-color: $completed;
-          color: $secondary-dark;
-        }
+      svg path {
+        fill: $completed;
+      }
+    }
 
-        &--error {
-          background-color: transparent;
-          border-color: $error;
-          color: $secondary-dark;
-        }
+    &--error {
+      background-color: transparent;
+      border-color: $error;
+      color: $error;
+
+      svg path {
+        fill: $error;
       }
     }
   }
