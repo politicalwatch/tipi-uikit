@@ -5,7 +5,7 @@
       :class="{ disabled: !canDownloadCSV }"
       :title="!canDownloadCSV ? 'Demasiados resultados para poder descargar. Afina la búsqueda' : 'Descarga CSV con todos los resultados'"
       @click.prevent="loadCSVItems"
-      class="c-button c-button--compact c-button--icon-right" href="#">
+      class="c-button c-button--compact c-button--secondary c-button--icon-right" href="#">
         {{ label }}
         <span class="c-icon c-icon--type-download">
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" fill="none" viewBox="0 0 12 16">
@@ -69,3 +69,9 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+.c-button--secondary {
+  margin-right: 16px;
+}
+</style>

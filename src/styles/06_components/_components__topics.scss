@@ -10,6 +10,12 @@
     padding: rem($spacer-unit);
     text-decoration: none;
     margin: 0 $topic-pill-separator $topic-pill-separator 0;
+    margin-left: 1px;
+    float: left;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   &__label {
@@ -34,6 +40,12 @@
         &-tags {
           display: flex;
           flex-wrap: wrap;
+
+          .c-topics__tag {
+            &:hover {
+              text-decoration: underline;
+            }
+          }
         }
 
         &-topic {
@@ -52,6 +64,10 @@
           margin: rem($spacer-unit) 0;
           color: $secondary-dark;
           text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
 

@@ -18,7 +18,6 @@ export default {
   },
   props: {
     initiative: Object,
-    linkText: String,
     metaColors: {
       type: Object,
       default: function() {
@@ -39,10 +38,14 @@ export default {
     },
     getIcon: function(initiative) {
       const color = this.getColorByStatus(initiative['status'])
-      const map = {'completed': 'success', 'neutral': 'clock', 'error': 'close-menu'}
+      const map = {'completed': 'success', 'neutral': 'clock', 'error': 'denied'}
       return map[color]
     },
     getStateMessage: function(initiative) {
+      if (initiative['status'] == 'Desconocida') {
+        return `${initiative['status']}`
+      }
+
       const color = this.getColorByStatus(initiative['status'])
       let date = initiative['updated']
       if (color == 'neutral') {
@@ -50,7 +53,6 @@ export default {
       }
 
       const formattedDate = moment(date).fromNow()
-
       return `${initiative['status']} ${formattedDate}`
     },
   },

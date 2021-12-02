@@ -13,7 +13,11 @@
         <h3 class="c-initiative-card__label">{{ metaGroupsOthers }}</h3>
         <p v-html="getAuthors(initiative)"></p>
       </div>
-      <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="initiative.topics"/>
+      <router-link v-if="initiative.id" :to="{name: 'initiative', params: { id: initiative.id }}" v-slot="{ href }">
+        <a :href="href" target="_blank">
+          <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="initiative.topics" :limit="3" />
+        </a>
+      </router-link>
       <div class="o-grid">
         <div class="o-grid__col">
           <tipi-initiative-meta v-if="extendedLayout" :initiative="initiative" :metaColors="metaColors" />

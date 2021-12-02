@@ -1,6 +1,7 @@
 import TipiResults from './Results/Results.vue';
 import TipiMessage from './Message/Message.vue';
 import TipiCsvDownload from './CSVDownload/CSVDownload.vue';
+import TipiCongressLink from './CongressLink/CongressLink.vue';
 import TipiHeader from './Header/Header.vue';
 import TipiNavbar from './Navbar/Navbar.vue';
 import TipiDeputy from './Deputy/Deputy.vue';
@@ -27,6 +28,7 @@ export {
   TipiResults,
   TipiMessage,
   TipiCsvDownload,
+  TipiCongressLink,
   TipiHeader,
   TipiNavbar,
   TipiDeputy,

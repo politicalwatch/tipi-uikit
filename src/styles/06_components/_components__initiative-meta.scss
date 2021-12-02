@@ -9,7 +9,7 @@
     text-align: center;
 
     &--neutral {
-      background-color: $neutral;
+      background-color: $secondary;
       color: $black;
     }
 
@@ -60,11 +60,11 @@
 
     &--neutral {
       background-color: transparent;
-      border-color: $neutral;
-      color: $neutral;
+      border-color: $secondary;
+      color: $secondary;
 
       svg path {
-        fill: $neutral;
+        fill: $secondary;
       }
     }
 

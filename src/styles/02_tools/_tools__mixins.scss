@@ -156,7 +156,9 @@
     .u-text-#{$align} {
       text-align: $align;
     }
+  }
 
+  @each $align in (left, right, center) {
     @each $bp-key, $bp-value in $breakpoints {
       @media (min-width: $bp-value) {
 

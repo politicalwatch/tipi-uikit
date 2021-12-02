@@ -1,19 +1,33 @@
 <template>
-  <div class="c-topics" v-html="getTopics(topics)"></div>
+  <div class="c-topics">
+    <span v-html="getTopics()" />
+    <div v-if="limit && (limit < topics.length)" class="c-topics__topic" style="background-color:#2d4252;">
+      <tipi-icon icon="more" />
+    </div>
+  </div>
 </template>
 
 <script>
+import TipiIcon from '../Icon/Icon.vue';
 import * as Utils from '../../utils';
 
 export default {
   name: 'TipiTopicPill',
+  components: {
+    TipiIcon
+  },
   props: {
     topics: Array,
     topicsStyles: Object,
     withLinks: Boolean,
+    limit: Number,
   },
   methods: {
-    getTopics: function(topics) {
+    getTopics: function() {
+      let topics = this.topics
+      if (this.limit) {
+        topics = topics.slice(0, this.limit)
+      }
       if (this.topicsStyles && topics.length) {
         return topics.slice().sort(Utils.naturalSort).map((element, i)=> {
           if (this.withLinks) {
