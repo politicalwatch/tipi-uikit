@@ -20,7 +20,7 @@
       </router-link>
       <div class="o-grid">
         <div class="o-grid__col">
-          <tipi-initiative-meta v-if="extendedLayout" :initiative="initiative" :metaColors="metaColors" />
+          <tipi-initiative-meta :initiative="initiative" :metaColors="metaColors" />
         </div>
         <div class="o-grid__col o-grid__col--right">
           <router-link v-if="initiative.id" :to="{name: 'initiative', params: { id: initiative.id }}" v-slot="{ href }">

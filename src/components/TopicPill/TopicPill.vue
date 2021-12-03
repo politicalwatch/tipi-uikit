@@ -1,7 +1,7 @@
 <template>
   <div class="c-topics">
     <span v-html="getTopics()" />
-    <div v-if="limit && (limit < topics.length)" class="c-topics__topic" style="background-color:#2d4252;">
+    <div v-if="limit && (limit < topics.length)" class="c-topics__topic c-topics__topic__small" style="background-color:#2d4252;">
       <tipi-icon icon="more" />
     </div>
   </div>
@@ -34,13 +34,13 @@ export default {
             console.log(this.topicsStyles)
             console.log(element)
             return `
-              <a href="#topic-${i}" class="c-topics__topic" style="background-color:${this.topicsStyles[element].color}">
+              <a href="#topic-${i}" class="c-topics__topic c-topics__topic__small" style="background-color:${this.topicsStyles[element].color}">
                 ${this.topicsStyles[element].shortname}
               </a>
             `;
           } else {
             return `
-              <div class="c-topics__topic" style="background-color:${this.topicsStyles[element].color}">
+              <div class="c-topics__topic c-topics__topic__small" style="background-color:${this.topicsStyles[element].color}">
                 ${this.topicsStyles[element].shortname}
               </div>
             `;
@@ -49,7 +49,7 @@ export default {
       }
       return topics.length ?
         topics.join('<br/>') :
-        `<div class="c-topics__topic" style="background-color: #000; color: #fff;">
+        `<div class="c-topics__topic c-topics__topic__small" style="background-color: #000; color: #fff;">
           ${this.topicsStyles['no-topic'] ? this.topicsStyles['no-topic'].shortname : 'Sin temática'}
         </div>`;
     },
