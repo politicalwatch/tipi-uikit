@@ -11,6 +11,11 @@
     text-decoration: none;
     margin: 0 $topic-pill-separator $topic-pill-separator 0;
 
+    &__small {
+      margin-left: 1px;
+      float: left;
+    }
+
     &:hover {
       text-decoration: underline;
     }
