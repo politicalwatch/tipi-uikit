@@ -15,7 +15,7 @@
       </div>
       <router-link v-if="initiative.id" :to="{name: 'initiative', params: { id: initiative.id }}" v-slot="{ href }">
         <a :href="href" target="_blank">
-          <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="initiative.topics" :limit="3" />
+          <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="getTopics(initiative)" :limit="3" />
         </a>
       </router-link>
       <div class="o-grid">
