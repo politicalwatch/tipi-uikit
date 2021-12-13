@@ -149,6 +149,15 @@
   }
 }
 
+@mixin fill-colors() {
+  @each $color-name, $color-value in $colors {
+
+    .u-filling-#{$color-name} svg path {
+      fill: $color-value !important;
+    }
+  }
+}
+
 //aligns
 @mixin text-aligns() {
   @each $align in (left, right, center) {
