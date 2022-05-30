@@ -15,7 +15,7 @@
       </div>
       <router-link v-if="initiative.id" :to="{name: 'initiative', params: { id: initiative.id }}" v-slot="{ href }">
         <a :href="href" target="_blank">
-          <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="initiative.topics" :limit="3" />
+          <tipi-topic-pill class="c-initiative-card__topics" :topicsStyles="topicsStyles" :topics="getTopics(initiative)" :limit="3" />
         </a>
       </router-link>
       <div class="o-grid">
@@ -37,6 +37,7 @@
 <script>
 const moment = require('moment');
 moment.locale('es');
+
 import TipiIcon from '../Icon/Icon.vue';
 import TipiTopicPill from '../TopicPill/TopicPill.vue';
 import TipiInitiativeMeta from '../InitiativeMeta/InitiativeMeta.vue';
@@ -62,19 +63,25 @@ export default {
     metaColors: {type: Object, default: undefined},
   },
   methods: {
-
     getAuthors: function(initiative) {
       return initiative.authors.length ?
-	initiative.authors.join('<br/>') :
-	'';
+        initiative.authors.join('<br/>') :
+        '';
+    },
+    getTopics: function(initiative) {
+      let topics = []
+      for (const tagged of initiative['tagged']) {
+        topics = topics.concat(tagged['topics'])
+      }
+      return topics
     },
     getDeputies: function(initiative) {
       if (initiative.deputies.length == 0) return '';
       let regex_id = /\[.*\]/;
       return initiative.deputies.map(d => {
-	var has_id = regex_id.exec(d);
-	if (!has_id) return d;
-	return d.replace(has_id[0], '').trim();
+        var has_id = regex_id.exec(d);
+        if (!has_id) return d;
+        return d.replace(has_id[0], '').trim();
       }).join('<br/>');
     },
   },

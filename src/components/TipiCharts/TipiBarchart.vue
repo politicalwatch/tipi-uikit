@@ -64,6 +64,10 @@ export default {
       required: false,
       default: 'desc', // Options: alphabetically, asc, desc
     },
+    knowledgebase: {
+      type: String,
+      required: true,
+    }
   },
   mounted() {
     this.calculeRows();
@@ -78,11 +82,14 @@ export default {
   },
   methods: {
     calculeRows() {
+      const tagged = this.getTagged()
+      const tags = tagged.tags
       const rows = [];
-      const totalTimes = this.result.tags
+      const totalTimes = tags
         .reduce((cnt, o) => (cnt + o.times), 0);
 
-      this.result.tags.forEach(d => {
+
+      tags.forEach(d => {
         const idx = rows.map(r => r.topic).indexOf(d.topic);
         if(idx === -1) {
           // New topic -> construct object
@@ -118,6 +125,9 @@ export default {
         : this.barOrder === 'asc'
           ? rows.sort((a, b) => a.times - b.times)
           : rows.sort((a, b) => b.times - a.times);
+    },
+    getTagged() {
+      return this.result.tagged.filter(e => e.knowledgebase == this.knowledgebase).pop()
     },
   },
 };
