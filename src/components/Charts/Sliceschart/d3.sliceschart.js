@@ -124,9 +124,14 @@ class d3sliceschart extends d3chart{
             .innerRadius(this.inRadius)
             .cornerRadius(this.cfg.radius.round);
 
+        let max = d3.max(this.data, d => d[this.cfg.value])
+        if (max == 0) {
+          max = 1
+        }
+
         this.rScale
           .range([this.inRadius, this.cfg.radius.outter])
-          .domain([0, d3.max(this.data, d => d[this.cfg.value])]);
+          .domain([0, max]);
 
         // Set up color scheme
         if(this.cfg.color.scheme){
