@@ -21,6 +21,10 @@ export default {
     topicsStyles: Object,
     withLinks: Boolean,
     limit: Number,
+    order: {
+      type: Boolean,
+      default: true,
+    }
   },
   methods: {
     getTopics: function() {
@@ -29,7 +33,10 @@ export default {
         topics = topics.slice(0, this.limit)
       }
       if (this.topicsStyles && topics.length) {
-        return topics.slice().sort(Utils.naturalSort).map((element, i)=> {
+        let returnedTopics = (this.order) ?
+          topics.slice().sort(Utils/naturalSort) :
+          topics.slice();
+        return returnedTopics.map((element, i)=> {
           if (this.withLinks) {
             return `
               <a href="#topic-${i}" class="c-topics__topic c-topics__topic__small" style="background-color:${this.topicsStyles[element].color}">
