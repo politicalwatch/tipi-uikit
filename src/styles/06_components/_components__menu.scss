@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .c-menu {
   @include th6;
 
@@ -18,6 +19,29 @@
     justify-content: flex-end;
   }
 
+  &__submenu {
+    margin: rem($spacer-unit * 2) 0 0 0;
+    padding: 0;
+
+    @media (min-width: $md) {
+      position: absolute;
+      top: 100%;
+      left: rem($spacer-unit * 2);
+      transform: translateY(-$spacer-unit);
+      opacity: 0;
+      transition: opacity 0.2s linear, transform 0.2s linear;
+      margin: 0;
+      padding: rem($spacer-unit);
+      background: $white;
+      box-shadow: inset 0 -2px 2px 0 rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+
+    .c-menu__item {
+      margin-bottom: rem($spacer-unit);
+    }
+  }
+
   &__item {
     margin-bottom: rem($spacer-unit * 2);
 
@@ -28,6 +52,34 @@
 
     &::before {
       display: none;
+    }
+
+    &:hover {
+
+      .c-menu__submenu {
+        @media (min-width: $md) {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
+
+    &.has-submenu {
+      position: relative;
+
+      &::after {
+        @media (min-width: $md) {
+          position: absolute;
+          content: "";
+          right: 0;
+          top: rem($spacer-unit);
+          pointer-events: none;
+          width: rem($spacer-unit);
+          height: rem($spacer-unit);
+          background: url('../assets/svg/icon-chevron-down.svg') no-repeat center center;
+          background-size: contain;
+        }
+      }
     }
   }
 

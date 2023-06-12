@@ -9,7 +9,7 @@
     <div  v-if="preImage" class="c-decorator" :style="`background-image: url(${preImage})`"></div>
     <div class="c-navbar__wrapper o-container">
       <div class="c-navbar__brand">
-        <a class="c-navbar__brand-link" href="/">AAAAA<img class="c-navbar__brand-logo" :src="logo"></a>
+        <a class="c-navbar__brand-link" href="/"><img class="c-navbar__brand-logo" :src="logo"></a>
       </div>
       <button
         type="button"
@@ -26,11 +26,23 @@
           <li
           @click="closeMenuMobile"
           class="c-menu__item"
+          :class="{ 'has-submenu': link.children }"
           v-for="link in links"
           :key="link.route"
           v-show="link.condition">
             <a v-if="link.external" :href="link.route" class="c-menu__link" target="_blank">{{ link.name }}<icon :icon="link.icon" class="c-menu__icon" v-if="link.icon" /></a>
             <router-link v-else :to="{name: link.route }" class="c-menu__link">{{ link.name }}<icon :icon="link.icon" class="c-menu__icon" v-if="link.icon" /></router-link>
+            <ul class="c-menu__submenu" v-if="link.children">
+              <li
+              @click="closeMenuMobile"
+              class="c-menu__item"
+              v-for="child in link.children"
+              :key="child.route"
+              v-show="child.condition">
+                <a v-if="child.external" :href="child.route" class="c-menu__link" target="_blank">{{ child.name }}<icon :icon="child.icon" class="c-menu__icon" v-if="child.icon" /></a>
+                <router-link v-else :to="{name: child.route }" class="c-menu__link">{{ child.name }}<icon :icon="child.icon" class="c-menu__icon" v-if="child.icon" /></router-link>
+              </li>
+            </ul>
           </li>
         </ul>
       </nav>
