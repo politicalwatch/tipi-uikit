@@ -69,11 +69,11 @@ export default {
         '';
     },
     getTopics: function(initiative) {
-      let topics = []
+      let topics = [];
       for (const tagged of initiative['tagged']) {
-        topics = topics.concat(tagged['topics'])
+        topics = topics.concat(tagged['topics']);
       }
-      return topics
+      return topics;
     },
     getDeputies: function(initiative) {
       if (initiative.deputies.length == 0) return '';

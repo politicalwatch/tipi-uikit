@@ -67,7 +67,7 @@ export default {
     knowledgebase: {
       type: String,
       required: true,
-    }
+    },
   },
   mounted() {
     this.calculeRows();
@@ -82,8 +82,8 @@ export default {
   },
   methods: {
     calculeRows() {
-      const tagged = this.getTagged()
-      const tags = tagged.tags
+      const tagged = this.getTagged();
+      const tags = tagged.tags;
       const rows = [];
       const totalTimes = tags
         .reduce((cnt, o) => (cnt + o.times), 0);
@@ -127,7 +127,7 @@ export default {
           : rows.sort((a, b) => b.times - a.times);
     },
     getTagged() {
-      return this.result.tagged.filter(e => e.knowledgebase == this.knowledgebase).pop()
+      return this.result.tagged.filter(e => e.knowledgebase == this.knowledgebase).pop();
     },
   },
 };

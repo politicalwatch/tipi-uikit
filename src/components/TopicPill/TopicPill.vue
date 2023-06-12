@@ -14,7 +14,7 @@ import * as Utils from '../../utils';
 export default {
   name: 'TipiTopicPill',
   components: {
-    TipiIcon
+    TipiIcon,
   },
   props: {
     topics: Array,
@@ -24,13 +24,13 @@ export default {
     order: {
       type: Boolean,
       default: true,
-    }
+    },
   },
   methods: {
     getTopics: function() {
-      let topics = this.topics
+      let topics = this.topics;
       if (this.limit) {
-        topics = topics.slice(0, this.limit)
+        topics = topics.slice(0, this.limit);
       }
       if (this.topicsStyles && topics.length) {
         let returnedTopics = (this.order) ?

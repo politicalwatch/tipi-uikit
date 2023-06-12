@@ -37,23 +37,23 @@ export default {
       return 'neutral';
     },
     getIcon: function(initiative) {
-      const color = this.getColorByStatus(initiative['status'])
-      const map = {'completed': 'success', 'neutral': 'clock', 'error': 'denied'}
-      return map[color]
+      const color = this.getColorByStatus(initiative['status']);
+      const map = {'completed': 'success', 'neutral': 'clock', 'error': 'denied'};
+      return map[color];
     },
     getStateMessage: function(initiative) {
       if (initiative['status'] == 'Desconocida') {
-        return `${initiative['status']}`
+        return `${initiative['status']}`;
       }
 
-      const color = this.getColorByStatus(initiative['status'])
-      let date = initiative['updated']
+      const color = this.getColorByStatus(initiative['status']);
+      let date = initiative['updated'];
       if (color == 'neutral') {
-        date = initiative['created']
+        date = initiative['created'];
       }
 
-      const formattedDate = moment(date).fromNow()
-      return `${initiative['status']} ${formattedDate}`
+      const formattedDate = moment(date).fromNow();
+      return `${initiative['status']} ${formattedDate}`;
     },
   },
 };

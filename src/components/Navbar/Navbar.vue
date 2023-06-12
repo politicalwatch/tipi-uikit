@@ -9,7 +9,7 @@
     <div  v-if="preImage" class="c-decorator" :style="`background-image: url(${preImage})`"></div>
     <div class="c-navbar__wrapper o-container">
       <div class="c-navbar__brand">
-        <a class="c-navbar__brand-link" href="/"><img class="c-navbar__brand-logo" :src="logo"></a>
+        <a class="c-navbar__brand-link" href="/">AAAAA<img class="c-navbar__brand-logo" :src="logo"></a>
       </div>
       <button
         type="button"
