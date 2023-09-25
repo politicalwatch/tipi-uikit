@@ -150,7 +150,7 @@
 
       li {
         background-color: $white;
-        margin-bottom: rem($spacer-unit / 2);
+        margin-bottom: rem(calc($spacer-unit / 2));
 
         &::before {
           display: none;
@@ -202,7 +202,7 @@
 
     &__element {
       background-color: $white;
-      margin-bottom: rem($spacer-unit / 2);
+      margin-bottom: rem(calc($spacer-unit / 2));
 
       &::before {
         display: none;

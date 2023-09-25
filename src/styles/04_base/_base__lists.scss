@@ -10,7 +10,7 @@ ul {
     &::before {
       content: "";
       display: inline-block;
-      margin-bottom: rem($spacer-unit / 2);
+      margin-bottom: rem(calc($spacer-unit / 2));
       background-color: $primary;
       width: rem($spacer-unit / 2);
       height: rem($spacer-unit / 2);

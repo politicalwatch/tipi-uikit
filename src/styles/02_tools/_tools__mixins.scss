@@ -37,7 +37,7 @@
   @for $i from $min through $max {
 
     &--#{$i} {
-      max-width: (($container-max - $o-container__gutter) / 12) * $i;
+      max-width: (calc(($container-max - $o-container__gutter) / 12)) * $i;
     }
   }
 }
