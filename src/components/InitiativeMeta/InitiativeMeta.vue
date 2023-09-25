@@ -9,6 +9,8 @@
 <script>
 const moment = require('moment');
 moment.locale('es');
+import { formatDistanceToNow } from 'date-fns';
+import es from 'date-fns/locale/es';
 import TipiIcon from '../Icon/Icon.vue';
 
 export default {
@@ -52,7 +54,8 @@ export default {
         date = initiative['created'];
       }
 
-      const formattedDate = moment(date).fromNow();
+      // const formattedDate = moment(date).fromNow();
+      const formattedDate = formatDistanceToNow(date, {addSuffix: true, locale: es});
       return `${initiative['status']} ${formattedDate}`;
     },
   },
