@@ -1,13 +1,22 @@
 <template>
   <div class="c-initiative-meta">
-    <div :class="`c-initiative-meta__status c-initiative-meta__status--${ getColorByStatus(initiative.status) }`">
-      <strong><tipi-icon :icon="getIcon(initiative)"></tipi-icon>{{ getStateMessage(initiative) }}</strong>
+    <div
+      :class="
+        `c-initiative-meta__status c-initiative-meta__status--${getColorByStatus(
+          initiative.status
+        )}`
+      "
+    >
+      <strong
+        ><tipi-icon :icon="getIcon(initiative)"></tipi-icon
+        >{{ getStateMessage(initiative) }}</strong
+      >
     </div>
   </div>
 </template>
 
 <script>
-const moment = require('moment');
+import moment from 'moment';
 moment.locale('es');
 import { formatDistanceToNow } from 'date-fns';
 import es from 'date-fns/locale/es';
@@ -24,9 +33,22 @@ export default {
       type: Object,
       default: function() {
         return {
-          'completed': ['Aprobada', 'Respondida', 'Celebrada', 'Convertida en otra', 'Acumulada en otra'],
-          'neutral': ['En tramitación', 'Desconocida'],
-          'error': ['No admitida a trámite', 'No debatida', 'Rechazada', 'Retirada', 'Derogada', 'No celebrada'],
+          completed: [
+            'Aprobada',
+            'Respondida',
+            'Celebrada',
+            'Convertida en otra',
+            'Acumulada en otra',
+          ],
+          neutral: ['En tramitación', 'Desconocida'],
+          error: [
+            'No admitida a trámite',
+            'No debatida',
+            'Rechazada',
+            'Retirada',
+            'Derogada',
+            'No celebrada',
+          ],
         };
       },
     },
@@ -40,7 +62,7 @@ export default {
     },
     getIcon: function(initiative) {
       const color = this.getColorByStatus(initiative['status']);
-      const map = {'completed': 'success', 'neutral': 'clock', 'error': 'denied'};
+      const map = { completed: 'success', neutral: 'clock', error: 'denied' };
       return map[color];
     },
     getStateMessage: function(initiative) {
@@ -55,7 +77,7 @@ export default {
       }
 
       // const formattedDate = moment(date).fromNow();
-      const formattedDate = formatDistanceToNow(date, {addSuffix: true, locale: es});
+      const formattedDate = formatDistanceToNow(date, { addSuffix: true, locale: es });
       return `${initiative['status']} ${formattedDate}`;
     },
   },
