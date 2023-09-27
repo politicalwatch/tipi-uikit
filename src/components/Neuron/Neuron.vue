@@ -3,7 +3,8 @@
 </template>
 
 <script>
-import d3 from 'd3';
+import { select } from 'd3-selection';
+import { easeBackOut } from 'd3-ease';
 
 export default {
   name: 'TipiNeuron',
@@ -71,7 +72,7 @@ export default {
       //TODO: Encapsulate this in a class so we can have multiple vizualisations in one page.
       //Globals
       let data = [];
-      let svg = d3.select(this.$el);
+      let svg = select(this.$el);
       svg.selectAll('*').remove();
       let width = +svg.node().getBoundingClientRect().width;
       let height = +svg.node().getBoundingClientRect().height;
@@ -105,7 +106,7 @@ export default {
           .transition()
           .duration(700)
           .delay((d, i) => i * i + 500)
-          .ease(d3.easeBackOut)
+          .ease(easeBackOut)
           .attr('d', (d, i) => {
             let pos = calculatePosition(d, i);
             return 'M ' + width / 2 + ' ' + height / 2 + 'L ' + pos[0] + ' ' + pos[1];
@@ -129,7 +130,7 @@ export default {
           .transition()
           .duration(700)
           .delay((d, i) => i * i)
-          .ease(d3.easeBackOut)
+          .ease(easeBackOut)
           .attr('transform', calculateTransform);
 
         node
@@ -178,7 +179,7 @@ export default {
           .attr('fill', color['center'])
           .transition()
           .duration(700)
-          .ease(d3.easeBackOut)
+          .ease(easeBackOut)
           .attr('r', 20);
       }
       onDataReady(topics, initiative);

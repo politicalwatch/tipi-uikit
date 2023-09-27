@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import d3 from 'd3';
+import { select } from 'd3-selection';
 
 export default {
   name: 'TipiTwoCircles',
@@ -23,7 +23,7 @@ export default {
       let duration = 2000;
 
       //Globals
-      let svg = d3.select(this.$el);
+      let svg = select(this.$el);
       svg.selectAll('*').remove();
       let width = +svg.node().getBoundingClientRect().width;
       let maxRadius = 150;
