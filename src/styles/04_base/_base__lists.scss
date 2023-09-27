@@ -8,12 +8,12 @@ ul {
     margin-bottom: rem($spacer-unit);
 
     &::before {
-      content: "";
+      content: '';
       display: inline-block;
       margin-bottom: rem(calc($spacer-unit / 2));
       background-color: $primary;
-      width: rem($spacer-unit / 2);
-      height: rem($spacer-unit / 2);
+      width: rem(calc($spacer-unit / 2));
+      height: rem(calc($spacer-unit / 2));
       margin-right: rem($spacer-unit);
     }
 
@@ -44,7 +44,7 @@ ol {
       @include overline;
 
       counter-increment: section;
-      content: counters(section, ".") ". ";
+      content: counters(section, '.') '. ';
       color: $primary;
     }
 
