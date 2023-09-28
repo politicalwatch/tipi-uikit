@@ -209,13 +209,28 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.c-party_logo_icon {
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
+  width: 5rem;
+  height: 5rem;
+  position: absolute;
+  left: -1.25rem;
+  bottom: -1.25rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
 .c-party_logo_icon__image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: absolute;
+  margin: 0;
+  top: calc(50% - 1.5rem);
+  left: calc(50% - 1.5rem);
 
   svg {
-    width: 65%;
+    width: 3rem;
+    height: 3rem;
   }
 }
 </style>
