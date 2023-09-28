@@ -52,9 +52,6 @@
 </template>
 
 <script>
-import moment from 'moment';
-moment.locale('es');
-
 import TipiIcon from '../Icon/Icon.vue';
 import TipiTopicPill from '../TopicPill/TopicPill.vue';
 import TipiInitiativeMeta from '../InitiativeMeta/InitiativeMeta.vue';
@@ -65,11 +62,6 @@ export default {
     TipiIcon,
     TipiTopicPill,
     TipiInitiativeMeta,
-  },
-  data: function() {
-    return {
-      moment: moment,
-    };
   },
   props: {
     initiative: Object,
