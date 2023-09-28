@@ -17,7 +17,7 @@ export default {
     svg() {
       let svg = '';
       try {
-        svg = defineAsyncComponent(() => import(`@/assets/svg/icon-${this.icon}.svg`));
+        svg = defineAsyncComponent(() => import(`../../assets/svg/icon-${this.icon}.svg`));
       } catch (error) {
         svg = this.icon;
       }
