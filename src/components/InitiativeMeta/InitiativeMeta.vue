@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { formatDistanceToNow } from 'date-fns';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import es from 'date-fns/locale/es';
 import TipiIcon from '../Icon/Icon.vue';
 
@@ -74,7 +74,10 @@ export default {
         date = initiative['created'];
       }
 
-      const formattedDate = formatDistanceToNow(date, { addSuffix: true, locale: es });
+      const formattedDate = formatDistanceToNow(new Date(date), {
+        locale: es,
+        addSuffix: true,
+      });
       return `${initiative['status']} ${formattedDate}`;
     },
   },
