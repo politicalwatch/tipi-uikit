@@ -180,7 +180,7 @@ export default {
       let svg = '';
       try {
         svg = defineAsyncComponent(() =>
-          import(`@/assets/party_logos/icon/${this.parties[this.party].logo}.svg`)
+          import(`../../assets/party_logos/icon/${this.parties[this.party].logo}.svg`)
         );
       } catch (error) {
         svg = this.icon;
@@ -198,7 +198,7 @@ export default {
     },
     getLogoSrc: function() {
       return defineAsyncComponent(() =>
-        import(`@/assets/party_logos/icon/${this.parties[this.party].logo}.svg`)
+        import(`../../assets/party_logos/icon/${this.parties[this.party].logo}.svg`)
       );
     },
     getName: function() {
