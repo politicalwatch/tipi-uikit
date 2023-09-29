@@ -24,9 +24,9 @@ export default {
       return svg;
     },
   },
-  mounted() {
-    if (this.color && this.$el.firstChild.querySelector('path')) {
-      this.$el.firstChild.querySelector('path').setAttribute('fill', this.color);
+  updated() {
+    if (this.color && this.$el.querySelector('svg path')) {
+      this.$el.querySelector('svg path').style.fill = this.color;
     }
   },
 };

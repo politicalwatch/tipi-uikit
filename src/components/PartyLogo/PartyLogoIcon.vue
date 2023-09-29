@@ -1,6 +1,6 @@
 <template>
-  <div class="c-party_logo_icon" :style="getBackground()">
-    <figure class="c-party_logo_icon__image" :alt="'Logo de ' + getName()">
+  <div class="c-party_logo_icon" :style="getBackground">
+    <figure class="c-party_logo_icon__image" :alt="'Logo de ' + getName">
       <component :is="svg"></component>
     </figure>
   </div>
@@ -187,22 +187,15 @@ export default {
       }
       return svg;
     },
-  },
-  methods: {
     getBackground: function() {
-      const bg = this.parties[this.party].color;
+      const bg = this.parties[this.party]?.color ? this.parties[this.party].color : '';
       if (bg.length == 7) {
         return 'background-color:' + bg;
       }
       return 'background-image:' + bg;
     },
-    getLogoSrc: function() {
-      return defineAsyncComponent(() =>
-        import(`../../assets/party_logos/icon/${this.parties[this.party].logo}.svg`)
-      );
-    },
     getName: function() {
-      return this.parties[this.party].name;
+      return this.parties[this.party]?.name ? this.parties[this.party].name : '';
     },
   },
 };
