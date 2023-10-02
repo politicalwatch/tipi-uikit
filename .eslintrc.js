@@ -1,19 +1,11 @@
+/* eslint-env node */
+require('@rushstack/eslint-patch/modern-module-resolution');
+
 module.exports = {
   root: true,
-  env: {
-    node: true,
-  },
-  extends: [
-    'plugin:vue/essential',
-  ],
+  extends: ['plugin:vue/essential', 'eslint:recommended', '@vue/eslint-config-prettier'],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'comma-dangle': ['error', 'always-multiline'],
-    'semi': ['error', 'always'],
-    'vue/mustache-interpolation-spacing': ['error', 'always'],
-  },
-  parserOptions: {
-    parser: 'babel-eslint',
+    'no-console': import.meta.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': import.meta.env.NODE_ENV === 'production' ? 'error' : 'off',
   },
 };
