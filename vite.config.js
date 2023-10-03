@@ -2,6 +2,8 @@ import { fileURLToPath, URL } from 'node:url';
 import { resolve } from 'path'
 import { defineConfig } from 'vite';
 import vue2 from '@vitejs/plugin-vue2';
+import vitePluginRequire from 'vite-plugin-require';
+
 import { createSvgPlugin } from "vite-plugin-vue2-svg";
 
 const svgoConfig = {
@@ -36,6 +38,7 @@ export default defineConfig({
   },
   plugins: [
     vue2(),
+    vitePluginRequire(),
     createSvgPlugin({
       svgoConfig
     })

@@ -47,7 +47,7 @@ export default {
     getLogoSrc: function () {
       let logo = '';
       if (this.party in this.logos) {
-        logo = require(`../../assets/party_logos/${this.logos[this.party]}`);
+        logo = import(`../../assets/party_logos/${this.logos[this.party]}`);
       }
       return logo;
     },
