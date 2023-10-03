@@ -1,5 +1,5 @@
 {
-  "name": "tipi-uikit",
+  "name": "@politicalwatch/tipi-uikit",
   "version": "1.3.0",
   "private": true,
   "main": "src/components/index.js",
