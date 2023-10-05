@@ -1,6 +1,6 @@
 import * as TipiComponents from './components';
 
-let TipiUI = Vue => {
+let TipiUI = (Vue) => {
   Object.values(TipiComponents).forEach((TipiComponent) => {
     Vue.use(TipiComponent);
   });

@@ -2085,10 +2085,12 @@ const vh = /* @__PURE__ */ Xn(yh), _h = {
   },
   computed: {
     isMoreResults: function() {
-      return !this.loadingResults && this.queryMeta.page < this.queryMeta.pages;
+      var t, e;
+      return !this.loadingResults && ((t = this.queryMeta) == null ? void 0 : t.page) < ((e = this.queryMeta) == null ? void 0 : e.pages);
     },
     nextResultsLabel: function() {
-      let t = this.queryMeta.page * this.queryMeta.per_page + 1, e = t + this.queryMeta.per_page - 1;
+      var n, r, i;
+      let t = ((n = this.queryMeta) == null ? void 0 : n.page) * ((r = this.queryMeta) == null ? void 0 : r.per_page) + 1, e = t + ((i = this.queryMeta) == null ? void 0 : i.per_page) - 1;
       return `(${t}-${e})`;
     },
     extendedLayout: function() {
@@ -2151,7 +2153,7 @@ function Sh(t, e, n, r, i, a) {
         }, null, 8, ["initiative", "extendedLayout", "topicsStyles", "metaDeputies", "metaGroupsOthers", "metaColors"])
       ]))), 128))
     ])) : at("", !0),
-    this.$listeners.loadMore && a.isMoreResults ? (R(), q("div", xh, [
+    a.isMoreResults ? (R(), q("div", xh, [
       B("div", wh, [
         B("a", {
           href: "#",
