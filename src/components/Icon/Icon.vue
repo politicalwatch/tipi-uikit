@@ -1,11 +1,12 @@
 <template>
   <span class="c-icon" :class="`c-icon--type-${icon}`">
-    <component :is="svg" />
+    <inline-svg src="svg" />
   </span>
 </template>
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import InlineSvg from 'vue-inline-svg';
 
 export default {
   name: 'TipiIcon',
@@ -13,15 +14,12 @@ export default {
     icon: String,
     color: String,
   },
+  components: {
+    InlineSvg,
+  },
   computed: {
     svg() {
-      let svg = '';
-      try {
-        svg = defineAsyncComponent(() => import(`../../assets/svg/icon-${this.icon}.svg`));
-      } catch (error) {
-        svg = this.icon;
-      }
-      return svg;
+      return (svg = `../../assets/svg/icon-${this.icon}.svg`);
     },
   },
   updated() {

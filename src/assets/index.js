@@ -23,7 +23,7 @@ import icon_less from './svg/icon-less.svg';
 import icon_location from './svg/icon-location.svg';
 import icon_mail from './svg/icon-mail.svg';
 import icon_more from './svg/icon-more.svg';
-import icon_open_bank from './svg/icon-open-bank.svg';
+import icon_open_blank from './svg/icon-open-blank.svg';
 import icon_plus from './svg/icon-plus.svg';
 import icon_search from './svg/icon-search.svg';
 import icon_success from './svg/icon-success.svg';
@@ -55,7 +55,7 @@ export {
   icon_location,
   icon_mail,
   icon_more,
-  icon_open_bank,
+  icon_open_blank,
   icon_plus,
   icon_search,
   icon_success,
