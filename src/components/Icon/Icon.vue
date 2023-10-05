@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import { defineAsyncComponent } from 'vue';
 import InlineSvg from 'vue-inline-svg';
 
 export default {
@@ -19,7 +18,7 @@ export default {
   },
   computed: {
     svg() {
-      return (svg = `../../assets/svg/icon-${this.icon}.svg`);
+      return `../../assets/svg/icon-${this.icon}.svg`;
     },
   },
   updated() {
