@@ -24,7 +24,7 @@
         />
       </div>
     </section>
-    <div class="o-grid o-grid--center" v-if="this.$listeners.loadMore && isMoreResults">
+    <div class="o-grid o-grid--center" v-if="isMoreResults">
       <div class="o-grid__col">
         <a href="#" class="c-button c-button--secondary" @click.prevent="loadMore">
           Cargar más {{ nextResultsLabel }}
@@ -49,7 +49,7 @@ export default {
     loadingResults: Boolean,
     initiatives: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       },
     },
@@ -61,23 +61,23 @@ export default {
     metaColors: { type: Object, default: undefined },
   },
   computed: {
-    isMoreResults: function() {
-      return !this.loadingResults && this.queryMeta.page < this.queryMeta.pages;
+    isMoreResults: function () {
+      return !this.loadingResults && this.queryMeta?.page < this.queryMeta?.pages;
     },
-    nextResultsLabel: function() {
-      let nextResult = this.queryMeta.page * this.queryMeta.per_page + 1;
-      let lastResult = nextResult + this.queryMeta.per_page - 1;
+    nextResultsLabel: function () {
+      let nextResult = this.queryMeta?.page * this.queryMeta?.per_page + 1;
+      let lastResult = nextResult + this.queryMeta?.per_page - 1;
       return `(${nextResult}-${lastResult})`;
     },
-    extendedLayout: function() {
+    extendedLayout: function () {
       return this.layout != 'tiny';
     },
   },
   methods: {
-    loadMore: function() {
+    loadMore: function () {
       this.$emit('loadMore');
     },
-    setupMasonry: function() {
+    setupMasonry: function () {
       let grid = document.querySelector('.o-masonry');
       if (grid) {
         let msnry = new Masonry(grid, {
@@ -90,17 +90,17 @@ export default {
     },
   },
   watch: {
-    initiatives: function() {
+    initiatives: function () {
       if (this.initiatives && this.initiatives.length && !this.loadingResults) {
         this.setupMasonry();
       }
     },
   },
-  mounted: function() {
+  mounted: function () {
     this.setupMasonry();
     window.addEventListener(
       'resize',
-      function() {
+      function () {
         this.setupMasonry();
       }.bind(this)
     );
