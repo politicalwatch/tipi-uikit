@@ -3,7 +3,7 @@ import { select, selectAll } from 'd3-selection';
 import { scaleOrdinal, scaleLinear } from 'd3-scale';
 import { min, max, extent } from 'd3-array';
 import { transition } from 'd3-transition';
-import * as cloud from 'd3-cloud';
+import cloud from 'd3-cloud';
 import {
   easeLinear,
   easePolyIn,
@@ -165,10 +165,10 @@ class d3wordscloud extends d3chart {
    * Compute data before operate
    */
   computeData() {
-    d3.cloud()
+    cloud()
       .size([this.cfg.width, this.cfg.height])
       .words(
-        this.data.map(d => ({
+        this.data.map((d) => ({
           text: d[this.cfg.key],
           size: d[this.cfg.size],
           value: d[this.cfg.value],
@@ -177,8 +177,8 @@ class d3wordscloud extends d3chart {
       )
       .rotate(() => this.wordsAngle(this.cfg.angle))
       .font(this.cfg.fontFamily)
-      .fontSize(d => d.size * this.fontScale)
-      .on('end', d => {
+      .fontSize((d) => d.size * this.fontScale)
+      .on('end', (d) => {
         if (this.data.length !== d.length && this.fontScale > 0) {
           this.fontScale = this.fontScale - 0.1;
           this.computeData();
@@ -198,9 +198,9 @@ class d3wordscloud extends d3chart {
     this.svg
       .attr(
         'viewBox',
-        `0 0 ${this.cfg.width + this.cfg.margin.left + this.cfg.margin.right} ${this.cfg.height +
-          this.cfg.margin.top +
-          this.cfg.margin.bottom}`
+        `0 0 ${this.cfg.width + this.cfg.margin.left + this.cfg.margin.right} ${
+          this.cfg.height + this.cfg.margin.top + this.cfg.margin.bottom
+        }`
       )
       .attr('width', this.cfg.width + this.cfg.margin.left + this.cfg.margin.right)
       .attr('height', this.cfg.height + this.cfg.margin.top + this.cfg.margin.bottom);
@@ -224,7 +224,7 @@ class d3wordscloud extends d3chart {
       .ease(d3[this.cfg.transition.ease]);
 
     // Word group selection data
-    this.wordgroup = this.gcenter.selectAll('.chart__word-group').data(this.tData, d => d.text);
+    this.wordgroup = this.gcenter.selectAll('.chart__word-group').data(this.tData, (d) => d.text);
   }
 
   /**
@@ -252,12 +252,12 @@ class d3wordscloud extends d3chart {
 
     newwords
       .append('text')
-      .style('font-size', d => d.size + 'px')
-      .style('font-family', d => d.font)
+      .style('font-size', (d) => d.size + 'px')
+      .style('font-family', (d) => d.font)
       .attr('text-anchor', 'middle')
-      .attr('fill', d => d.color)
-      .attr('transform', d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
-      .on('mouseover', d => {
+      .attr('fill', (d) => d.color)
+      .attr('transform', (d) => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
+      .on('mouseover', (d) => {
         const label = this.cfg.tooltip.suffixPlural
           ? pluralize(this.cfg.tooltip.suffix, d.value)
           : this.cfg.tooltip.suffix;
@@ -274,7 +274,7 @@ class d3wordscloud extends d3chart {
           .style('left', window.event['pageX'] - 28 + 'px')
           .style('top', window.event['pageY'] - 40 + 'px');
       })
-      .text(d => d.text);
+      .text((d) => d.text);
   }
 
   /**
@@ -285,11 +285,11 @@ class d3wordscloud extends d3chart {
 
     this.wordgroup
       .selectAll('text')
-      .data(this.tData, d => d.text)
+      .data(this.tData, (d) => d.text)
       .transition(this.transition)
-      .attr('fill', d => this.colorElement(d, 'text'))
-      .style('font-size', d => d.size + 'px')
-      .attr('transform', d => `translate(${[d.x, d.y]})rotate(${d.rotate})`);
+      .attr('fill', (d) => this.colorElement(d, 'text'))
+      .style('font-size', (d) => d.size + 'px')
+      .attr('transform', (d) => `translate(${[d.x, d.y]})rotate(${d.rotate})`);
   }
 
   /**
@@ -298,11 +298,7 @@ class d3wordscloud extends d3chart {
   exitElements() {
     if (!this.renderEnd) return;
 
-    this.wordgroup
-      .exit()
-      .transition(this.transition)
-      .style('opacity', 0)
-      .remove();
+    this.wordgroup.exit().transition(this.transition).style('opacity', 0).remove();
   }
 
   /**
