@@ -4,7 +4,7 @@
       <a v-if="disclaimerLink.external" :href="disclaimerLink.route" target="_blank" v-html="disclaimerLink.name"></a>
       <router-link v-else :to="{name: disclaimerLink.route}" v-html="disclaimerLink.name"></router-link>
 
-      <a class="c-disclaimer__close" href="#" @click="closeDisclaimer"><icon icon="icon_close" color="#fff" /></a>
+      <a class="c-disclaimer__close" href="#" @click="closeDisclaimer"><icon icon="close" color="#fff" /></a>
     </div>
     <div  v-if="preImage" class="c-decorator" :style="`background-image: url(${preImage})`"></div>
     <div class="c-navbar__wrapper o-container">
