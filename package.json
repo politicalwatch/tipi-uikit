@@ -1,6 +1,6 @@
 {
   "name": "@politicalwatch/tipi-uikit",
-  "version": "1.5.13",
+  "version": "1.5.14",
   "main": "src/components/index.js",
   "scripts": {
     "dev": "vite",
@@ -21,7 +21,6 @@
     "qs": "^6.11.2",
     "save-svg-as-png": "^1.4.17",
     "stylelint-config-standard": "^34.0.0",
-    "vite-plugin-require": "^1.1.11",
     "vite-svg-loader": "^4.0.0",
     "vue": "^3.3.4",
     "vue-inline-svg": "^2.1.3",
