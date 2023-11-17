@@ -27,6 +27,7 @@ import icon_hamburger from '../../assets/svg/icon-hamburger.svg';
 import icon_info from '../../assets/svg/icon-info.svg';
 import icon_less from '../../assets/svg/icon-less.svg';
 import icon_location from '../../assets/svg/icon-location.svg';
+import icon_logout from '../../assets/svg/icon-logout.svg';
 import icon_mail from '../../assets/svg/icon-mail.svg';
 import icon_more from '../../assets/svg/icon-more.svg';
 import icon_open_blank from '../../assets/svg/icon-open-blank.svg';
@@ -61,6 +62,7 @@ export default {
     icon_info,
     icon_less,
     icon_location,
+    icon_logout,
     icon_mail,
     icon_more,
     icon_open_blank,
