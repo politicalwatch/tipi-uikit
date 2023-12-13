@@ -14,6 +14,8 @@ import TipiTopicLink from './TopicLink/TopicLink.vue';
 import TipiTwoCircles from './TwoCircles/TwoCircles.vue';
 import TipiSplash from './Splash/Splash.vue';
 import TipiIcon from './Icon/Icon.vue';
+import PartyLogo from './PartyLogo/PartyLogo.vue';
+import PartyLogoIcon from './PartyLogo/PartyLogoIcon.vue';
 import TipiInitiativeCard from './InitiativeCard/InitiativeCard.vue';
 import TipiTopicPill from './TopicPill/TopicPill.vue';
 import TipiLoader from './Loader/Loader.vue';
@@ -41,6 +43,8 @@ export {
   TipiTwoCircles,
   TipiSplash,
   TipiIcon,
+  PartyLogo,
+  PartyLogoIcon,
   TipiInitiativeCard,
   TipiTopicPill,
   TipiLoader,
