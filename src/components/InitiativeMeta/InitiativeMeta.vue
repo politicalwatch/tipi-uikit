@@ -42,6 +42,7 @@ export default {
           error: [
             'No admitida a trámite',
             'No debatida',
+            'Caducada',
             'Rechazada',
             'Retirada',
             'Derogada',
