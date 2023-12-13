@@ -22,6 +22,7 @@ import icon_denied from '../../assets/svg/icon-denied.svg';
 import icon_document from '../../assets/svg/icon-document.svg';
 import icon_download from '../../assets/svg/icon-download.svg';
 import icon_error from '../../assets/svg/icon-error.svg';
+import icon_footprint from '../../assets/svg/icon-footprint.svg';
 import icon_github from '../../assets/svg/icon-github.svg';
 import icon_hamburger from '../../assets/svg/icon-hamburger.svg';
 import icon_info from '../../assets/svg/icon-info.svg';
@@ -57,6 +58,7 @@ export default {
     icon_document,
     icon_download,
     icon_error,
+    icon_footprint,
     icon_github,
     icon_hamburger,
     icon_info,
