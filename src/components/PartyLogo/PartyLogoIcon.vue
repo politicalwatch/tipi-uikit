@@ -14,7 +14,7 @@ export default {
   props: {
     party: String,
   },
-  data: function() {
+  data: function () {
     return {
       parties: {
         Cs: {
@@ -179,22 +179,26 @@ export default {
     svg() {
       let svg = '';
       try {
-        svg = defineAsyncComponent(() =>
-          import(`../../assets/party_logos/icon/${this.parties[this.party].logo}.svg`)
-        );
+        if (this.party in this.parties) {
+          svg = defineAsyncComponent(() =>
+            import(`../../assets/party_logos/icon/${this.parties[this.party].logo}.svg`)
+          );
+        } else {
+          svg = defineAsyncComponent(() => import('../../assets/svg/icon-error.svg'));
+        }
       } catch (error) {
         svg = this.icon;
       }
       return svg;
     },
-    getBackground: function() {
-      const bg = this.parties[this.party]?.color ? this.parties[this.party].color : '';
+    getBackground: function () {
+      const bg = this.parties[this.party]?.color ? this.parties[this.party].color : '#f4f6f8';
       if (bg.length == 7) {
         return 'background-color:' + bg;
       }
       return 'background-image:' + bg;
     },
-    getName: function() {
+    getName: function () {
       return this.parties[this.party]?.name ? this.parties[this.party].name : '';
     },
   },
