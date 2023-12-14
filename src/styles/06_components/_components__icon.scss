@@ -1,8 +1,18 @@
 .c-icon {
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &--type-location {
+    svg {
+      width: 14px;
+      height: 16px;
+    }
+  }
+
   @each $color-name, $color-value in $colors {
-
     &--#{$color-name} {
-
       path {
         fill: $color-value !important;
       }
