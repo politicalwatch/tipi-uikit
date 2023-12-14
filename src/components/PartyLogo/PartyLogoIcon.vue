@@ -27,6 +27,11 @@ export default {
           logo: 'vox',
           color: '#5ac035',
         },
+        Vox: {
+          name: 'VOX',
+          logo: 'vox',
+          color: '#5ac035',
+        },
         ERC: {
           name: 'Esquerra Republicana',
           logo: 'erc',
@@ -158,6 +163,11 @@ export default {
           color: '#e30613',
         },
         'PsdeG-PSOE': {
+          name: 'Partido Socialista Obrero Español',
+          logo: 'psoe',
+          color: '#e30613',
+        },
+        'PSIB-PSOE': {
           name: 'Partido Socialista Obrero Español',
           logo: 'psoe',
           color: '#e30613',
