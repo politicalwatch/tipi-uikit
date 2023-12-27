@@ -1,11 +1,9 @@
 <template>
   <div class="c-initiative-meta">
     <div
-      :class="
-        `c-initiative-meta__status c-initiative-meta__status--${getColorByStatus(
-          initiative.status
-        )}`
-      "
+      :class="`c-initiative-meta__status c-initiative-meta__status--${getColorByStatus(
+        initiative.status
+      )}`"
     >
       <strong>
         <tipi-icon :icon="getIcon(initiative)"></tipi-icon>
@@ -16,8 +14,8 @@
 </template>
 
 <script>
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-import es from 'date-fns/locale/es';
+import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
+import { es } from 'date-fns/locale/es';
 import TipiIcon from '../Icon/Icon.vue';
 
 export default {
@@ -29,7 +27,7 @@ export default {
     initiative: Object,
     metaColors: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           completed: [
             'Aprobada',
@@ -53,18 +51,18 @@ export default {
     },
   },
   methods: {
-    getColorByStatus: function(status) {
+    getColorByStatus: function (status) {
       for (let color in this.metaColors) {
         if (this.metaColors[color].indexOf(status) != -1) return color;
       }
       return 'neutral';
     },
-    getIcon: function(initiative) {
+    getIcon: function (initiative) {
       const color = this.getColorByStatus(initiative['status']);
       const map = { completed: 'success', neutral: 'clock', error: 'denied' };
       return map[color];
     },
-    getStateMessage: function(initiative) {
+    getStateMessage: function (initiative) {
       if (initiative['status'] == 'Desconocida') {
         return `${initiative['status']}`;
       }

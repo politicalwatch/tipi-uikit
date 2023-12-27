@@ -1,6 +1,6 @@
 {
   "name": "@politicalwatch/tipi-uikit",
-  "version": "1.6.14",
+  "version": "1.6.15",
   "main": "src/components/index.js",
   "scripts": {
     "dev": "vite",
@@ -15,7 +15,7 @@
     "core-js": "^3.32.2",
     "d3": "^5.14.2",
     "d3-cloud": "^1.2.5",
-    "date-fns": "^2.30.0",
+    "date-fns": "^3.0.0",
     "masonry-layout": "^4.2.2",
     "pluralize": "^8.0.0",
     "qs": "^6.11.2",
@@ -35,7 +35,7 @@
     "@storybook/testing-library": "^0.2.2",
     "@storybook/vue3": "^7.6.6",
     "@storybook/vue3-vite": "^7.6.6",
-    "@vitejs/plugin-vue": "^4.4.0",
+    "@vitejs/plugin-vue": "^5.0.0",
     "@vue/eslint-config-prettier": "^8.0.0",
     "@vue/test-utils": "^2.4.1",
     "autoprefixer": "^10.4.16",
