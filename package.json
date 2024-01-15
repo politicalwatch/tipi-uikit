@@ -1,6 +1,6 @@
 {
   "name": "@politicalwatch/tipi-uikit",
-  "version": "1.6.16",
+  "version": "1.7.0",
   "main": "src/components/index.js",
   "scripts": {
     "dev": "vite",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "core-js": "^3.32.2",
-    "d3": "^5.14.2",
+    "d3": "^7.8.5",
     "d3-cloud": "^1.2.5",
     "date-fns": "^3.0.0",
     "masonry-layout": "^4.2.2",
