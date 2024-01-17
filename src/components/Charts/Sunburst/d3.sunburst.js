@@ -260,8 +260,8 @@ class d3sunburst extends d3chart {
           ? pluralize(this.cfg.tooltip.suffix, d.value)
           : this.cfg.tooltip.suffix;
         const text = this.cfg.tooltip.suffix
-          ? `<div>${d.data[this.cfg.key]}: ${d.value} ${label}</div>`
-          : `<div>${d.data[this.cfg.key]}: ${d.value}</div>`;
+          ? `<div>${d.target.__data__.data[this.cfg.key]}: ${d.target.__data__.data.value} ${label}</div>`
+          : `<div>${d.target.__data__.data[this.cfg.key]}: ${d.target.__data__.data.value}</div>`;
         this.tooltip.html(text).classed('active', true);
       })
       .on('mouseout', () => {
