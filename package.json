@@ -1,6 +1,6 @@
 {
   "name": "@politicalwatch/tipi-uikit",
-  "version": "1.7.18",
+  "version": "1.7.19",
   "main": "src/components/index.js",
   "scripts": {
     "dev": "vite",

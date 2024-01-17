@@ -280,7 +280,6 @@ class d3sliceschart extends d3chart {
       //       .style('top', window.event['pageY'] - 40 + 'px');
       //})
       .on('mouseover', (event, d) => {
-        console.log('MOUSEOVER in sliceschart', d);
         const total = d3.sum(this.data, (d) => d.value);
         const value = d.data.value > 0 && total > 0 ? Math.round((d.data.value / total) * 100) : 0;
         const key = d.data[this.cfg.key];

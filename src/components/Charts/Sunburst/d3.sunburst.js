@@ -256,8 +256,6 @@ class d3sunburst extends d3chart {
       .attr('class', 'chart__slice chart__slice--sunburst')
       .style('fill', (d) => this.colorElement(d.data))
       .on('mouseover', (event, d) => {
-        console.log('event', event);
-        console.log('d', d);
         const label = this.cfg.tooltip.suffixPlural
           ? pluralize(this.cfg.tooltip.suffix, d.value)
           : this.cfg.tooltip.suffix;

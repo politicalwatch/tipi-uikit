@@ -258,8 +258,6 @@ class d3wordscloud extends d3chart {
       .attr('fill', (d) => d.color)
       .attr('transform', (d) => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
       .on('mouseover', (event, d) => {
-        console.log('d', d);
-        console.log('event', event);
         const label = this.cfg.tooltip.suffixPlural
           ? pluralize(this.cfg.tooltip.suffix, d.value)
           : this.cfg.tooltip.suffix;
