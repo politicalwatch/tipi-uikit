@@ -171,9 +171,9 @@ class d3sunburst extends d3chart {
     this.svg
       .attr(
         'viewBox',
-        `0 0 ${this.cfg.width + this.cfg.margin.left + this.cfg.margin.right} ${this.cfg.height +
-          this.cfg.margin.top +
-          this.cfg.margin.bottom}`
+        `0 0 ${this.cfg.width + this.cfg.margin.left + this.cfg.margin.right} ${
+          this.cfg.height + this.cfg.margin.top + this.cfg.margin.bottom
+        }`
       )
       .attr('width', this.cfg.width + this.cfg.margin.left + this.cfg.margin.right)
       .attr('height', this.cfg.height + this.cfg.margin.top + this.cfg.margin.bottom);
@@ -186,10 +186,10 @@ class d3sunburst extends d3chart {
    * Bind data to main elements groups
    */
   bindData() {
-    const partition = data => {
+    const partition = (data) => {
       const root = d3
         .hierarchy(data)
-        .sum(d => d[this.cfg.value])
+        .sum((d) => d[this.cfg.value])
         .sort((a, b) => b.name - a.name);
       return d3.partition()(root);
     };
@@ -198,7 +198,7 @@ class d3sunburst extends d3chart {
 
     this.itemg = this.gcenter
       .selectAll('.chart__slice-group')
-      .data(this.hData, d => d.data[this.cfg.key]);
+      .data(this.hData, (d) => d.data[this.cfg.key]);
 
     // Set transition
     this.transition = d3
@@ -222,10 +222,10 @@ class d3sunburst extends d3chart {
 
     this.arc = d3
       .arc()
-      .startAngle(d => this.xScale(d.x0))
-      .endAngle(d => this.xScale(d.x1))
-      .innerRadius(d => Math.max(0, this.yScale(d.y0)))
-      .outerRadius(d => Math.max(0, this.yScale(d.y1)));
+      .startAngle((d) => this.xScale(d.x0))
+      .endAngle((d) => this.xScale(d.x1))
+      .innerRadius((d) => Math.max(0, this.yScale(d.y0)))
+      .outerRadius((d) => Math.max(0, this.yScale(d.y1)));
 
     // Set up color scheme
     if (this.cfg.color.scheme) {
@@ -245,8 +245,8 @@ class d3sunburst extends d3chart {
       .enter()
       .append('g')
       .attr('class', 'chart__slice-group chart__slice-group--sunburst clickable')
-      .on('click', d => {
-        window.event.stopPropagation();
+      .on('click', (event, d) => {
+        event.stopPropagation();
         this.focusOn(d);
       });
 
@@ -254,8 +254,8 @@ class d3sunburst extends d3chart {
     newg
       .append('path')
       .attr('class', 'chart__slice chart__slice--sunburst')
-      .style('fill', d => this.colorElement(d.data))
-      .on('mouseover', d => {
+      .style('fill', (d) => this.colorElement(d.data))
+      .on('mouseover', (d) => {
         const label = this.cfg.tooltip.suffixPlural
           ? pluralize(this.cfg.tooltip.suffix, d.value)
           : this.cfg.tooltip.suffix;
@@ -267,18 +267,18 @@ class d3sunburst extends d3chart {
       .on('mouseout', () => {
         this.tooltip.classed('active', false);
       })
-      .on('mousemove', () => {
+      .on('mousemove', (event) => {
         this.tooltip
-          .style('left', window.event['pageX'] - 28 + 'px')
-          .style('top', window.event['pageY'] - 40 + 'px');
+          .style('left', event['pageX'] - 28 + 'px')
+          .style('top', event['pageY'] - 40 + 'px');
       })
       .transition(this.transition)
-      .attrTween('d', d => {
+      .attrTween('d', (d) => {
         const iy0 = d3.interpolate(0, d.y0);
         const iy1 = d3.interpolate(d.y0, d.y1);
         const ix0 = d3.interpolate(0, d.x0);
         const ix1 = d3.interpolate(0, d.x1);
-        return t => {
+        return (t) => {
           d.y0 = iy0(t);
           d.y1 = iy1(t);
           d.x0 = ix0(t);
@@ -292,7 +292,7 @@ class d3sunburst extends d3chart {
       .append('path')
       .attr('class', 'chart__line--hidden')
       .attr('id', (_, i) => `hiddenArc${i}`)
-      .attr('d', d => this.middleArcLine(d));
+      .attr('d', (d) => this.middleArcLine(d));
 
     this.labels = newg
       .append('text')
@@ -307,7 +307,7 @@ class d3sunburst extends d3chart {
       .append('textPath')
       .attr('startOffset', '50%')
       .attr('xlink:href', (_, i) => `#hiddenArc${i}`)
-      .text(d => d.data.name);
+      .text((d) => d.data.name);
   }
 
   /**
@@ -317,13 +317,13 @@ class d3sunburst extends d3chart {
     this.itemg
       .selectAll('.chart__slice')
       .transition(this.transition)
-      .attrTween('d', d => {
-        const d2 = this.hData.filter(j => j.data.name === d.data.name)[0];
+      .attrTween('d', (d) => {
+        const d2 = this.hData.filter((j) => j.data.name === d.data.name)[0];
         const iy0 = d3.interpolate(d.y0, d2.y0);
         const iy1 = d3.interpolate(d.y1, d2.y1);
         const ix0 = d3.interpolate(d.x0, d2.x0);
         const ix1 = d3.interpolate(d.x1, d2.x1);
-        return t => {
+        return (t) => {
           d2.y0 = iy0(t);
           d2.y1 = iy1(t);
           d2.x0 = ix0(t);
@@ -331,10 +331,10 @@ class d3sunburst extends d3chart {
           return this.arc(d2);
         };
       })
-      .style('fill', d => this.colorElement(d.data));
+      .style('fill', (d) => this.colorElement(d.data));
 
     this.labels
-      .attr('display', d => (this.textFits(d) ? null : 'none'))
+      .attr('display', (d) => (this.textFits(d) ? null : 'none'))
       .transition(this.transition)
       .duration(this.cfg.transition.duration / 2)
       .delay(this.cfg.transition.duration / 2)
@@ -345,11 +345,7 @@ class d3sunburst extends d3chart {
    * Remove chart's elements without data
    */
   exitElements() {
-    this.itemg
-      .exit()
-      .transition(this.transition)
-      .style('opacity', 0)
-      .remove();
+    this.itemg.exit().transition(this.transition).style('opacity', 0).remove();
   }
 
   /**
@@ -366,7 +362,7 @@ class d3sunburst extends d3chart {
    * Transition slice on focus
    */
   focusOn(d) {
-    const d2 = this.hData.filter(j => j.data.name === d.data.name)[0];
+    const d2 = this.hData.filter((j) => j.data.name === d.data.name)[0];
     const transition = this.svg
       .transition()
       .duration(this.cfg.transition.duration)
@@ -374,24 +370,24 @@ class d3sunburst extends d3chart {
       .tween('scale', () => {
         const xd = d3.interpolate(this.xScale.domain(), [d2.x0, d2.x1]);
         const yd = d3.interpolate(this.yScale.domain(), [d2.y0, 1]);
-        return t => {
+        return (t) => {
           this.xScale.domain(xd(t));
           this.yScale.domain(yd(t));
         };
       });
 
-    transition.selectAll('.chart__slice').attrTween('d', d => () => {
-      const d3 = this.hData.filter(j => j.data.name === d.data.name)[0];
+    transition.selectAll('.chart__slice').attrTween('d', (d) => () => {
+      const d3 = this.hData.filter((j) => j.data.name === d.data.name)[0];
       return this.arc(d3);
     });
 
-    transition.selectAll('.chart__line--hidden').attrTween('d', da => () => {
-      const d2 = this.hData.filter(j => j.data.name === da.data.name)[0];
+    transition.selectAll('.chart__line--hidden').attrTween('d', (da) => () => {
+      const d2 = this.hData.filter((j) => j.data.name === da.data.name)[0];
       return this.middleArcLine(d2);
     });
 
-    transition.selectAll('.chart__labels').attrTween('display', da => () => {
-      const d2 = this.hData.filter(j => j.data.name === da.data.name)[0];
+    transition.selectAll('.chart__labels').attrTween('display', (da) => () => {
+      const d2 = this.hData.filter((j) => j.data.name === da.data.name)[0];
       return this.textFits(d2) ? null : 'none';
     });
   }
