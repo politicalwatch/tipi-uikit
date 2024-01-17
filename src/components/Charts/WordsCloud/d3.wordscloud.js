@@ -257,7 +257,9 @@ class d3wordscloud extends d3chart {
       .attr('text-anchor', 'middle')
       .attr('fill', (d) => d.color)
       .attr('transform', (d) => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
-      .on('mouseover', (d) => {
+      .on('mouseover', (event, d) => {
+        console.log('d', d);
+        console.log('event', event);
         const label = this.cfg.tooltip.suffixPlural
           ? pluralize(this.cfg.tooltip.suffix, d.value)
           : this.cfg.tooltip.suffix;
@@ -269,10 +271,10 @@ class d3wordscloud extends d3chart {
       .on('mouseout', () => {
         this.tooltip.classed('active', false);
       })
-      .on('mousemove', () => {
+      .on('mousemove', (event) => {
         this.tooltip
-          .style('left', window.event['pageX'] - 28 + 'px')
-          .style('top', window.event['pageY'] - 40 + 'px');
+          .style('left', event['pageX'] - 28 + 'px')
+          .style('top', event['pageY'] - 40 + 'px');
       })
       .text((d) => d.text);
   }

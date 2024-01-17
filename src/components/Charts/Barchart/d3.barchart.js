@@ -1,9 +1,9 @@
-import d3chart from "../d3.chart";
-import { select, selectAll } from "d3-selection";
-import { scaleBand, scaleLinear, scaleOrdinal } from "d3-scale";
-import { max } from "d3-array";
-import { transition } from "d3-transition";
-import { axisBottom, axisLeft } from "d3-axis";
+import d3chart from '../d3.chart';
+import { select, selectAll } from 'd3-selection';
+import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
+import { max } from 'd3-array';
+import { transition } from 'd3-transition';
+import { axisBottom, axisLeft } from 'd3-axis';
 import {
   easeLinear,
   easePolyIn,
@@ -41,8 +41,8 @@ import {
   easeBounceIn,
   easeBounce,
   easeBounceOut,
-  easeBounceInOut
-} from "d3-ease";
+  easeBounceInOut,
+} from 'd3-ease';
 import {
   schemeCategory10,
   schemeAccent,
@@ -53,8 +53,8 @@ import {
   schemeSet1,
   schemeSet2,
   schemeSet3,
-  schemeTableau10
-} from "d3-scale-chromatic";
+  schemeTableau10,
+} from 'd3-scale-chromatic';
 
 const d3 = {
   select,
@@ -112,13 +112,13 @@ const d3 = {
   schemeSet1,
   schemeSet2,
   schemeSet3,
-  schemeTableau10
+  schemeTableau10,
 };
 
-import pluralize from "pluralize";
+import pluralize from 'pluralize';
 
-const REFERENCE = "Texto de referencia";
-const SCANNED = "Texto escaneado";
+const REFERENCE = 'Texto de referencia';
+const SCANNED = 'Texto escaneado';
 
 /**
  * D3 Bar Chart
@@ -127,30 +127,30 @@ class d3barchart extends d3chart {
   constructor(selection, data, config) {
     super(selection, data, config, {
       margin: { top: 10, right: 30, bottom: 20, left: 40 },
-      key: "key",
+      key: 'key',
       currentKey: false,
       values: [],
-      orientation: "vertical",
+      orientation: 'vertical',
       labelRotation: 0,
       color: {
         key: false,
         keys: false,
         scheme: false,
-        current: "#1f77b4",
-        default: "#AAA",
-        axis: "#000"
+        current: '#1f77b4',
+        default: '#AAA',
+        axis: '#000',
       },
       axis: {
         yTitle: false,
         xTitle: false,
-        yFormat: ".0f",
-        xFormat: ".0f",
+        yFormat: '.0f',
+        xFormat: '.0f',
         yTicks: 10,
-        xTicks: 10
+        xTicks: 10,
       },
       tooltip: { label: false, suffix: false, suffixPlural: false },
       keys: { [SCANNED]: SCANNED, [REFERENCE]: REFERENCE },
-      transition: { duration: 350, ease: "easeLinear" }
+      transition: { duration: 350, ease: 'easeLinear' },
     });
   }
 
@@ -160,7 +160,7 @@ class d3barchart extends d3chart {
   initChart() {
     // Set up dimensions
     this.getDimensions();
-    this.initChartFrame("barchart");
+    this.initChartFrame('barchart');
 
     if (this.cfg.tooltip.suffix && this.cfg.tooltip.suffixPlural) {
       pluralize.addIrregularRule(this.cfg.tooltip.suffix, this.cfg.tooltip.suffixPlural);
@@ -172,23 +172,23 @@ class d3barchart extends d3chart {
     this.yScale = d3.scaleLinear();
 
     // Axis group
-    this.axisg = this.g.append("g").attr("class", "chart__axis chart__axis--barchart");
+    this.axisg = this.g.append('g').attr('class', 'chart__axis chart__axis--barchart');
 
     // Horizontal grid
     this.yGrid = this.axisg
-      .append("g")
-      .attr("class", "chart__grid chart__grid--y chart__grid--barchart");
+      .append('g')
+      .attr('class', 'chart__grid chart__grid--y chart__grid--barchart');
 
     // Bottom axis
-    this.xAxis = this.axisg.append("g").attr("class", "chart__axis-x chart__axis-x--barchart");
+    this.xAxis = this.axisg.append('g').attr('class', 'chart__axis-x chart__axis-x--barchart');
 
     // Vertical axis title
     if (this.cfg.axis.yTitle)
       this.yAxisTitle = this.axisg
-        .append("text")
-        .attr("class", "chart__axis-title chart__axis-title--barchart")
-        .attr("transform", "rotate(-90)")
-        .style("text-anchor", "middle");
+        .append('text')
+        .attr('class', 'chart__axis-title chart__axis-title--barchart')
+        .attr('transform', 'rotate(-90)')
+        .style('text-anchor', 'middle');
 
     this.setChartDimension();
     this.updateChart();
@@ -200,10 +200,10 @@ class d3barchart extends d3chart {
   setScales() {
     this.xScale
       .rangeRound(
-        this.cfg.orientation !== "horizontal" ? [0, this.cfg.width] : [0, this.cfg.height]
+        this.cfg.orientation !== 'horizontal' ? [0, this.cfg.width] : [0, this.cfg.height]
       )
       .paddingInner(0.1)
-      .domain(this.data.map(d => d[this.cfg.key]));
+      .domain(this.data.map((d) => d[this.cfg.key]));
 
     this.xScaleInn
       .domain(this.cfg.values)
@@ -213,18 +213,18 @@ class d3barchart extends d3chart {
     const yMax = this.calculateBiggestNumber();
     this.yScale
       .rangeRound(
-        this.cfg.orientation !== "horizontal" ? [0, this.cfg.height] : [this.cfg.width, 0]
+        this.cfg.orientation !== 'horizontal' ? [0, this.cfg.height] : [this.cfg.width, 0]
       )
       .domain([yMax, 0]);
 
     if (this.cfg.color.scheme instanceof Array === true) {
       this.colorScale = d3.scaleOrdinal().range(this.cfg.color.scheme);
-    } else if (typeof this.cfg.color.scheme === "string") {
+    } else if (typeof this.cfg.color.scheme === 'string') {
       this.colorScale = d3.scaleOrdinal(d3[this.cfg.color.scheme]);
     }
 
     const yGridFunction =
-      this.cfg.orientation !== "horizontal"
+      this.cfg.orientation !== 'horizontal'
         ? d3
             .axisLeft(this.yScale)
             .tickSize(-this.cfg.width)
@@ -235,13 +235,13 @@ class d3barchart extends d3chart {
             .ticks(this.cfg.axis.yTicks, this.cfg.axis.yFormat);
 
     const xAxisFunction =
-      this.cfg.orientation !== "horizontal" ? d3.axisBottom(this.xScale) : d3.axisLeft(this.xScale);
+      this.cfg.orientation !== 'horizontal' ? d3.axisBottom(this.xScale) : d3.axisLeft(this.xScale);
 
     // Horizontal grid
     this.yGrid
       .attr(
-        "transform",
-        this.cfg.orientation !== "horizontal" ? "translate(0,0)" : `translate(0,${this.cfg.height})`
+        'transform',
+        this.cfg.orientation !== 'horizontal' ? 'translate(0,0)' : `translate(0,${this.cfg.height})`
       )
       .transition(this.transition)
       .call(yGridFunction);
@@ -249,8 +249,8 @@ class d3barchart extends d3chart {
     // Bottom axis
     this.xAxis
       .attr(
-        "transform",
-        this.cfg.orientation !== "horizontal" ? `translate(0,${this.cfg.height})` : "translate(0,0)"
+        'transform',
+        this.cfg.orientation !== 'horizontal' ? `translate(0,${this.cfg.height})` : 'translate(0,0)'
       )
       .call(xAxisFunction);
   }
@@ -262,30 +262,30 @@ class d3barchart extends d3chart {
     // SVG element
     this.svg
       .attr(
-        "viewBox",
-        `0 0 ${this.cfg.width + this.cfg.margin.left + this.cfg.margin.right} ${this.cfg.height +
-          this.cfg.margin.top +
-          this.cfg.margin.bottom}`
+        'viewBox',
+        `0 0 ${this.cfg.width + this.cfg.margin.left + this.cfg.margin.right} ${
+          this.cfg.height + this.cfg.margin.top + this.cfg.margin.bottom
+        }`
       )
-      .attr("width", this.cfg.width + this.cfg.margin.left + this.cfg.margin.right)
-      .attr("height", this.cfg.height + this.cfg.margin.top + this.cfg.margin.bottom);
+      .attr('width', this.cfg.width + this.cfg.margin.left + this.cfg.margin.right)
+      .attr('height', this.cfg.height + this.cfg.margin.top + this.cfg.margin.bottom);
 
     // Vertical axis title
     if (this.cfg.axis.yTitle)
       this.yAxisTitle
-        .attr("y", -this.cfg.margin.left + 10)
-        .attr("x", -this.cfg.height / 2)
+        .attr('y', -this.cfg.margin.left + 10)
+        .attr('x', -this.cfg.height / 2)
         .text(this.cfg.axis.yTitle);
 
     // Bottom axis label rotation
     if (this.cfg.labelRotation !== 0)
       this.xAxis
-        .selectAll("text")
-        .attr("y", Math.cos((this.cfg.labelRotation * Math.PI) / 180) * 9)
-        .attr("x", Math.sin((this.cfg.labelRotation * Math.PI) / 180) * 9)
-        .attr("dy", ".35em")
-        .attr("transform", `rotate(${this.cfg.labelRotation})`)
-        .style("text-anchor", "start");
+        .selectAll('text')
+        .attr('y', Math.cos((this.cfg.labelRotation * Math.PI) / 180) * 9)
+        .attr('x', Math.sin((this.cfg.labelRotation * Math.PI) / 180) * 9)
+        .attr('dy', '.35em')
+        .attr('transform', `rotate(${this.cfg.labelRotation})`)
+        .style('text-anchor', 'start');
   }
 
   /**
@@ -294,17 +294,17 @@ class d3barchart extends d3chart {
   bindData() {
     // Set transition
     this.transition = d3
-      .transition("t")
+      .transition('t')
       .duration(this.cfg.transition.duration)
       .ease(d3[this.cfg.transition.ease]);
 
     // Bars groups
-    this.g.selectAll(".chart__bar-group").remove();
-    this.itemg = this.g.selectAll(".chart__bar-group").data(this.data, d => d[this.cfg.key]);
+    this.g.selectAll('.chart__bar-group').remove();
+    this.itemg = this.g.selectAll('.chart__bar-group').data(this.data, (d) => d[this.cfg.key]);
   }
 
   hasComparissionData() {
-    return this.data.some(item => item[REFERENCE] > 0);
+    return this.data.some((item) => item[REFERENCE] > 0);
   }
 
   calculateTotals() {
@@ -369,44 +369,46 @@ class d3barchart extends d3chart {
 
     const newbars = this.itemg
       .enter()
-      .append("g")
-      .attr("class", "chart__bar-group chart__bar-group--barchart")
-      .attr("transform", d => {
-        if (this.cfg.orientation !== "horizontal") {
+      .append('g')
+      .attr('class', 'chart__bar-group chart__bar-group--barchart')
+      .attr('transform', (d) => {
+        if (this.cfg.orientation !== 'horizontal') {
           return `translate(${this.xScale(d[this.cfg.key])},0)`;
         }
         return `translate(0,${this.xScale(d[this.cfg.key])})`;
       });
 
     const rects = newbars
-      .selectAll(".chart__bar")
-      .data(d =>
-        this.cfg.values.map(v => {
+      .selectAll('.chart__bar')
+      .data((d) =>
+        this.cfg.values.map((v) => {
           const dat = { ...d };
           dat[this.cfg.key] = d[this.cfg.key];
           return dat;
         })
       )
       .enter()
-      .append("rect")
-      .attr("class", "chart__bar chart__bar--barchart")
-      .classed("chart__bar--current", d => {
+      .append('rect')
+      .attr('class', 'chart__bar chart__bar--barchart')
+      .classed('chart__bar--current', (d) => {
         return this.cfg.currentKey && d[this.cfg.key] === this.cfg.currentKey;
       })
-      .attr("x", (d, i) => {
-        return this.cfg.orientation !== "horizontal"
+      .attr('x', (d, i) => {
+        return this.cfg.orientation !== 'horizontal'
           ? this.xScaleInn(this.cfg.values[i % this.cfg.values.length])
           : 0;
       })
-      .attr("y", (d, i) => {
-        return this.cfg.orientation !== "horizontal"
+      .attr('y', (d, i) => {
+        return this.cfg.orientation !== 'horizontal'
           ? this.cfg.height
           : this.xScaleInn(this.cfg.values[i % this.cfg.values.length]);
       })
-      .attr("height", 0)
-      .attr("width", 0)
-      .on("mouseover", (d, i) => {
-        const key = this.cfg.values[i % this.cfg.values.length];
+      .attr('height', 0)
+      .attr('width', 0)
+      .on('mouseover', (event, d) => {
+        const bars = d3.selectAll('.chart__bar--barchart').nodes();
+        const index = bars.indexOf(event.currentTarget);
+        const key = this.cfg.values[index % this.cfg.values.length];
         const label = this.cfg.tooltip.suffixPlural
           ? pluralize(this.cfg.tooltip.suffix, d[key])
           : this.cfg.tooltip.suffix;
@@ -415,18 +417,16 @@ class d3barchart extends d3chart {
 
         const percentage = this.calculatePercentage(d[key], totals[key]).toFixed(2);
 
-        const text = this.cfg.tooltip.suffix
-          ? `<div>${labelKey}: ${percentage}% ${label}</div>`
-          : `<div>${labelKey}: ${percentage}%</div>`;
-        this.tooltip.html(text).classed("active", true);
+        const text = `<div>${labelKey}: ${percentage}%</div>`;
+        this.tooltip.html(text).classed('active', true);
       })
-      .on("mouseout", () => {
-        this.tooltip.classed("active", false);
+      .on('mouseout', () => {
+        this.tooltip.classed('active', false);
       })
-      .on("mousemove", () => {
+      .on('mousemove', (event) => {
         this.tooltip
-          .style("left", window.event["pageX"] - 28 + "px")
-          .style("top", window.event["pageY"] - 40 + "px");
+          .style('left', event['pageX'] - 28 + 'px')
+          .style('top', event['pageY'] - 40 + 'px');
       });
   }
 
@@ -437,37 +437,37 @@ class d3barchart extends d3chart {
     const totals = this.calculateTotals();
 
     // Bars groups
-    this.itemg.transition(this.transition).attr("transform", d => {
-      return this.cfg.orientation !== "horizontal"
+    this.itemg.transition(this.transition).attr('transform', (d) => {
+      return this.cfg.orientation !== 'horizontal'
         ? `translate(${this.xScale(d[this.cfg.key])},0)`
         : `translate(0,${this.xScale(d[this.cfg.key])})`;
     });
     // Bars
     this.g
-      .selectAll(".chart__bar")
+      .selectAll('.chart__bar')
       .transition(this.transition)
-      .attr("fill", (d, i) => this.colorElement(d, this.cfg.values[i % this.cfg.values.length]))
-      .attr("opacity", (d, i) => (i % 2 == 1 && this.hasComparissionData() ? 0.6 : 1))
-      .attr("x", (d, i) => {
-        return this.cfg.orientation !== "horizontal"
+      .attr('fill', (d, i) => this.colorElement(d, this.cfg.values[i % this.cfg.values.length]))
+      .attr('opacity', (d, i) => (i % 2 == 1 && this.hasComparissionData() ? 0.6 : 1))
+      .attr('x', (d, i) => {
+        return this.cfg.orientation !== 'horizontal'
           ? this.xScaleInn(this.cfg.values[i % this.cfg.values.length])
           : 0;
       })
-      .attr("y", (d, i) => {
-        return this.cfg.orientation !== "horizontal"
+      .attr('y', (d, i) => {
+        return this.cfg.orientation !== 'horizontal'
           ? this.yScale(+d[this.cfg.values[i % this.cfg.values.length]])
           : this.xScaleInn(this.cfg.values[i % this.cfg.values.length]);
       })
-      .attr("width", (d, i) => {
+      .attr('width', (d, i) => {
         const key = this.cfg.values[i % this.cfg.values.length];
         const percentage = this.calculatePercentage(d[key], totals[key]);
 
-        return this.cfg.orientation !== "horizontal"
+        return this.cfg.orientation !== 'horizontal'
           ? this.xScaleInn.bandwidth()
           : this.yScale(percentage);
       })
-      .attr("height", (d, i) => {
-        return this.cfg.orientation !== "horizontal"
+      .attr('height', (d, i) => {
+        return this.cfg.orientation !== 'horizontal'
           ? this.cfg.height - this.yScale(+d[this.cfg.values[i % this.cfg.values.length]])
           : this.xScaleInn.bandwidth();
       });
@@ -477,11 +477,7 @@ class d3barchart extends d3chart {
    * Remove chart's elements without data
    */
   exitElements() {
-    this.itemg
-      .exit()
-      .transition(this.transition)
-      .style("opacity", 0)
-      .remove();
+    this.itemg.exit().transition(this.transition).style('opacity', 0).remove();
   }
 }
 

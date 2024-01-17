@@ -255,13 +255,15 @@ class d3sunburst extends d3chart {
       .append('path')
       .attr('class', 'chart__slice chart__slice--sunburst')
       .style('fill', (d) => this.colorElement(d.data))
-      .on('mouseover', (d) => {
+      .on('mouseover', (event, d) => {
+        console.log('event', event);
+        console.log('d', d);
         const label = this.cfg.tooltip.suffixPlural
           ? pluralize(this.cfg.tooltip.suffix, d.value)
           : this.cfg.tooltip.suffix;
         const text = this.cfg.tooltip.suffix
-          ? `<div>${d.target.__data__.data[this.cfg.key]}: ${d.target.__data__.data.value} ${label}</div>`
-          : `<div>${d.target.__data__.data[this.cfg.key]}: ${d.target.__data__.data.value}</div>`;
+          ? `<div>${d.data[this.cfg.key]}: ${d.value} ${label}</div>`
+          : `<div>${d.data[this.cfg.key]}: ${d.value}</div>`;
         this.tooltip.html(text).classed('active', true);
       })
       .on('mouseout', () => {
