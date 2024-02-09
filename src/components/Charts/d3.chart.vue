@@ -28,7 +28,7 @@ export default {
     datum: {
       type: Array,
       required: true,
-      default: () => ([]),
+      default: () => [],
     },
     title: {
       type: String,
@@ -44,7 +44,6 @@ export default {
     },
     download: {
       type: String,
-      default: 'Descargar',
     },
   },
   methods: {
@@ -63,10 +62,12 @@ export default {
       deep: true,
     },
     datum(vals) {
-      this.chart.updateData([ ...vals ]);
+      this.chart.updateData([...vals]);
     },
     height(val) {
-      setTimeout(() =>{ this.chart.resizeChart(); }, 10);
+      setTimeout(() => {
+        this.chart.resizeChart();
+      }, 10);
     },
   },
   beforeDestroy() {
