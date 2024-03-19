@@ -76,7 +76,7 @@ export default {
       const formattedDate = formatDistanceToNow(new Date(date), {
         locale: es,
         addSuffix: true,
-      });
+      }).replace('alrededor de ', '');
       return `${initiative['status']} ${formattedDate}`;
     },
   },
