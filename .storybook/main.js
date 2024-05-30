@@ -5,14 +5,15 @@ const config = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    '@chromatic-com/storybook'
+    '@chromatic-com/storybook',
   ],
   framework: {
     name: '@storybook/vue3-vite',
-    options: {},
+    options: {
+      docgen: 'vue-component-meta',
+    },
   },
-  docs: {
-    autodocs: true
-  },
+  docs: {},
+  staticDirs: [{ from: '../src/assets', to: '/assets' }],
 };
 export default config;
