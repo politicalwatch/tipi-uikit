@@ -17,7 +17,7 @@ const { icon, color } = toRefs(props);
 const svg = computed(() => {
   let svg = '';
   try {
-    svg = defineAsyncComponent(() => import(`@/assets/svg/icon-${icon.value}.svg`));
+    svg = defineAsyncComponent(() => import(`../../assets/svg/icon-${icon.value}.svg`));
   } catch (error) {
     svg = icon.value;
   }
