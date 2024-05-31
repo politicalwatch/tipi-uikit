@@ -3,40 +3,40 @@
     <div class="c-splash__outer">
       <div class="c-splash__inner">
         <slot></slot>
-        <p><a class="c-splash__close" :class="closeClass" href="#" @click="closeSplash">{{ closeText }}</a></p>
+        <p>
+          <a class="c-splash__close" :class="closeClass" href="#" @click="closeSplash">{{
+            closeText
+          }}</a>
+        </p>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TipiSplash',
-  props: {
-    closeClass: {
-      type: String,
-      default: 'c-button c-button--primary',
-    },
-    closeText: {
-      type: String,
-      default: 'Comenzar',
-    },
+<script setup>
+import { ref, computed } from 'vue';
+
+const { closeClass, closeText } = defineProps({
+  closeClass: {
+    type: String,
+    default: 'c-button c-button--primary',
   },
-  data: function () {
-    return {
-      closedMessage: false,
-    };
+  closeText: {
+    type: String,
+    default: 'Comenzar',
   },
-  computed: {
-    closedSplash: function () {
-      return JSON.parse(window.sessionStorage.getItem('closedSplash')) || this.closedMessage ? true : false;
-    },
-  },
-  methods: {
-    closeSplash: function() {
-      window.sessionStorage.setItem('closedSplash', true);
-      this.closedMessage = true;
-    },
-  },
+});
+
+const closedMessage = ref(false);
+
+const closedSplash = computed(() => {
+  return JSON.parse(window.sessionStorage.getItem('closedSplash')) || closedMessage.value
+    ? true
+    : false;
+});
+
+const closeSplash = () => {
+  window.sessionStorage.setItem('closedSplash', true);
+  closedMessage.value = true;
 };
 </script>

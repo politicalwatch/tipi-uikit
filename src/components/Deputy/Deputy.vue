@@ -1,7 +1,7 @@
 <template>
   <div class="c-deputy" :class="addBirthdayClass()" v-if="deputy">
     <div class="o-container">
-      <div class="o-grid  o-grid--reverse">
+      <div class="o-grid o-grid--reverse">
         <div class="o-grid__col u-4@sm">
           <div class="c-deputy__image_container">
             <img class="c-deputy__image" :src="deputy.image" :alt="'Foto de ' + deputy.name" />
@@ -52,67 +52,53 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+
 import TipiIcon from '../Icon/Icon.vue';
 import PartyLogo from '../PartyLogo/PartyLogo.vue';
 import PartyLogoIcon from '../PartyLogo/PartyLogoIcon.vue';
 
-export default {
-  name: 'TipiDeputy',
-  components: {
-    TipiIcon,
-    PartyLogo,
-    PartyLogoIcon,
-  },
-  data: function() {
-    return {
-      isCollapsed: true,
-    };
-  },
-  props: {
-    deputy: Object,
-    parliamentaryGroup: Object,
-  },
-  methods: {
-    getCollapsedClass: function() {
-      if (this.isCollapsed) {
-        return 'c-deputy__hidden';
-      }
-      return 'c-deputy__info';
-    },
-    getCollapseIcon: function() {
-      if (this.isCollapsed) {
-        return 'plus';
-      }
-      return 'less';
-    },
-    getCollapseMessage: function() {
-      if (this.isCollapsed) {
-        return 'Mostrar más';
-      }
-      return 'Mostrar menos';
-    },
-    collapse: function() {
-      this.isCollapsed = !this.isCollapsed;
-    },
-    addBirthdayClass: function() {
-      const date = new Date(this.deputy.birthdate);
-      const today = new Date();
-      if (date.getDate() == today.getDate() && date.getMonth() == today.getMonth()) {
-        return 'c-deputy__birthday';
-      }
-    },
-    getAge: function() {
-      const date = new Date(this.deputy.birthdate);
-      const today = new Date();
-      const age = today.getFullYear() - date.getFullYear();
-      return age;
-    },
-    getConstituency: function() {
-      const constituency = this.deputy.constituency;
-      return constituency;
-    },
-  },
+const { deputy, parliamentaryGroup } = defineProps({
+  deputy: Object,
+  parliamentaryGroup: Object,
+});
+
+const isCollapsed = ref(true);
+
+const getCollapsedClass = () => {
+  return isCollapsed.value ? 'c-deputy__hidden' : 'c-deputy__info';
+};
+
+const getCollapseIcon = () => {
+  return isCollapsed.value ? 'plus' : 'less';
+};
+
+const getCollapseMessage = () => {
+  return isCollapsed.value ? 'Mostrar más' : 'Mostrar menos';
+};
+
+const collapse = () => {
+  isCollapsed.value = !isCollapsed.value;
+};
+
+const addBirthdayClass = () => {
+  const date = new Date(deputy.birthdate);
+  const today = new Date();
+  if (date.getDate() == today.getDate() && date.getMonth() == today.getMonth()) {
+    return 'c-deputy__birthday';
+  }
+};
+
+const getAge = () => {
+  const date = new Date(deputy.birthdate);
+  const today = new Date();
+  const age = today.getFullYear() - date.getFullYear();
+  return age;
+};
+
+const getConstituency = () => {
+  return deputy.constituency;
 };
 </script>
 

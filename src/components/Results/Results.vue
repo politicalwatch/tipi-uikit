@@ -34,76 +34,80 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed, onMounted, watch } from 'vue';
+
 import TipiInitiativeCard from '../InitiativeCard/InitiativeCard.vue';
 import TipiLoader from '../Loader/Loader.vue';
 import Masonry from 'masonry-layout';
 
-export default {
-  name: 'TipiResults',
-  components: {
-    TipiInitiativeCard,
-    TipiLoader,
-  },
-  props: {
-    loadingResults: Boolean,
-    initiatives: {
-      type: Array,
-      default: function () {
-        return [];
-      },
-    },
-    queryMeta: Object,
-    layout: String,
-    topicsStyles: Object,
-    metaDeputies: { type: String, default: 'Diputada/o' },
-    metaGroupsOthers: { type: String, default: 'Autor' },
-    metaColors: { type: Object, default: undefined },
-  },
-  computed: {
-    isMoreResults: function () {
-      return !this.loadingResults && this.queryMeta?.page < this.queryMeta?.pages;
-    },
-    nextResultsLabel: function () {
-      let nextResult = this.queryMeta?.page * this.queryMeta?.per_page + 1;
-      let lastResult = nextResult + this.queryMeta?.per_page - 1;
-      return `(${nextResult}-${lastResult})`;
-    },
-    extendedLayout: function () {
-      return this.layout != 'tiny';
+const {
+  loadingResults,
+  initiatives,
+  queryMeta,
+  layout,
+  topicsStyles,
+  metaDeputies,
+  metaGroupsOthers,
+  metaColors,
+} = defineProps({
+  loadingResults: Boolean,
+  initiatives: {
+    type: Array,
+    default: function () {
+      return [];
     },
   },
-  methods: {
-    loadMore: function () {
-      this.$emit('loadMore');
-    },
-    setupMasonry: function () {
-      let grid = document.querySelector('.o-masonry');
-      if (grid) {
-        let msnry = new Masonry(grid, {
-          columnWidth: '.o-masonry__item',
-          percentPosition: true,
-          itemSelector: '.o-masonry__item',
-        });
-        msnry.layout();
-      }
-    },
-  },
-  watch: {
-    initiatives: function () {
-      if (this.initiatives && this.initiatives.length && !this.loadingResults) {
-        this.setupMasonry();
-      }
-    },
-  },
-  mounted: function () {
-    this.setupMasonry();
-    window.addEventListener(
-      'resize',
-      function () {
-        this.setupMasonry();
-      }.bind(this)
-    );
-  },
+  queryMeta: Object,
+  layout: String,
+  topicsStyles: Object,
+  metaDeputies: { type: String, default: 'Diputada/o' },
+  metaGroupsOthers: { type: String, default: 'Autor' },
+  metaColors: { type: Object, default: undefined },
+});
+
+const isMoreResults = computed(() => {
+  return !loadingResults && queryMeta?.page < queryMeta?.pages;
+});
+
+const nextResultsLabel = computed(() => {
+  let nextResult = queryMeta?.page * queryMeta?.per_page + 1;
+  let lastResult = nextResult + queryMeta?.per_page - 1;
+  return `(${nextResult}-${lastResult})`;
+});
+
+const extendedLayout = computed(() => {
+  return layout != 'tiny';
+});
+
+const loadMore = () => {
+  emit('loadMore');
 };
+const setupMasonry = function () {
+  let grid = document.querySelector('.o-masonry');
+  if (grid) {
+    let msnry = new Masonry(grid, {
+      columnWidth: '.o-masonry__item',
+      percentPosition: true,
+      itemSelector: '.o-masonry__item',
+    });
+    msnry.layout();
+  }
+};
+
+onMounted(() => {
+  setupMasonry();
+  window.addEventListener(
+    'resize',
+    function () {
+      setupMasonry();
+    }.bind(this)
+  );
+});
+
+watch(initiatives, () => {
+  if (initiatives && initiatives.length && !loadingResults) {
+    setupMasonry();
+  }
+});
 </script>

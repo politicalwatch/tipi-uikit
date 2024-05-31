@@ -13,72 +13,67 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import { es } from 'date-fns/locale/es';
 import TipiIcon from '../Icon/Icon.vue';
 
-export default {
-  name: 'TipiInitiativeMeta',
-  components: {
-    TipiIcon,
-  },
-  props: {
-    initiative: Object,
-    metaColors: {
-      type: Object,
-      default: function () {
-        return {
-          completed: [
-            'Aprobada',
-            'Respondida',
-            'Celebrada',
-            'Convertida en otra',
-            'Acumulada en otra',
-          ],
-          neutral: ['En tramitación', 'Desconocida'],
-          error: [
-            'No admitida a trámite',
-            'No debatida',
-            'Caducada',
-            'Rechazada',
-            'Retirada',
-            'Derogada',
-            'No celebrada',
-          ],
-        };
-      },
+const { initiative, metaColors } = defineProps({
+  initiative: Object,
+  metaColors: {
+    type: Object,
+    default: function () {
+      return {
+        completed: [
+          'Aprobada',
+          'Respondida',
+          'Celebrada',
+          'Convertida en otra',
+          'Acumulada en otra',
+        ],
+        neutral: ['En tramitación', 'Desconocida'],
+        error: [
+          'No admitida a trámite',
+          'No debatida',
+          'Caducada',
+          'Rechazada',
+          'Retirada',
+          'Derogada',
+          'No celebrada',
+        ],
+      };
     },
   },
-  methods: {
-    getColorByStatus: function (status) {
-      for (let color in this.metaColors) {
-        if (this.metaColors[color].indexOf(status) != -1) return color;
-      }
-      return 'neutral';
-    },
-    getIcon: function (initiative) {
-      const color = this.getColorByStatus(initiative['status']);
-      const map = { completed: 'success', neutral: 'clock', error: 'denied' };
-      return map[color];
-    },
-    getStateMessage: function (initiative) {
-      if (initiative['status'] == 'Desconocida') {
-        return `${initiative['status']}`;
-      }
+});
 
-      const color = this.getColorByStatus(initiative['status']);
-      let date = initiative['updated'];
-      if (color == 'neutral') {
-        date = initiative['created'];
-      }
+const getColorByStatus = (status) => {
+  for (let color in metaColors) {
+    if (metaColors[color].indexOf(status) != -1) return color;
+  }
+  return 'neutral';
+};
 
-      const formattedDate = formatDistanceToNow(new Date(date), {
-        locale: es,
-        addSuffix: true,
-      }).replace('alrededor de ', '');
-      return `${initiative['status']} ${formattedDate}`;
-    },
-  },
+const getIcon = (initiative) => {
+  const color = getColorByStatus(initiative['status']);
+  const map = { completed: 'success', neutral: 'clock', error: 'denied' };
+  return map[color];
+};
+
+const getStateMessage = (initiative) => {
+  if (initiative['status'] == 'Desconocida') {
+    return `${initiative['status']}`;
+  }
+
+  const color = getColorByStatus(initiative['status']);
+  let date = initiative['updated'];
+  if (color == 'neutral') {
+    date = initiative['created'];
+  }
+
+  const formattedDate = formatDistanceToNow(new Date(date), {
+    locale: es,
+    addSuffix: true,
+  }).replace('alrededor de ', '');
+  return `${initiative['status']} ${formattedDate}`;
 };
 </script>

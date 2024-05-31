@@ -57,60 +57,54 @@
   </span>
 </template>
 
-<script>
+<script setup>
 import JsonExcel from 'vue-json-excel3';
 
-export default {
-  name: 'TipiCsvDownload',
-  components: {
-    JsonExcel,
-  },
-  props: {
-    initiatives: {
-      type: Array,
-      default: function () {
-        return [];
-      },
-    },
-    csvItems: Array,
-    canDownloadCSV: Boolean,
-    csvFields: {
-      type: Object,
-      default: function () {
-        return {
-          title: 'title',
-          reference: 'reference',
-          initiative_type_alt: 'initiative_type_alt',
-          authors: 'authors',
-          deputies: 'deputies',
-          topics: 'topics',
-          tags: 'tags',
-          place: 'place',
-          status: 'status',
-          created: 'created',
-          updated: 'updated',
-          url: 'url',
-        };
-      },
-    },
-    label: {
-      type: String,
-      default: 'Descarga los datos',
-    },
-    buttonClass: {
-      type: String,
-      default: 'c-button--compact',
+const { initiatives } = defineProps({
+  initiatives: {
+    type: Array,
+    default: function () {
+      return () => [];
     },
   },
-  methods: {
-    loadCSVItems: function (event) {
-      this.$emit('loadCSVItems', event);
-    },
-    getNameFromCSV: function () {
-      let d = new Date();
-      return 'export-' + d.toISOString() + '.csv';
-    },
+  csvItems: Array,
+  canDownloadCSV: Boolean,
+  csvFields: {
+    type: Object,
+    default: () => ({
+      title: 'title',
+      reference: 'reference',
+      initiative_type_alt: 'initiative_type_alt',
+      authors: 'authors',
+      deputies: 'deputies',
+      topics: 'topics',
+      tags: 'tags',
+      place: 'place',
+      status: 'status',
+      created: 'created',
+      updated: 'updated',
+      url: 'url',
+    }),
   },
+  label: {
+    type: String,
+    default: 'Descarga los datos',
+  },
+  buttonClass: {
+    type: String,
+    default: 'c-button--compact',
+  },
+});
+
+const emit = defineEmits(['loadCSVItems']);
+
+const loadCSVItems = (event) => {
+  emit('loadCSVItems', event);
+};
+
+const getNameFromCSV = () => {
+  let d = new Date();
+  return 'export-' + d.toISOString() + '.csv';
 };
 </script>
 

@@ -51,48 +51,40 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import TipiIcon from '../Icon/Icon.vue';
 import TipiTopicPill from '../TopicPill/TopicPill.vue';
 import TipiInitiativeMeta from '../InitiativeMeta/InitiativeMeta.vue';
 
-export default {
-  name: 'TipiInitiativeCard',
-  components: {
-    TipiIcon,
-    TipiTopicPill,
-    TipiInitiativeMeta,
-  },
-  props: {
+const { initiative, topicsStyles, extendedLayout, metaDeputies, metaGroupsOthers, metaColors } =
+  defineProps({
     initiative: Object,
     topicsStyles: Object,
     extendedLayout: Boolean,
     metaDeputies: String,
     metaGroupsOthers: String,
     metaColors: { type: Object, default: undefined },
-  },
-  methods: {
-    getAuthors: function(initiative) {
-      return initiative.authors.length ? initiative.authors.join('<br/>') : '';
-    },
-    getTopics: function(initiative) {
-      let topics = [];
-      for (const tagged of initiative['tagged']) {
-        topics = topics.concat(tagged['topics']);
-      }
-      return topics;
-    },
-    getDeputies: function(initiative) {
-      if (initiative.deputies.length == 0) return '';
-      let regex_id = /\[.*\]/;
-      return initiative.deputies
-        .map(d => {
-          var has_id = regex_id.exec(d);
-          if (!has_id) return d;
-          return d.replace(has_id[0], '').trim();
-        })
-        .join('<br/>');
-    },
-  },
+  });
+
+const getAuthors = (initiative) => {
+  return initiative.authors.length ? initiative.authors.join('<br/>') : '';
+};
+
+const getTopics = (initiative) => {
+  return initiative['tagged'].reduce((topics, tagged) => {
+    return topics.concat(tagged['topics']);
+  }, []);
+};
+
+const getDeputies = (initiative) => {
+  if (initiative.deputies.length == 0) return '';
+  let regex_id = /\[.*\]/;
+  return initiative.deputies
+    .map((d) => {
+      var has_id = regex_id.exec(d);
+      if (!has_id) return d;
+      return d.replace(has_id[0], '').trim();
+    })
+    .join('<br/>');
 };
 </script>

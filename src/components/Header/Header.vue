@@ -1,5 +1,5 @@
 <template>
-  <header class="c-page-header" :class="{ 'c-page-header--nosub' : !subtitle }">
+  <header class="c-page-header" :class="{ 'c-page-header--nosub': !subtitle }">
     <h1 class="c-page-header__title">
       {{ title }}
     </h1>

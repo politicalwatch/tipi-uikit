@@ -4,66 +4,57 @@
     <div
       v-if="limit && limit < topics.length"
       class="c-topics__topic c-topics__topic__small"
-      style="background-color:#2d4252;"
+      style="background-color: #2d4252"
     >
       <tipi-icon icon="more" />
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import TipiIcon from '../Icon/Icon.vue';
 import * as Utils from '../../utils';
 
-export default {
-  name: 'TipiTopicPill',
-  components: {
-    TipiIcon,
+const { topics, topicsStyles, withLinks, limit, order } = defineProps({
+  topics: Array,
+  topicsStyles: Object,
+  withLinks: Boolean,
+  limit: Number,
+  order: {
+    type: Boolean,
+    default: true,
   },
-  props: {
-    topics: Array,
-    topicsStyles: Object,
-    withLinks: Boolean,
-    limit: Number,
-    order: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  methods: {
-    getTopics: function() {
-      let topics = this.topics;
-      if (this.limit) {
-        topics = topics.slice(0, this.limit);
-      }
-      if (this.topicsStyles && topics.length) {
-        let returnedTopics = this.order ? topics.slice().sort(Utils.naturalSort) : topics.slice();
-        return returnedTopics
-          .map((element, i) => {
-            if (this.withLinks) {
-              return `
-              <a href="#topic-${i}" class="c-topics__topic c-topics__topic__small" style="background-color:${this.topicsStyles[element].color}">
-                ${this.topicsStyles[element].shortname}
-              </a>
-            `;
-            } else {
-              return `
-              <div class="c-topics__topic c-topics__topic__small" style="background-color:${this.topicsStyles[element].color}">
-                ${this.topicsStyles[element].shortname}
-              </div>
-            `;
-            }
-          })
-          .join('');
-      }
-      return topics.length
-        ? topics.join('<br/>')
-        : `<div class="c-topics__topic c-topics__topic__small" style="background-color: #ccc; color: #444;">
-          ${
-            this.topicsStyles['no-topic'] ? this.topicsStyles['no-topic'].shortname : 'Sin temática'
-          }
-        </div>`;
-    },
-  },
+});
+
+const getTopics = () => {
+  let topicsTemp = topics;
+  if (limit) {
+    topicsTemp = topicsTemp.slice(0, limit);
+  }
+  if (topicsStyles && topicsTemp.length) {
+    let returnedTopics = order ? topicsTemp.slice().sort(Utils.naturalSort) : topicsTemp.slice();
+    return returnedTopics
+      .map((element, i) => {
+        if (withLinks) {
+          return `
+          <a href="#topic-${i}" class="c-topics__topic c-topics__topic__small" style="background-color:${topicsStyles[element].color}">
+            ${topicsStyles[element].shortname}
+          </a>
+        `;
+        } else {
+          return `
+          <div class="c-topics__topic c-topics__topic__small" style="background-color:${topicsStyles[element].color}">
+            ${topicsStyles[element].shortname}
+          </div>
+        `;
+        }
+      })
+      .join('');
+  }
+  return topicsTemp.length
+    ? topicsTemp.join('<br/>')
+    : `<div class="c-topics__topic c-topics__topic__small" style="background-color: #ccc; color: #444;">
+      ${topicsStyles['no-topic'] ? topicsStyles['no-topic'].shortname : 'Sin temática'}
+    </div>`;
 };
 </script>
