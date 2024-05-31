@@ -1,22 +1,16 @@
-import InitiativeMeta from '@/components/InitiativeMeta/InitiativeMeta.vue';
+import TipiInitiativeMeta from '@/components/InitiativeMeta/InitiativeMeta.vue';
 
 // More on how to set up stories at: https://storybook.js.org/docs/vue/writing-stories/introduction
 export default {
-  title: 'Example/InitiativeMeta',
-  component: InitiativeMeta,
+  title: 'Example/TipiInitiativeMeta',
+  component: TipiInitiativeMeta,
   tags: ['autodocs'],
 
-  // argTypes: {
-  //   type: {
-  //     control: {
-  //       type: 'select',
-  //     },
-  //     options: ['success', 'error', 'info'],
-  //   },
-  //   icon: {
-  //     control: 'boolean',
-  //   },
-  // },
+  argTypes: {
+    initiative: {
+      type: 'object',
+    },
+  },
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/vue/writing-stories/args

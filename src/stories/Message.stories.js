@@ -1,14 +1,14 @@
-import Message from '@/components/Message/Message.vue';
+import TipiMessage from '@/components/Message/Message.vue';
 
 // More on how to set up stories at: https://storybook.js.org/docs/vue/writing-stories/introduction
 export default {
-  title: 'Example/Message',
-  component: Message,
+  title: 'Example/TipiMessage',
+  component: TipiMessage,
   tags: ['autodocs'],
   render: (args) => ({
     // Components used in your story `template` are defined in the `components` object
     components: {
-      Message,
+      TipiMessage,
     },
     // The story's `args` need to be mapped into the template through the `setup()` method
     setup() {
@@ -19,11 +19,11 @@ export default {
     },
     // Then, the spread values can be accessed directly in the template
     template: `
-    <Message :type="type" :icon="icon">
+    <TipiMessage :type="type" :icon="icon">
       <template #default>
         <p>This is the default slot content</p>
       </template>
-    </Message>
+    </TipiMessage>
   `,
   }),
 
