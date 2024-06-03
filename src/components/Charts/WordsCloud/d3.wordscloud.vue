@@ -9,7 +9,7 @@ export default {
     this.chart = new d3wordscloud(
       this.$refs.chart,
       JSON.parse(JSON.stringify(this.datum)),
-      this.config,
+      this.config
     );
   },
 };

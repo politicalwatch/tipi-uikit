@@ -7,17 +7,29 @@ export default {
   tags: ['autodocs'],
 
   argTypes: {
-    icon: {
+    config: {
+      type: 'object',
+    },
+    datum: {
+      type: 'array',
+    },
+    title: {
       type: 'text',
     },
-    icon: {
+    source: {
+      type: 'text',
+    },
+    height: {
+      type: 'number',
+    },
+    download: {
       type: 'text',
     },
   },
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/vue/writing-stories/args
-export const WordsCloud = {
+export const Primary = {
   args: {
     datum: [
       { tag: 'Atención a personas dependientes', size: 25, value: 1, color: '#dd1367' },
