@@ -46,9 +46,9 @@ const getPeopleFromName = (string) => {
   if (string.hasOwnProperty('name')) return string;
   const regex_id = /\[.*\]/;
   const has_id = regex_id.exec(string);
-  if (!has_id) return source.find((s) => s.name == string);
+  if (!has_id) return source.value.find((s) => s.name == string);
   const peopleId = has_id[0].replace('[', '').replace(']', '');
-  return source.find((s) => s.id == peopleId);
+  return source.value.find((s) => s.id == peopleId);
 };
 
 const show = () => {
