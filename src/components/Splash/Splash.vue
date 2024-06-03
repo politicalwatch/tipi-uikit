@@ -14,9 +14,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, toRefs, computed } from 'vue';
 
-const { closeClass, closeText } = defineProps({
+const props = defineProps({
   closeClass: {
     type: String,
     default: 'c-button c-button--primary',
@@ -26,6 +26,7 @@ const { closeClass, closeText } = defineProps({
     default: 'Comenzar',
   },
 });
+const { closeClass, closeText } = toRefs(props);
 
 const closedMessage = ref(false);
 

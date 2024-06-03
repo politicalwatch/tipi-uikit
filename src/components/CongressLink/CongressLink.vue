@@ -9,9 +9,11 @@
 </template>
 
 <script setup>
+import { toRefs } from 'vue';
 import TipiIcon from '../Icon/Icon.vue';
 
-const { url } = defineProps({
+const props = defineProps({
   url: { type: String },
 });
+const { url } = toRefs(props);
 </script>

@@ -7,12 +7,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { toRefs, computed } from 'vue';
 import InlineSvg from 'vue-inline-svg';
 
-const { party } = defineProps({
-  party: String,
+const props = defineProps({
+  party: { type: String },
 });
+
+const { party } = toRefs(props);
 
 const parties = {
   Cs: {
@@ -185,8 +187,8 @@ const parties = {
 const svg = computed(() => {
   let svg = '';
   try {
-    if (party in parties) {
-      svg = `../../assets/party_logos/icon/${parties[party].logo}.svg`;
+    if (party.value in parties) {
+      svg = `../../assets/party_logos/icon/${parties[party.value].logo}.svg`;
     } else {
       svg = '../../assets/svg/icon-error.svg';
     }
@@ -197,7 +199,7 @@ const svg = computed(() => {
 });
 
 const getBackground = computed(() => {
-  const bg = parties[party]?.color ? parties[party].color : '#f4f6f8';
+  const bg = parties[party.value]?.color ? parties[party.value].color : '#f4f6f8';
   if (bg.length == 7) {
     return 'background-color:' + bg;
   }
@@ -205,7 +207,7 @@ const getBackground = computed(() => {
 });
 
 const getName = computed(() => {
-  return parties[party]?.name ? parties[party].name : '';
+  return parties[party.value]?.name ? parties[party.value].name : '';
 });
 </script>
 

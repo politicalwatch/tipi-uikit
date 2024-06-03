@@ -42,41 +42,38 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { toRefs, computed } from 'vue';
 import qs from 'qs';
+
 import * as Utils from '../../utils';
 
-export default {
-  name: 'tipi-topics',
-  props: {
-    meta: String,
-    topics: Array,
-    tags: Array,
-    topicsStyles: Object,
-  },
-  computed: {
-    sortedTopics: function () {
-      return this.$props.topics.slice().sort(Utils.naturalSort);
-    },
-  },
-  methods: {
-    getSubtopics(topic) {
-      return [
-        ...new Set(
-          this.$props.tags.filter((tag) => tag.topic === topic).map((tag) => tag.subtopic)
-        ),
-      ];
-    },
-    getTags: function (subtopic) {
-      return this.$props.tags.filter((tag) => tag.subtopic === subtopic).map((tag) => tag.tag);
-    },
-    paramsData: function (currentTopic, currentSubtopic, currentTag) {
-      return qs.stringify({
-        topic: currentTopic,
-        subtopics: currentSubtopic ? currentSubtopic : undefined,
-        tags: currentTag ? currentTag : undefined,
-      });
-    },
-  },
+const props = defineProps({
+  meta: { type: String },
+  topics: { type: Array },
+  tags: { type: Array },
+  topicsStyles: { type: Object },
+});
+
+const { meta, topics, tags, topicsStyles } = toRefs(props);
+
+const sortedTopics = computed(() => {
+  return topics.value.slice().sort(Utils.naturalSort);
+});
+
+const getSubtopics = (topic) => {
+  return [...new Set(tags.value.filter((tag) => tag.topic === topic).map((tag) => tag.subtopic))];
+};
+
+const getTags = (subtopic) => {
+  return tags.value.filter((tag) => tag.subtopic === subtopic).map((tag) => tag.tag);
+};
+
+const paramsData = (currentTopic, currentSubtopic, currentTag) => {
+  return qs.stringify({
+    topic: currentTopic,
+    subtopics: currentSubtopic ? currentSubtopic : undefined,
+    tags: currentTag ? currentTag : undefined,
+  });
 };
 </script>

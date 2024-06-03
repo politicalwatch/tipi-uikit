@@ -8,9 +8,11 @@
 </template>
 
 <script setup>
+import { toRefs } from 'vue';
+
 import TipiIcon from '../Icon/Icon.vue';
 
-const { type, icon } = defineProps({
+const props = defineProps({
   type: {
     type: String,
     default: 'success',
@@ -20,4 +22,6 @@ const { type, icon } = defineProps({
   },
   icon: Boolean,
 });
+
+const { type, icon } = toRefs(props);
 </script>

@@ -1,7 +1,7 @@
 <template>
-  <div class="c-text" v-if="is(value)">
+  <div class="c-text" v-if="is()">
     <h6 class="c-text__label">{{ meta }}</h6>
-    <p v-if="!source" class="c-text__value" v-html="show(value)"></p>
+    <p v-if="!source" class="c-text__value" v-html="show()"></p>
     <ul class="c-text__list" v-if="source">
       <li
         v-for="(v, i) in value"
@@ -30,13 +30,17 @@
 </template>
 
 <script setup>
-const { meta, value, type, source, hideGroup } = defineProps({
+import { toRefs } from 'vue';
+
+const props = defineProps({
   meta: String,
   value: [String, Array],
   type: String,
   source: Array,
   hideGroup: Boolean,
 });
+
+const { meta, value, type, source, hideGroup } = toRefs(props);
 
 const getPeopleFromName = (string) => {
   if (string.hasOwnProperty('name')) return string;
@@ -47,19 +51,19 @@ const getPeopleFromName = (string) => {
   return source.find((s) => s.id == peopleId);
 };
 
-const show = (value) => {
-  if (value.constructor === Array) return value.join('<br/>');
-  return value;
+const show = () => {
+  if (value.value.constructor === Array) return value.value.join('<br/>');
+  return value.value;
 };
 
 const hasImage = (name) => {
   return getPeopleFromName(name) && getPeopleFromName(name).image;
 };
 
-const is = (value) => {
-  if (value === undefined) return false;
-  if (value.constructor === String && value != '') return true;
-  if (value.constructor === Array && value.length > 0) return true;
+const is = () => {
+  if (value.value === undefined) return false;
+  if (value.value.constructor === String && value.value != '') return true;
+  if (value.value.constructor === Array && value.value.length > 0) return true;
   return false;
 };
 </script>

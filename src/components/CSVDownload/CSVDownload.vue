@@ -58,9 +58,10 @@
 </template>
 
 <script setup>
+import { toRefs } from 'vue';
 import JsonExcel from 'vue-json-excel3';
 
-const { initiatives } = defineProps({
+const props = defineProps({
   initiatives: {
     type: Array,
     default: function () {
@@ -95,6 +96,7 @@ const { initiatives } = defineProps({
     default: 'c-button--compact',
   },
 });
+const { initiatives, csvItems, canDownloadCSV, csvFields, label, buttonClass } = toRefs(props);
 
 const emit = defineEmits(['loadCSVItems']);
 

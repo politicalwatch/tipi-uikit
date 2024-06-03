@@ -7,7 +7,7 @@
 <script setup>
 import { ref, toRefs, watchEffect } from 'vue';
 const props = defineProps({
-  party: String,
+  party: { type: String },
 });
 const { party } = toRefs(props);
 

@@ -7,9 +7,13 @@
   </header>
 </template>
 
-<script>
-export default {
-  name: 'TipiHeader',
-  props: ['title', 'subtitle'],
-};
+<script setup>
+import { toRefs } from 'vue';
+
+const props = defineProps({
+  title: String,
+  subtitle: String,
+});
+
+const { title, subtitle } = toRefs(props);
 </script>

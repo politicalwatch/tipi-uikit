@@ -18,8 +18,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-const { color, image, topic } = defineProps({
+import { toRefs, computed } from 'vue';
+
+const props = defineProps({
   color: {
     type: String,
     default: '#000',
@@ -28,7 +29,9 @@ const { color, image, topic } = defineProps({
   topic: Object,
 });
 
+const { color, image, topic } = toRefs(props);
+
 const topicImage = computed(() => {
-  return `/img/topics/${image}` || `/img/topics/${topic.icon}`;
+  return `/img/topics/${image.value}` || `/img/topics/${topic.value.icon}`;
 });
 </script>

@@ -1,17 +1,14 @@
 <template>
   <div>
     <tipi-loader
-      v-if="this.loadingResults"
+      v-if="loadingResults"
       title="Cargando resultados"
       subtitle="Puede llevar algun tiempo"
     />
-    <section
-      class="o-masonry o-grid"
-      v-if="this.initiatives && this.initiatives.length && !this.loadingResults"
-    >
+    <section class="o-masonry o-grid" v-if="initiatives && initiatives.length && !loadingResults">
       <div
         class="o-grid__col u-12 u-4@sm o-masonry__item"
-        v-for="(initiative, index) in this.initiatives"
+        v-for="(initiative, index) in initiatives"
         :key="index"
       >
         <tipi-initiative-card
@@ -35,22 +32,13 @@
 </template>
 
 <script setup>
-import { computed, onMounted, watch } from 'vue';
+import { toRefs, computed, onMounted, watch } from 'vue';
 
 import TipiInitiativeCard from '../InitiativeCard/InitiativeCard.vue';
 import TipiLoader from '../Loader/Loader.vue';
 import Masonry from 'masonry-layout';
 
-const {
-  loadingResults,
-  initiatives,
-  queryMeta,
-  layout,
-  topicsStyles,
-  metaDeputies,
-  metaGroupsOthers,
-  metaColors,
-} = defineProps({
+const props = defineProps({
   loadingResults: Boolean,
   initiatives: {
     type: Array,
@@ -66,18 +54,29 @@ const {
   metaColors: { type: Object, default: undefined },
 });
 
+const {
+  loadingResults,
+  initiatives,
+  queryMeta,
+  layout,
+  metaDeputies,
+  metaGroupsOthers,
+  metaColors,
+} = toRefs(props);
+const { topicsStyles } = props;
+
 const isMoreResults = computed(() => {
-  return !loadingResults && queryMeta?.page < queryMeta?.pages;
+  return !loadingResults.value && queryMeta.value?.page < queryMeta.value?.pages;
 });
 
 const nextResultsLabel = computed(() => {
-  let nextResult = queryMeta?.page * queryMeta?.per_page + 1;
-  let lastResult = nextResult + queryMeta?.per_page - 1;
+  let nextResult = queryMeta.value?.page * queryMeta.value?.per_page + 1;
+  let lastResult = nextResult + queryMeta.value?.per_page - 1;
   return `(${nextResult}-${lastResult})`;
 });
 
 const extendedLayout = computed(() => {
-  return layout != 'tiny';
+  return layout.value != 'tiny';
 });
 
 const loadMore = () => {
@@ -106,7 +105,7 @@ onMounted(() => {
 });
 
 watch(initiatives, () => {
-  if (initiatives && initiatives.length && !loadingResults) {
+  if (initiatives.value && initiatives.value.length && !loadingResults.value) {
     setupMasonry();
   }
 });

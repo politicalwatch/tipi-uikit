@@ -3,12 +3,13 @@
 </template>
 
 <script setup>
-import { onMounted, watch } from 'vue';
+import { toRefs, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { select } from 'd3-selection';
 import { easeBackOut } from 'd3-ease';
 import { transition } from 'd3-transition';
 
-const { initiative, topics, styles } = defineProps({
+const props = defineProps({
   initiative: Object,
   topics: Array,
   styles: {
@@ -18,6 +19,9 @@ const { initiative, topics, styles } = defineProps({
     },
   },
 });
+
+const { initiative, topics, styles } = toRefs(props);
+const route = useRoute();
 
 const loadVizz = (topics, initiative, styles, color = { center: '#222' }) => {
   //Mapping ranges
@@ -186,15 +190,12 @@ const loadVizz = (topics, initiative, styles, color = { center: '#222' }) => {
 };
 
 onMounted(() => {
-  loadVizz(topics, initiative, styles);
+  loadVizz(topics.value, initiative.value, styles.value);
 });
 
-watch(
-  () => [topics, initiative],
-  ([topics, initiative, styles]) => {
-    loadVizz(topics, initiative, styles);
-  }
-);
+watch(route, () => {
+  loadVizz(topics.value, initiative.value, styles.value);
+});
 </script>
 
 <style lang="scss">

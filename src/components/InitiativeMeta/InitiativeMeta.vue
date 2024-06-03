@@ -1,24 +1,22 @@
 <template>
   <div class="c-initiative-meta">
-    <div
-      :class="`c-initiative-meta__status c-initiative-meta__status--${getColorByStatus(
-        initiative.status
-      )}`"
-    >
+    <div :class="`c-initiative-meta__status c-initiative-meta__status--${getColorByStatus()}`">
       <strong>
-        <tipi-icon :icon="getIcon(initiative)"></tipi-icon>
-        {{ getStateMessage(initiative) }}
+        <tipi-icon :icon="getIcon()"></tipi-icon>
+        {{ getStateMessage() }}
       </strong>
     </div>
   </div>
 </template>
 
 <script setup>
+import { toRefs } from 'vue';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import { es } from 'date-fns/locale/es';
+
 import TipiIcon from '../Icon/Icon.vue';
 
-const { initiative, metaColors } = defineProps({
+const props = defineProps({
   initiative: Object,
   metaColors: {
     type: Object,
@@ -46,34 +44,36 @@ const { initiative, metaColors } = defineProps({
   },
 });
 
-const getColorByStatus = (status) => {
-  for (let color in metaColors) {
-    if (metaColors[color].indexOf(status) != -1) return color;
+const { initiative, metaColors } = toRefs(props);
+
+const getColorByStatus = () => {
+  for (let color in metaColors.value) {
+    if (metaColors.value[color].indexOf(initiative.value.status) != -1) return color;
   }
   return 'neutral';
 };
 
-const getIcon = (initiative) => {
-  const color = getColorByStatus(initiative['status']);
+const getIcon = () => {
+  const color = getColorByStatus();
   const map = { completed: 'success', neutral: 'clock', error: 'denied' };
   return map[color];
 };
 
-const getStateMessage = (initiative) => {
-  if (initiative['status'] == 'Desconocida') {
-    return `${initiative['status']}`;
+const getStateMessage = () => {
+  if (initiative.value['status'] == 'Desconocida') {
+    return `${initiative.value['status']}`;
   }
 
-  const color = getColorByStatus(initiative['status']);
-  let date = initiative['updated'];
+  const color = getColorByStatus();
+  let date = initiative.value['updated'];
   if (color == 'neutral') {
-    date = initiative['created'];
+    date = initiative.value['created'];
   }
 
   const formattedDate = formatDistanceToNow(new Date(date), {
     locale: es,
     addSuffix: true,
   }).replace('alrededor de ', '');
-  return `${initiative['status']} ${formattedDate}`;
+  return `${initiative.value['status']} ${formattedDate}`;
 };
 </script>

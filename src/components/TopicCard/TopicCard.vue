@@ -1,10 +1,10 @@
 <template>
-  <div :style="`background-color: ${getColor(topic)}`" class="c-topic-card">
+  <div :style="`background-color: ${getColor()}`" class="c-topic-card">
     <div class="o-container">
       <div class="o-grid o-grid--reverse">
         <div class="o-grid__col u-12 u-3@sm u-offset-1@sm">
           <img
-            :src="`/img/topics/${getIcon(topic)}`"
+            :src="`/img/topics/${getIcon()}`"
             :alt="`Imagen de ${topic.name}`"
             class="c-topic-card__image"
           />
@@ -23,7 +23,9 @@
 </template>
 
 <script setup>
-const { topic, topicsStyles } = defineProps({
+import { toRefs } from 'vue';
+
+const props = defineProps({
   topic: Object,
   topicsStyles: {
     type: Object,
@@ -33,15 +35,18 @@ const { topic, topicsStyles } = defineProps({
   },
 });
 
-const getIcon = (topic) => {
-  return topicsStyles.hasOwnProperty(topic.name) && topicsStyles[topic.name].image
-    ? topicsStyles[topic.name].image
-    : topic.icon;
+const { topic } = toRefs(props);
+const { topicsStyles } = props;
+
+const getIcon = () => {
+  return topicsStyles.hasOwnProperty(topic.value.name) && topicsStyles[topic.value.name].image
+    ? topicsStyles[topic.value.name].image
+    : topic.value.icon;
 };
 
-const getColor = (topic) => {
-  return topicsStyles.hasOwnProperty(topic.name) && topicsStyles[topic.name].color
-    ? topicsStyles[topic.name].color
+const getColor = () => {
+  return topicsStyles.hasOwnProperty(topic.value.name) && topicsStyles[topic.value.name].color
+    ? topicsStyles[topic.value.name].color
     : '#000';
 };
 </script>

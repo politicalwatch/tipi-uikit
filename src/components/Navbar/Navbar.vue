@@ -75,11 +75,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, toRefs, computed } from 'vue';
 
 import Icon from '../Icon/Icon.vue';
 
-const { links, disclaimerLink, preImage, logo } = defineProps({
+const props = defineProps({
   links: Array,
   disclaimerLink: {
     type: Object,
@@ -90,6 +90,8 @@ const { links, disclaimerLink, preImage, logo } = defineProps({
   preImage: String,
   logo: String,
 });
+
+const { links, disclaimerLink, preImage, logo } = toRefs(props);
 
 const closedMessage = ref(false);
 const menuVisible = ref(false);

@@ -3,20 +3,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, toRefs, onMounted, watch } from 'vue';
 import { select } from 'd3-selection';
 import { transition } from 'd3-transition';
 
-const { selection, styles, topic } = defineProps({
+const props = defineProps({
   selection: Object,
+  topic: String,
   styles: {
     type: Object,
     default: function () {
       return { topics: {}, defaultColor: '#cecece' };
     },
   },
-  topic: String,
 });
+
+const { selection, topic } = toRefs(props);
+const { styles } = props;
 
 const twoCirclesRef = ref(null);
 
@@ -31,10 +34,10 @@ const loadVizz = () => {
   let maxRadius = 150;
   let minRadius = 5;
 
-  let mainTopic = topic;
-  let data = [selection.selected];
-  let maxName = selection.compareswith._id;
-  let maxNumber = selection.compareswith.initiatives;
+  let mainTopic = topic.value;
+  let data = [selection.value.selected];
+  let maxName = selection.value.compareswith._id;
+  let maxNumber = selection.value.compareswith.initiatives;
   let mainColor = styles.topics[mainTopic] ? styles.topics[mainTopic].color : styles.defaultColor;
   let maxColor = styles.topics[maxName] ? styles.topics[maxName].color : mainColor;
 
@@ -115,9 +118,12 @@ onMounted(() => {
   loadVizz();
 });
 
-watch(selection.selected._id, () => {
-  loadVizz();
-});
+watch(
+  () => selection.value.selected._id,
+  () => {
+    loadVizz();
+  }
+);
 </script>
 
 <style lang="scss">

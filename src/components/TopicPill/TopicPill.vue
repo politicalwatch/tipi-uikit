@@ -12,10 +12,12 @@
 </template>
 
 <script setup>
+import { toRefs } from 'vue';
+
 import TipiIcon from '../Icon/Icon.vue';
 import * as Utils from '../../utils';
 
-const { topics, topicsStyles, withLinks, limit, order } = defineProps({
+const props = defineProps({
   topics: Array,
   topicsStyles: Object,
   withLinks: Boolean,
@@ -26,16 +28,21 @@ const { topics, topicsStyles, withLinks, limit, order } = defineProps({
   },
 });
 
+const { topics, withLinks, limit, order } = toRefs(props);
+const { topicsStyles } = props;
+
 const getTopics = () => {
-  let topicsTemp = topics;
-  if (limit) {
-    topicsTemp = topicsTemp.slice(0, limit);
+  let topicsTemp = topics.value;
+  if (limit.value) {
+    topicsTemp = topicsTemp.slice(0, limit.value);
   }
   if (topicsStyles && topicsTemp.length) {
-    let returnedTopics = order ? topicsTemp.slice().sort(Utils.naturalSort) : topicsTemp.slice();
+    let returnedTopics = order.value
+      ? topicsTemp.slice().sort(Utils.naturalSort)
+      : topicsTemp.slice();
     return returnedTopics
       .map((element, i) => {
-        if (withLinks) {
+        if (withLinks.value) {
           return `
           <a href="#topic-${i}" class="c-topics__topic c-topics__topic__small" style="background-color:${topicsStyles[element].color}">
             ${topicsStyles[element].shortname}

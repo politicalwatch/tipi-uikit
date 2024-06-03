@@ -53,16 +53,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, toRefs } from 'vue';
 
 import TipiIcon from '../Icon/Icon.vue';
-import PartyLogo from '../PartyLogo/PartyLogo.vue';
 import PartyLogoIcon from '../PartyLogo/PartyLogoIcon.vue';
 
-const { deputy, parliamentaryGroup } = defineProps({
+const props = defineProps({
   deputy: Object,
   parliamentaryGroup: Object,
 });
+
+const { deputy, parliamentaryGroup } = toRefs(props);
 
 const isCollapsed = ref(true);
 
@@ -83,7 +84,7 @@ const collapse = () => {
 };
 
 const addBirthdayClass = () => {
-  const date = new Date(deputy.birthdate);
+  const date = new Date(deputy.value.birthdate);
   const today = new Date();
   if (date.getDate() == today.getDate() && date.getMonth() == today.getMonth()) {
     return 'c-deputy__birthday';
@@ -91,14 +92,14 @@ const addBirthdayClass = () => {
 };
 
 const getAge = () => {
-  const date = new Date(deputy.birthdate);
+  const date = new Date(deputy.value.birthdate);
   const today = new Date();
   const age = today.getFullYear() - date.getFullYear();
   return age;
 };
 
 const getConstituency = () => {
-  return deputy.constituency;
+  return deputy.value.constituency;
 };
 </script>
 
