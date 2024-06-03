@@ -1,4 +1,5 @@
 import TipiTopicCard from '@/components/TopicCard/TopicCard.vue';
+import { topicsStyles } from './mocks';
 
 // More on how to set up stories at: https://storybook.js.org/docs/vue/writing-stories/introduction
 export default {
@@ -769,14 +770,6 @@ export const Primary = {
       id: 'ods-1',
       description: ['Acabar con la pobreza en todas sus formas en todo el mundo'],
     },
-    topicsStyles: {
-      'ODS 1 Fin de la pobreza': {
-        shortname: 'ODS 1',
-        color: '#eb1c2d',
-        image: 'ods-1.svg',
-        orgs_logos: ['caritas.png'],
-      },
-      'no-topic': { shortname: 'Sin relación con la Agenda2030' },
-    },
+    topicsStyles,
   },
 };

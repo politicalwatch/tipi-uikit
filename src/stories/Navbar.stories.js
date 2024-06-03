@@ -1,9 +1,49 @@
+import { vueRouter } from 'storybook-vue3-router';
 import TipiNavbar from '@/components/Navbar/Navbar.vue';
+
+const customRoutes = [
+  {
+    path: '/',
+    name: 'home',
+    component: TipiNavbar,
+  },
+  {
+    path: '/alerts',
+    name: 'alerts',
+    component: TipiNavbar,
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: TipiNavbar,
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: TipiNavbar,
+  },
+  {
+    path: '/deputies',
+    name: 'deputies',
+    component: TipiNavbar,
+  },
+  {
+    path: '/ods',
+    name: 'ods',
+    component: TipiNavbar,
+  },
+  {
+    path: '/search',
+    name: 'search',
+    component: TipiNavbar,
+  },
+];
 
 // More on how to set up stories at: https://storybook.js.org/docs/vue/writing-stories/introduction
 export default {
   title: 'Example/TipiNavbar',
   component: TipiNavbar,
+  decorators: [vueRouter(customRoutes)],
   tags: ['autodocs'],
 
   argTypes: {
