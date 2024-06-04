@@ -5,7 +5,9 @@
 </template>
 
 <script setup>
-import { toRefs, computed, defineAsyncComponent } from 'vue';
+import { toRefs, computed } from 'vue';
+
+import icons from '../../assets/svg/icons';
 
 const props = defineProps({
   icon: { type: String },
@@ -16,9 +18,9 @@ const { icon, color } = toRefs(props);
 
 const svg = computed(() => {
   let svg = '';
-  try {
-    svg = defineAsyncComponent(() => import(`../../assets/svg/icon-${icon.value}.svg`));
-  } catch (error) {
+  if (icon.value in icons) {
+    svg = icons[icon.value];
+  } else {
     svg = icon.value;
   }
   return svg;
