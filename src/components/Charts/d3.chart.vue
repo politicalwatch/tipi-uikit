@@ -9,77 +9,71 @@
   </div>
 </template>
 
-<script setup>
-import { ref, watch, onBeforeUnmount } from 'vue';
+<script>
 import { saveSvgAsPng } from 'save-svg-as-png';
 
-const chart = ref(null);
-
-const props = defineProps({
-  config: {
-    type: Object,
-    required: true,
-    default: () => ({}),
+export default {
+  name: 'D3Chart',
+  data() {
+    return {
+      chart: {},
+    };
   },
-  datum: {
-    type: Array,
-    required: true,
-    default: () => [],
+  props: {
+    config: {
+      type: Object,
+      required: true,
+      default: () => ({}),
+    },
+    datum: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
+    title: {
+      type: String,
+      default: '',
+    },
+    source: {
+      type: String,
+      default: '',
+    },
+    height: {
+      type: Number,
+      default: 300,
+    },
+    download: {
+      type: String,
+    },
   },
-  title: {
-    type: String,
-    default: '',
+  methods: {
+    downloadSVG() {
+      const node = this.$refs.chart.getElementsByClassName('chart')[0];
+      saveSvgAsPng(node, 'chart.png', {
+        backgroundColor: '#FFF',
+      });
+    },
   },
-  source: {
-    type: String,
-    default: '',
+  watch: {
+    config: {
+      handler(val) {
+        this.chart.updateConfig(val);
+      },
+      deep: true,
+    },
+    datum(vals) {
+      this.chart.updateData([...vals]);
+    },
+    height(val) {
+      setTimeout(() => {
+        this.chart.resizeChart();
+      }, 10);
+    },
   },
-  height: {
-    type: Number,
-    default: 300,
+  beforeDestroy() {
+    this.chart.destroyChart();
   },
-  download: {
-    type: String,
-  },
-});
-
-const { config, datum, title, source, height, download } = toRefs(props);
-
-const downloadSVG = () => {
-  const node = chart.value.getElementsByClassName('chart')[0];
-  saveSvgAsPng(node, 'chart.png', {
-    backgroundColor: '#FFF',
-  });
 };
-
-watch(
-  () => config.value,
-  (val) => {
-    chart.value.updateConfig(val);
-  },
-  { deep: true }
-);
-
-watch(
-  () => datum.value,
-  (vals) => {
-    chart.value.updateData([...vals]);
-  },
-  { deep: true }
-);
-
-watch(
-  () => height.value,
-  (val) => {
-    setTimeout(() => {
-      chart.value.resizeChart();
-    }, 10);
-  }
-);
-
-onBeforeUnmount(() => {
-  chart.value.destroyChart();
-});
 </script>
 
 <style lang="scss">
