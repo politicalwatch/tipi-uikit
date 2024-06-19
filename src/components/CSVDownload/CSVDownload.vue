@@ -32,6 +32,8 @@
       v-else
       :data="csvItems"
       :fields="csvFields"
+      :escapeCsv="false"
+      :meta="json_meta"
       :name="getNameFromCSV()"
       id="downloadCSV"
       type="csv"
@@ -73,14 +75,32 @@ const props = defineProps({
   csvFields: {
     type: Object,
     default: () => ({
-      title: 'title',
+      title: {
+        field: 'title',
+        callback: (value) => `"${value.replace(/\n/g, ' ')}"`,
+      },
       reference: 'reference',
       initiative_type_alt: 'initiative_type_alt',
-      authors: 'authors',
-      deputies: 'deputies',
-      topics: 'topics',
-      tags: 'tags',
-      place: 'place',
+      authors: {
+        field: 'authors',
+        callback: (value) => `"${value.join('; ').replace(/\n/g, ' ')}"`,
+      },
+      deputies: {
+        field: 'deputies',
+        callback: (value) => `"${value.join('; ').replace(/\n/g, ' ')}"`,
+      },
+      topics: {
+        field: 'topics',
+        callback: (value) => `"${value.replace(/\n/g, ' ')}"`,
+      },
+      tags: {
+        field: 'tags',
+        callback: (value) => `"${value.replace(/\n/g, ' ')}"`,
+      },
+      place: {
+        field: 'place',
+        callback: (value) => `"${value.replace(/\n/g, ' ')}"`,
+      },
       status: 'status',
       created: 'created',
       updated: 'updated',
@@ -99,6 +119,15 @@ const props = defineProps({
 const { initiatives, csvItems, canDownloadCSV, csvFields, label, buttonClass } = toRefs(props);
 
 const emit = defineEmits(['loadCSVItems']);
+
+const json_meta = [
+  [
+    {
+      key: 'charset',
+      value: 'utf-8',
+    },
+  ],
+];
 
 const loadCSVItems = (event) => {
   emit('loadCSVItems', event);
