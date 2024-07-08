@@ -65,6 +65,8 @@ const {
 } = toRefs(props);
 const { topicsStyles } = props;
 
+const emit = defineEmits(['loadMore']);
+
 const isMoreResults = computed(() => {
   return !loadingResults.value && queryMeta.value?.page < queryMeta.value?.pages;
 });
