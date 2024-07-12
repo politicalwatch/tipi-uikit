@@ -2,21 +2,25 @@
 .c-menu {
   @include th6;
 
-  color: $menu-link-color;
-  list-style: none;
-  text-align: center;
-  padding-top: rem($spacer-unit * 4);
+  & {
+    color: $menu-link-color;
+    list-style: none;
+    text-align: center;
+    padding-top: rem($spacer-unit * 4);
+  }
 
   @media (min-width: $md) {
     @include tbody;
 
-    display: flex;
-    flex-wrap: wrap;
-    flex: 1;
-    text-align: left;
-    padding: 0 0 0 rem($spacer-unit * 4);
-    margin: 0;
-    justify-content: flex-end;
+    & {
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1;
+      text-align: left;
+      padding: 0 0 0 rem($spacer-unit * 4);
+      margin: 0;
+      justify-content: flex-end;
+    }
   }
 
   &__submenu {
@@ -29,7 +33,9 @@
       left: rem($spacer-unit * 2);
       transform: translateY(-$spacer-unit);
       opacity: 0;
-      transition: opacity 0.2s linear, transform 0.2s linear;
+      transition:
+        opacity 0.2s linear,
+        transform 0.2s linear;
       margin: 0;
       padding: rem($spacer-unit);
       background: $white;
@@ -55,7 +61,6 @@
     }
 
     &:hover {
-
       .c-menu__submenu {
         @media (min-width: $md) {
           opacity: 1;
@@ -70,13 +75,14 @@
       &::after {
         @media (min-width: $md) {
           position: absolute;
-          content: "";
+          content: '';
           right: 0;
           top: rem($spacer-unit);
           pointer-events: none;
           width: rem($spacer-unit);
           height: rem($spacer-unit);
-          background: url('../assets/svg/icon-chevron-down.svg') no-repeat center center;
+          background: url('../assets/svg/icon-chevron-down.svg') no-repeat
+            center center;
           background-size: contain;
         }
       }

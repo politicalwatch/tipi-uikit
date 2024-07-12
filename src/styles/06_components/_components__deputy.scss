@@ -38,8 +38,10 @@
   &__name {
     @include th2;
 
-    text-align: center;
-    margin: 0 0 rem($spacer-unit) 0;
+    & {
+      text-align: center;
+      margin: 0 0 rem($spacer-unit) 0;
+    }
 
     @media (min-width: $sm) {
       text-align: left;
@@ -49,9 +51,11 @@
   &__group {
     @include subtitle;
 
-    text-transform: uppercase;
-    margin: 0 0 rem($spacer-unit) 0;
-    text-align: center;
+    & {
+      text-transform: uppercase;
+      margin: 0 0 rem($spacer-unit) 0;
+      text-align: center;
+    }
 
     @media (min-width: $sm) {
       text-align: left;
@@ -66,7 +70,9 @@
   &__description {
     @include subtitle;
 
-    text-align: center;
+    & {
+      text-align: center;
+    }
 
     @media (min-width: $sm) {
       text-align: left;
@@ -76,8 +82,10 @@
   &__links {
     @include th6;
 
-    color: $secondary-dark;
-    text-align: center;
+    & {
+      color: $secondary-dark;
+      text-align: center;
+    }
 
     @media (min-width: $sm) {
       text-align: left;
@@ -120,7 +128,8 @@
       text-align: left;
     }
 
-    a, a:hover {
+    a,
+    a:hover {
       color: $secondary-dark;
       font-weight: 500;
       text-decoration: none;
@@ -142,7 +151,8 @@
       font-size: 12px;
     }
 
-    p, a {
+    p,
+    a {
       margin-top: 8px;
       margin-bottom: 8px;
     }

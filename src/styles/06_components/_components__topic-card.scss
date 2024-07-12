@@ -16,8 +16,10 @@
   &__title {
     @include th2;
 
-    text-transform: uppercase;
-    text-align: center;
+    & {
+      text-transform: uppercase;
+      text-align: center;
+    }
 
     @media (min-width: $sm) {
       text-align: left;
@@ -27,7 +29,9 @@
   &__description {
     @include subtitle;
 
-    text-align: center;
+    & {
+      text-align: center;
+    }
 
     @media (min-width: $sm) {
       text-align: left;
