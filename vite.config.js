@@ -1,13 +1,13 @@
-import { fileURLToPath, URL } from "node:url";
-import { resolve } from "path";
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import svgLoader from "vite-svg-loader";
+import { fileURLToPath, URL } from 'node:url';
+import { resolve } from 'path';
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import svgLoader from 'vite-svg-loader';
 
 const svgoConfig = {
   plugins: [
     {
-      name: "preset-default",
+      name: 'preset-default',
       params: {
         overrides: {
           removeViewBox: false,
@@ -48,6 +48,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
+        additionalData: `@import "@/styles/main.scss";`,
       },
     },
   },

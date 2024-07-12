@@ -1,5 +1,5 @@
 /** @type { import('@storybook/vue3-vite').StorybookConfig } */
-const config = {
+export default {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
     '@storybook/addon-links',
@@ -15,5 +15,24 @@ const config = {
   },
   docs: {},
   staticDirs: [{ from: '../src/assets', to: '/assets' }],
+  async viteFinal(config, { configType }) {
+    const { mergeConfig } = await import('vite');
+
+    if (configType === 'DEVELOPMENT') {
+      // Your development configuration goes here
+    }
+    if (configType === 'PRODUCTION') {
+      // Your production configuration goes here.
+    }
+    return mergeConfig(config, {
+      // Your environment configuration here
+      css: {
+        preprocessorOptions: {
+          scss: {
+            additionalData: `@import "@/styles/main.scss";`,
+          },
+        },
+      },
+    });
+  },
 };
-export default config;

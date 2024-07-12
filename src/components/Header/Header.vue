@@ -17,3 +17,43 @@ const props = defineProps({
 
 const { title, subtitle } = toRefs(props);
 </script>
+
+<style lang="scss" scoped>
+.c-page-header {
+  margin-bottom: rem($spacer-unit * 4);
+  padding-bottom: rem($spacer-unit * 4);
+  border-bottom: 1px solid $neutral;
+
+  @media (min-width: $md) {
+    margin-bottom: rem($spacer-unit * 8);
+  }
+
+  &__title {
+    margin-bottom: rem($spacer-unit * 2);
+    color: $secondary-dark;
+
+    a {
+      color: $secondary-dark;
+    }
+  }
+
+  &__subtitle {
+    @include subtitle;
+
+    & {
+      color: $secondary;
+      margin: 0;
+    }
+  }
+
+  &--nosub {
+    padding-bottom: rem($spacer-unit * 2);
+
+    .c-page-header {
+      &__title {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+</style>
