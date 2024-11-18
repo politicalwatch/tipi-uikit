@@ -1,6 +1,6 @@
 {
   "name": "@politicalwatch/tipi-uikit",
-  "version": "1.9.18",
+  "version": "1.9.24",
   "main": "src/components/index.js",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@storybook/test": "^8.3.2",
+    "@storybook/test": "^8.4.4",
     "core-js": "^3.32.2",
     "d3": "^7.8.5",
     "d3-cloud": "^1.2.5",
@@ -28,29 +28,30 @@
     "vue-json-excel3": "^1.0.20"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^2.0.2",
+    "@chromatic-com/storybook": "^3.2.2",
     "@rushstack/eslint-patch": "^1.1.0",
-    "@storybook/addon-essentials": "^8.3.2",
-    "@storybook/addon-interactions": "^8.3.2",
-    "@storybook/addon-links": "^8.3.2",
-    "@storybook/blocks": "^8.3.2",
-    "@storybook/vue3": "^8.3.2",
-    "@storybook/vue3-vite": "^8.3.2",
+    "@storybook/addon-essentials": "^8.4.4",
+    "@storybook/addon-interactions": "^8.4.4",
+    "@storybook/addon-links": "^8.4.4",
+    "@storybook/blocks": "^8.4.4",
+    "@storybook/vue3": "^8.4.4",
+    "@storybook/vue3-vite": "^8.4.4",
     "@vitejs/plugin-vue": "^5.0.0",
-    "@vue/eslint-config-prettier": "^9.0.0",
+    "@vue/eslint-config-prettier": "^10.1.0",
     "@vue/test-utils": "^2.4.1",
     "autoprefixer": "^10.4.16",
     "eslint": "^9.0.0",
-    "eslint-plugin-storybook": "^0.8.0",
+    "eslint-plugin-storybook": "^0.11.0",
     "eslint-plugin-vue": "^9.0.0",
-    "jsdom": "^24.0.0",
+    "jsdom": "^25.0.0",
     "prettier": "^3.0.3",
     "sass": "^1.67.0",
-    "storybook": "^8.3.2",
+    "storybook": "^8.4.4",
     "storybook-vue3-router": "^5.0.0",
     "stylelint": "^16.1.0",
     "terser": "^5.14.2",
     "vite": "^5.0.12",
     "vitest": "^2.0.0"
-  }
+  },
+  "packageManager": "pnpm@9.11.0+sha512.0a203ffaed5a3f63242cd064c8fb5892366c103e328079318f78062f24ea8c9d50bc6a47aa3567cabefd824d170e78fa2745ed1f16b132e16436146b7688f19b"
 }
