@@ -138,7 +138,7 @@ class d3sunburst extends d3chart {
         default: '#AAA',
         axis: '#000',
       },
-      tooltip: { label: false, suffix: false, suffixPlural: false },
+      tooltip: { label: false, suffix: false, suffixPlural: false, humanReadable: false },
       transition: { duration: 350, ease: 'easeLinear' },
       charSpace: 8,
     });
@@ -238,6 +238,47 @@ class d3sunburst extends d3chart {
   }
 
   /**
+   * Format durations
+   */
+  to_duration(duration) {
+    if (duration > 60 * 60 * 1000) {
+      return this.to_hour_duration(duration);
+    } else if (duration > 60 * 1000) {
+      return this.to_min_duration(duration);
+    }
+
+    return this.to_secs_duration(duration);
+  }
+
+  to_secs_duration(duration) {
+    const total_secs = duration / 1000;
+    const secs = total_secs % 60;
+
+    return `${Math.floor(secs)} segundos`;
+  }
+
+  to_min_duration(duration) {
+    const total_secs = duration / 1000;
+    const minutes = total_secs / 60;
+    const secs = total_secs % 60;
+
+    return `${Math.floor(minutes)}:${('' + Math.floor(secs)).padStart(2, 0)} min`;
+  }
+
+  to_hour_duration(duration) {
+    const total_secs = duration / 1000;
+    const total_minutes = total_secs / 60;
+    const hours = total_minutes / 60;
+    const minutes = total_minutes % 60;
+    const secs = total_secs % 60;
+
+    return `${('' + Math.floor(hours)).padStart(2, 0)}:${('' + Math.floor(minutes)).padStart(
+      2,
+      0
+    )}:${('' + Math.floor(secs)).padStart(2, 0)} horas`;
+  }
+
+  /**
    * Add new chart's elements
    */
   enterElements() {
@@ -259,9 +300,11 @@ class d3sunburst extends d3chart {
         const label = this.cfg.tooltip.suffixPlural
           ? pluralize(this.cfg.tooltip.suffix, d.value)
           : this.cfg.tooltip.suffix;
-        const text = this.cfg.tooltip.suffix
-          ? `<div>${d.data[this.cfg.key]}: ${d.value} ${label}</div>`
-          : `<div>${d.data[this.cfg.key]}: ${d.value}</div>`;
+        const text = this.cfg.tooltip.humanReadable
+          ? `<div>${d.data[this.cfg.key]}: ${this.to_duration(d.value)}</div>`
+          : this.cfg.tooltip.suffix
+            ? `<div>${d.data[this.cfg.key]}: ${d.value} ${label}</div>`
+            : `<div>${d.data[this.cfg.key]}: ${d.value}</div>`;
         this.tooltip.html(text).classed('active', true);
       })
       .on('mouseout', () => {
