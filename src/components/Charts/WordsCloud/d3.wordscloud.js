@@ -1,3 +1,4 @@
+import { to_duration } from '../../../utils';
 import d3chart from '../d3.chart';
 import { select, selectAll } from 'd3-selection';
 import { scaleOrdinal, scaleLinear } from 'd3-scale';
@@ -137,7 +138,7 @@ class d3wordscloud extends d3chart {
         default: '#AAA',
         axis: '#000',
       },
-      tooltip: { label: false, suffix: false, suffixPlural: false },
+      tooltip: { label: false, suffix: false, suffixPlural: false, humanReadable: false },
       transition: { duration: 500, ease: 'easeLinear' },
     });
   }
@@ -261,9 +262,12 @@ class d3wordscloud extends d3chart {
         const label = this.cfg.tooltip.suffixPlural
           ? pluralize(this.cfg.tooltip.suffix, d.value)
           : this.cfg.tooltip.suffix;
-        const text = this.cfg.tooltip.suffix
-          ? `<div>${d.text}: ${d.value} ${label}</div>`
-          : `<div>${d.text}: ${d.value}</div>`;
+        const text = this.cfg.tooltip.humanReadable
+          ? `<div>${to_duration(d.value)}</div>`
+          : this.cfg.tooltip.suffix
+            ? `<div>${d.text}: ${d.value} ${label}</div>`
+            : `<div>${d.text}: ${d.value}</div>`;
+
         this.tooltip.html(text).classed('active', true);
       })
       .on('mouseout', () => {
