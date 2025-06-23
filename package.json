@@ -1,6 +1,6 @@
 {
   "name": "@politicalwatch/tipi-uikit",
-  "version": "1.9.33",
+  "version": "1.9.34",
   "main": "src/components/index.js",
   "scripts": {
     "dev": "vite",
@@ -21,7 +21,7 @@
     "pluralize": "^8.0.0",
     "qs": "^6.11.2",
     "save-svg-as-png": "^1.4.17",
-    "stylelint-config-standard": "^37.0.0",
+    "stylelint-config-standard": "^38.0.0",
     "vite-svg-loader": "^5.1.0",
     "vue": "^3.4.0",
     "vue-inline-svg": "^4.0.0",
@@ -51,7 +51,7 @@
     "stylelint": "^16.1.0",
     "terser": "^5.14.2",
     "vite": "^6.0.0",
-    "vitest": "^2.0.0"
+    "vitest": "^3.0.0"
   },
   "packageManager": "pnpm@9.11.0+sha512.0a203ffaed5a3f63242cd064c8fb5892366c103e328079318f78062f24ea8c9d50bc6a47aa3567cabefd824d170e78fa2745ed1f16b132e16436146b7688f19b"
 }
